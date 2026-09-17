@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../router/app_routes.dart';
+
+/// Which primary tab is currently active, for [AppBottomNavBar] to
+/// highlight.
+enum AppNavTab { goals, profile }
+
+/// The bottom navigation bar shared by the home ("Goals") and profile
+/// screens: two tabs plus a raised center FAB that opens Add Food.
+class AppBottomNavBar extends StatelessWidget {
+  const AppBottomNavBar({super.key, required this.currentTab});
+
+  final AppNavTab currentTab;
+
+  static const Color _active = Color(0xFF3C6E4F);
+  static const Color _inactive = Color(0xFF9C9A8A);
+  static const Color _surface = Color(0xFFFBFAF2);
+  static const Color _border = Color(0xFFDAD6C6);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.topCenter,
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: _surface,
+            border: Border(top: BorderSide(color: _border)),
+          ),
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.track_changes_outlined,
+                  label: 'Goals',
+                  active: currentTab == AppNavTab.goals,
+                  onTap: () => context.go(AppRoutes.homePath),
+                ),
+              ),
+              const Expanded(child: SizedBox.shrink()),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.person_outline,
+                  label: 'Profile',
+                  active: currentTab == AppNavTab.profile,
+                  onTap: () => context.go(AppRoutes.profilePath),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: -22,
+          child: _AddFoodFab(
+            onTap: () => context.push(AppRoutes.addFoodPath),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.icon,
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = active ? AppBottomNavBar._active : AppBottomNavBar._inactive;
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 22, color: color),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddFoodFab extends StatelessWidget {
+  const _AddFoodFab({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: 'Add food',
+      child: Material(
+        color: AppBottomNavBar._active,
+        shape: const CircleBorder(
+          side: BorderSide(color: AppBottomNavBar._surface, width: 3),
+        ),
+        elevation: 6,
+        shadowColor: const Color(0x593C6E4F),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: const SizedBox(
+            width: 52,
+            height: 52,
+            child: Icon(Icons.add, size: 22, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+}

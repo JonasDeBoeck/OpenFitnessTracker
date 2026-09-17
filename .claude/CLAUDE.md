@@ -5,7 +5,6 @@
 - `dart run build_runner build --delete-conflicting-outputs` — generate code
 - `flutter analyze` — run linter
 - `flutter test` — run tests
-- `flutter run` — start dev build
 
 ## Architecture
 Feature-first folder structure. Each feature lives in lib/features/<name>/.

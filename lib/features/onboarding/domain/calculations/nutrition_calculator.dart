@@ -28,32 +28,45 @@ double calculateTdee({
   return bmr * activityLevel.multiplier;
 }
 
+/// The flat kcal/day adjustment applied to TDEE for a [goal] (negative for
+/// a deficit). Exposed publicly so UI explaining the calculation (e.g. the
+/// home dashboard's targets tooltip) can display the real figure instead of
+/// duplicating it.
+double calorieAdjustmentFor(Goal goal) => switch (goal) {
+  Goal.cut => -500,
+  Goal.bulk => 300,
+  Goal.maintain => 0,
+};
+
 double calculateTargetCalories({
   required double tdee,
   required Goal goal,
 }) {
-  return switch (goal) {
-    Goal.cut => tdee - 500,
-    Goal.bulk => tdee + 300,
-    Goal.maintain => tdee,
-  };
+  return tdee + calorieAdjustmentFor(goal);
 }
 
 typedef Macros = ({double proteinGrams, double fatGrams, double carbGrams});
+
+typedef MacroRates = ({double proteinPerKg, double fatPerKg});
+
+/// Protein/fat targets per kg of bodyweight for a [goal]; carbs fill
+/// whatever calories remain. Exposed publicly for the same reason as
+/// [calorieAdjustmentFor].
+MacroRates macroRatesFor(Goal goal) => switch (goal) {
+  Goal.cut => (proteinPerKg: 2.2, fatPerKg: 0.9),
+  Goal.bulk => (proteinPerKg: 1.8, fatPerKg: 1.0),
+  Goal.maintain => (proteinPerKg: 2.0, fatPerKg: 1.0),
+};
 
 Macros calculateMacros({
   required double weightKg,
   required double targetCalories,
   required Goal goal,
 }) {
-  final (proteinPerKg, fatPerKg) = switch (goal) {
-    Goal.cut => (2.2, 0.9),
-    Goal.bulk => (1.8, 1.0),
-    Goal.maintain => (2.0, 1.0),
-  };
+  final rates = macroRatesFor(goal);
 
-  final proteinGrams = proteinPerKg * weightKg;
-  final fatGrams = fatPerKg * weightKg;
+  final proteinGrams = rates.proteinPerKg * weightKg;
+  final fatGrams = rates.fatPerKg * weightKg;
   final proteinCalories = proteinGrams * _kcalPerGramProtein;
   final fatCalories = fatGrams * _kcalPerGramFat;
   final carbCalories = targetCalories - proteinCalories - fatCalories;
