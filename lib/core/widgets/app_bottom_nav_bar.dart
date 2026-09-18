@@ -8,7 +8,8 @@ import '../router/app_routes.dart';
 enum AppNavTab { goals, profile }
 
 /// The bottom navigation bar shared by the home ("Goals") and profile
-/// screens: two tabs plus a raised center FAB that opens Add Food.
+/// screens: Goals, a disabled "Diary" placeholder, Food, and Profile tabs,
+/// plus a raised center FAB that also opens Add Food.
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({super.key, required this.currentTab});
 
@@ -41,7 +42,23 @@ class AppBottomNavBar extends StatelessWidget {
                   onTap: () => context.go(AppRoutes.homePath),
                 ),
               ),
+              const Expanded(
+                child: _NavItem(
+                  icon: Icons.menu_book_outlined,
+                  label: 'Diary',
+                  active: false,
+                  onTap: null,
+                ),
+              ),
               const Expanded(child: SizedBox.shrink()),
+              Expanded(
+                child: _NavItem(
+                  icon: Icons.restaurant_menu_outlined,
+                  label: 'Food',
+                  active: false,
+                  onTap: () => context.push(AppRoutes.foodSearchPath),
+                ),
+              ),
               Expanded(
                 child: _NavItem(
                   icon: Icons.person_outline,
@@ -75,7 +92,9 @@ class _NavItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool active;
-  final VoidCallback onTap;
+
+  /// Null disables the tab — used for destinations not built yet.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
