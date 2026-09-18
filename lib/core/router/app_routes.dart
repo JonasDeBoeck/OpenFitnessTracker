@@ -17,4 +17,12 @@ abstract final class AppRoutes {
   static const String scanBarcodeName = 'scan-barcode';
   static const String cropLabelPath = '/log-food/crop-label';
   static const String cropLabelName = 'crop-label';
+  static const String browseRecipesPath = '/log-food/browse-recipes';
+  static const String browseRecipesName = 'browse-recipes';
+  static const String createRecipePath = '/log-food/create-recipe';
+  static const String createRecipeName = 'create-recipe';
+  static const String addIngredientPath = '/log-food/create-recipe/add-ingredient';
+  static const String addIngredientName = 'add-ingredient';
+  static const String recipeDetailPath = '/log-food/recipe/:recipeId';
+  static const String recipeDetailName = 'recipe-detail';
 }

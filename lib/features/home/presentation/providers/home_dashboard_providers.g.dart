@@ -61,4 +61,4 @@ final class HomeDashboardProvider
   }
 }
 
-String _$homeDashboardHash() => r'fa230d63feab68eaef38ca88ae7dc7c292feaa7a';
+String _$homeDashboardHash() => r'95d4187cd57f6501696cdc8c790ab4a46f968b3d';

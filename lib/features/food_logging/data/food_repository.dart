@@ -60,14 +60,16 @@ class FoodRepository {
   Future<List<Food>> getRecentLoggedFoods({int limit = 10}) async {
     final entryRows =
         await (_db.select(_db.diaryEntries)
+              ..where((t) => t.foodId.isNotNull())
               ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)])
               ..limit(limit * 5))
             .get();
 
     final orderedUniqueFoodIds = <int>[];
     for (final entry in entryRows) {
-      if (!orderedUniqueFoodIds.contains(entry.foodId)) {
-        orderedUniqueFoodIds.add(entry.foodId);
+      final foodId = entry.foodId!;
+      if (!orderedUniqueFoodIds.contains(foodId)) {
+        orderedUniqueFoodIds.add(foodId);
       }
       if (orderedUniqueFoodIds.length >= limit) break;
     }

@@ -49,7 +49,7 @@ Future<HomeDashboardView?> homeDashboard(Ref ref) async {
           consumedCalories: sumCalories(entries.where((e) => e.mealType == type)),
           items: [
             for (final entry in entries.where((e) => e.mealType == type))
-              MealFoodItem(name: entry.foodName, calories: entry.calories),
+              MealFoodItem(name: entry.displayName, calories: entry.calories),
           ],
         ),
     ],
