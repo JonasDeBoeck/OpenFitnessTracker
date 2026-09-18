@@ -56,7 +56,7 @@ class AppBottomNavBar extends StatelessWidget {
         Positioned(
           top: -22,
           child: _AddFoodFab(
-            onTap: () => context.push(AppRoutes.addFoodPath),
+            onTap: () => context.push(AppRoutes.foodSearchPath),
           ),
         ),
       ],

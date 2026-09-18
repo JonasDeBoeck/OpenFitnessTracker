@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/models/meal_type.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/widgets/app_bottom_nav_bar.dart';
-import '../domain/models/meal_type.dart';
 import 'providers/home_dashboard_providers.dart';
 import 'theme/dashboard_colors.dart';
 import 'widgets/calorie_gauge_card.dart';
@@ -78,6 +78,6 @@ class HomeScreen extends ConsumerWidget {
   }
 
   void _openAddFood(BuildContext context, MealType mealType) {
-    context.push(AppRoutes.addFoodPath, extra: mealType);
+    context.push(AppRoutes.foodSearchPath, extra: mealType);
   }
 }
