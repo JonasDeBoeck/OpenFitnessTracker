@@ -1,0 +1,7 @@
+export 'presentation/add_product/add_product_launch_args.dart';
+export 'presentation/add_product/add_product_screen.dart';
+export 'presentation/barcode/barcode_scanner_screen.dart';
+export 'presentation/browse/browse_foods_screen.dart';
+export 'presentation/detail/food_detail_screen.dart';
+export 'presentation/providers/diary_providers.dart';
+export 'presentation/search/food_search_screen.dart';

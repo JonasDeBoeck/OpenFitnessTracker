@@ -8,16 +8,18 @@ part of 'home_dashboard_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Derives the home dashboard's view-model from the persisted [UserProfile].
-/// Returns null while there is no profile yet (the router redirects to
-/// onboarding in that case, so this is mostly defensive).
+/// Derives the home dashboard's view-model from the persisted [UserProfile]
+/// plus today's diary entries. Returns null while there is no profile yet
+/// (the router redirects to onboarding in that case, so this is mostly
+/// defensive).
 
 @ProviderFor(homeDashboard)
 final homeDashboardProvider = HomeDashboardProvider._();
 
-/// Derives the home dashboard's view-model from the persisted [UserProfile].
-/// Returns null while there is no profile yet (the router redirects to
-/// onboarding in that case, so this is mostly defensive).
+/// Derives the home dashboard's view-model from the persisted [UserProfile]
+/// plus today's diary entries. Returns null while there is no profile yet
+/// (the router redirects to onboarding in that case, so this is mostly
+/// defensive).
 
 final class HomeDashboardProvider
     extends
@@ -29,9 +31,10 @@ final class HomeDashboardProvider
     with
         $FutureModifier<HomeDashboardView?>,
         $FutureProvider<HomeDashboardView?> {
-  /// Derives the home dashboard's view-model from the persisted [UserProfile].
-  /// Returns null while there is no profile yet (the router redirects to
-  /// onboarding in that case, so this is mostly defensive).
+  /// Derives the home dashboard's view-model from the persisted [UserProfile]
+  /// plus today's diary entries. Returns null while there is no profile yet
+  /// (the router redirects to onboarding in that case, so this is mostly
+  /// defensive).
   HomeDashboardProvider._()
     : super(
         from: null,
@@ -58,4 +61,4 @@ final class HomeDashboardProvider
   }
 }
 
-String _$homeDashboardHash() => r'b73a7acaf0c773e0f1ac71baa5f5e55eb2537c2b';
+String _$homeDashboardHash() => r'fa230d63feab68eaef38ca88ae7dc7c292feaa7a';

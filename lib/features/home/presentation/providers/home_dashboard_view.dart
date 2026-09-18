@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/models/meal_type.dart';
 import '../../../onboarding/domain/models/goal.dart';
-import '../../domain/models/meal_type.dart';
 import '../theme/dashboard_colors.dart';
 
 /// One macro's progress against its daily target.
@@ -77,29 +77,27 @@ class HomeDashboardView {
     required double proteinGrams,
     required double fatGrams,
     required double carbGrams,
+    required double consumedProteinGrams,
+    required double consumedFatGrams,
+    required double consumedCarbGrams,
   }) => [
     MacroProgress(
       name: 'Protein',
       color: DashboardColors.macroProtein,
-      consumedGrams: 0,
+      consumedGrams: consumedProteinGrams,
       targetGrams: proteinGrams,
     ),
     MacroProgress(
       name: 'Fat',
       color: DashboardColors.macroFat,
-      consumedGrams: 0,
+      consumedGrams: consumedFatGrams,
       targetGrams: fatGrams,
     ),
     MacroProgress(
       name: 'Carbs',
       color: DashboardColors.macroCarb,
-      consumedGrams: 0,
+      consumedGrams: consumedCarbGrams,
       targetGrams: carbGrams,
     ),
-  ];
-
-  static List<MealSection> emptyMeals() => [
-    for (final type in MealType.values)
-      MealSection(type: type, consumedCalories: 0, items: const []),
   ];
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/models/meal_type.dart';
+import '../../../../core/models/meal_type.dart';
 import '../providers/home_dashboard_view.dart';
 import '../theme/dashboard_colors.dart';
 import '../theme/dashboard_text_styles.dart';

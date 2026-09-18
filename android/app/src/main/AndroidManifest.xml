@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Barcode scanning (mobile_scanner) and photo capture (image_picker)
+         for the food-logging feature. -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+
     <application
         android:label="open_fitness_tracker"
         android:name="${applicationName}"
@@ -30,6 +34,21 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- image_cropper's crop UI (used only in the nutrition-label OCR
+             flow). Verify this activity/theme name against the installed
+             image_cropper version's own example manifest if the crop
+             screen fails to launch. -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!-- Pre-downloads the on-device OCR model (google_mlkit_text_recognition)
+             instead of fetching it lazily on first scan. -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
