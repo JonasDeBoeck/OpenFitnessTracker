@@ -91,9 +91,21 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _vitaminDController.text = state.vitaminDMcgPer100g?.toString() ?? '';
   }
 
+  /// Picks the raw photo, lets the user draw their own crop rectangle on
+  /// [LabelCropScreen], then runs OCR on the cropped result. Navigation
+  /// (pushing the crop screen and reading back its popped rectangle) has
+  /// to happen here rather than in the notifier — same reason barcode
+  /// scanning is a screen the caller awaits rather than a plain service
+  /// call.
   Future<void> _scanNutritionLabel(ImageSource source) async {
     final notifier = ref.read(_provider.notifier);
-    await notifier.scanNutritionLabel(source);
+    final rawPath = await notifier.pickLabelPhoto(source);
+    if (rawPath == null || !mounted) return;
+
+    final cropRect = await context.push<Rect>(AppRoutes.cropLabelPath, extra: rawPath);
+    if (cropRect == null || !mounted) return;
+
+    await notifier.scanCroppedLabel(imagePath: rawPath, cropRect: cropRect);
     if (!mounted) return;
     _syncControllersFromState(ref.read(_provider));
   }

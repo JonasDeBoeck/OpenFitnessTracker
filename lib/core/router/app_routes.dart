@@ -15,4 +15,6 @@ abstract final class AppRoutes {
   static const String addProductName = 'add-product';
   static const String scanBarcodePath = '/log-food/scan-barcode';
   static const String scanBarcodeName = 'scan-barcode';
+  static const String cropLabelPath = '/log-food/crop-label';
+  static const String cropLabelName = 'crop-label';
 }
