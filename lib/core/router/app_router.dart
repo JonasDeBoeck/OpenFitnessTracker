@@ -64,6 +64,29 @@ GoRouter appRouter(Ref ref) {
         name: AppRoutes.cropLabelName,
         builder: (context, state) => LabelCropScreen(imagePath: state.extra as String),
       ),
+      GoRoute(
+        path: AppRoutes.browseRecipesPath,
+        name: AppRoutes.browseRecipesName,
+        builder: (context, state) => BrowseRecipesScreen(mealType: state.extra as MealType?),
+      ),
+      GoRoute(
+        path: AppRoutes.createRecipePath,
+        name: AppRoutes.createRecipeName,
+        builder: (context, state) => const CreateRecipeScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.addIngredientPath,
+        name: AppRoutes.addIngredientName,
+        builder: (context, state) => const AddIngredientScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.recipeDetailPath,
+        name: AppRoutes.recipeDetailName,
+        builder: (context, state) => RecipeDetailScreen(
+          recipeId: int.parse(state.pathParameters['recipeId']!),
+          mealType: state.extra as MealType?,
+        ),
+      ),
     ],
     redirect: (context, state) async {
       final hasProfile =

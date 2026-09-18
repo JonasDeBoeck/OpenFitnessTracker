@@ -7,17 +7,25 @@ import '../../../../core/router/app_routes.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
+import '../../domain/models/recipe.dart';
 import '../add_product/add_product_launch_args.dart';
 import '../providers/favorite_toggle_notifier.dart';
 import '../providers/food_search_providers.dart';
+import '../providers/recipe_favorite_toggle_notifier.dart';
+import '../providers/recipe_search_providers.dart';
 import '../widgets/food_list_row.dart';
+import '../widgets/recipe_list_row.dart';
+
+enum _Mode { foods, recipes }
 
 enum _RecentTab { recent, favorites }
 
-/// Search screen for adding food to a meal (or, from the bottom-nav FAB,
-/// with no meal preset). Shows Recent/Favorites when the search box is
-/// empty, live search results otherwise, plus entry points to barcode
-/// scanning, manual entry, and browsing the whole catalog A-Z.
+/// Search screen for adding food — or a recipe — to a meal (or, from the
+/// bottom-nav FAB, with no meal preset). A Foods/Recipes switch at the top
+/// picks which catalog is being searched/browsed; each mode still shows
+/// Recent/Favorites when its search box is empty, live search results
+/// otherwise, plus its own entry points (barcode/manual entry for foods,
+/// create for recipes) and a Browse all A-Z link.
 class FoodSearchScreen extends ConsumerStatefulWidget {
   const FoodSearchScreen({super.key, this.mealType});
 
@@ -29,6 +37,7 @@ class FoodSearchScreen extends ConsumerStatefulWidget {
 
 class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   final _searchController = TextEditingController();
+  _Mode _mode = _Mode.foods;
   _RecentTab _tab = _RecentTab.recent;
   String _query = '';
 
@@ -42,10 +51,21 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     context.push('/log-food/food/${food.id}', extra: widget.mealType);
   }
 
+  void _openRecipe(Recipe recipe) {
+    context.push('/log-food/recipe/${recipe.id}', extra: widget.mealType);
+  }
+
   Future<void> _toggleFavorite(Food food) async {
     await ref.read(favoriteToggleProvider.notifier).toggle(food.id!);
     if (_query.trim().isNotEmpty) {
       ref.invalidate(foodSearchResultsProvider(_query.trim()));
+    }
+  }
+
+  Future<void> _toggleRecipeFavorite(Recipe recipe) async {
+    await ref.read(recipeFavoriteToggleProvider.notifier).toggle(recipe.id!);
+    if (_query.trim().isNotEmpty) {
+      ref.invalidate(recipeSearchResultsProvider(_query.trim()));
     }
   }
 
@@ -73,14 +93,23 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     );
   }
 
+  void _createRecipe() {
+    context.push(AppRoutes.createRecipePath);
+  }
+
   void _browseAll() {
-    context.push(AppRoutes.browseFoodsPath, extra: widget.mealType);
+    if (_mode == _Mode.foods) {
+      context.push(AppRoutes.browseFoodsPath, extra: widget.mealType);
+    } else {
+      context.push(AppRoutes.browseRecipesPath, extra: widget.mealType);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final title = widget.mealType == null ? 'Log food' : 'Log food to ${widget.mealType!.label}';
     final hasQuery = _query.trim().isNotEmpty;
+    final isFoods = _mode == _Mode.foods;
 
     return Scaffold(
       backgroundColor: DashboardColors.pageBackground,
@@ -102,6 +131,28 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _ModeButton(
+                      label: 'Foods',
+                      active: isFoods,
+                      onTap: () => setState(() => _mode = _Mode.foods),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _ModeButton(
+                      label: 'Recipes',
+                      active: !isFoods,
+                      onTap: () => setState(() => _mode = _Mode.recipes),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
               child: Container(
                 height: 52,
@@ -118,8 +169,8 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
                       child: TextField(
                         controller: _searchController,
                         onChanged: (value) => setState(() => _query = value),
-                        decoration: const InputDecoration(
-                          hintText: 'Search foods',
+                        decoration: InputDecoration(
+                          hintText: isFoods ? 'Search foods' : 'Search recipes',
                           border: InputBorder.none,
                           isDense: true,
                         ),
@@ -140,35 +191,47 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _scanBarcode,
-                      icon: const Icon(Icons.qr_code_scanner, size: 16),
-                      label: const Text('Scan barcode'),
+              child: isFoods
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _scanBarcode,
+                            icon: const Icon(Icons.qr_code_scanner, size: 16),
+                            label: const Text('Scan barcode'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: DashboardColors.primary,
+                              side: const BorderSide(color: Color(0xFFC7C2AC), width: 1.5, style: BorderStyle.solid),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _addManually,
+                            icon: const Icon(Icons.edit_outlined, size: 16),
+                            label: const Text('Add manually'),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: DashboardColors.primary,
+                              side: const BorderSide(color: Color(0xFFC7C2AC), width: 1.5, style: BorderStyle.solid),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : OutlinedButton.icon(
+                      onPressed: _createRecipe,
+                      icon: const Icon(Icons.add, size: 16),
+                      label: const Text('Create recipe'),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: DashboardColors.primary,
+                        minimumSize: const Size.fromHeight(44),
                         side: const BorderSide(color: Color(0xFFC7C2AC), width: 1.5, style: BorderStyle.solid),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _addManually,
-                      icon: const Icon(Icons.edit_outlined, size: 16),
-                      label: const Text('Add manually'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: DashboardColors.primary,
-                        side: const BorderSide(color: Color(0xFFC7C2AC), width: 1.5, style: BorderStyle.solid),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
@@ -177,7 +240,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
                 child: TextButton.icon(
                   onPressed: _browseAll,
                   icon: const Icon(Icons.arrow_forward, size: 16),
-                  label: const Text('Browse all foods (A–Z)'),
+                  label: Text(isFoods ? 'Browse all foods (A–Z)' : 'Browse all recipes (A–Z)'),
                   style: TextButton.styleFrom(foregroundColor: DashboardColors.primary),
                 ),
               ),
@@ -208,7 +271,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildList(hasQuery),
+                child: isFoods ? _buildFoodList(hasQuery) : _buildRecipeList(hasQuery),
               ),
             ),
           ],
@@ -217,7 +280,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     );
   }
 
-  Widget _buildList(bool hasQuery) {
+  Widget _buildFoodList(bool hasQuery) {
     final AsyncValue<List<Food>> asyncFoods = hasQuery
         ? ref.watch(foodSearchResultsProvider(_query.trim()))
         : _tab == _RecentTab.recent
@@ -251,6 +314,78 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildRecipeList(bool hasQuery) {
+    final AsyncValue<List<Recipe>> asyncRecipes = hasQuery
+        ? ref.watch(recipeSearchResultsProvider(_query.trim()))
+        : _tab == _RecentTab.recent
+            ? ref.watch(recentRecipesProvider)
+            : ref.watch(favoriteRecipesProvider);
+
+    return asyncRecipes.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => Center(child: Text('Could not load recipes: $error')),
+      data: (recipes) {
+        if (recipes.isEmpty) {
+          return Center(
+            child: Text(
+              hasQuery ? 'No recipes match "${_query.trim()}".' : 'Save a recipe to see it here.',
+              style: DashboardTextStyles.mealEmpty,
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.only(bottom: 24),
+          itemCount: recipes.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final recipe = recipes[index];
+            return RecipeListRow(
+              recipe: recipe,
+              onTap: () => _openRecipe(recipe),
+              onToggleFavorite: () => _toggleRecipeFavorite(recipe),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ModeButton extends StatelessWidget {
+  const _ModeButton({required this.label, required this.active, required this.onTap});
+
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: active ? DashboardColors.primary : DashboardColors.surface,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          height: 42,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: active ? DashboardColors.primary : DashboardColors.border, width: 1.5),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: DashboardTextStyles.sectionTitle.copyWith(
+              fontSize: 13.5,
+              color: active ? DashboardColors.surface : DashboardColors.textSecondary,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

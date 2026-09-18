@@ -146,3 +146,57 @@ abstract class _$LogFoodNotifier extends $AsyncNotifier<void> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// [LogFoodNotifier]'s recipe counterpart — the one place a diary entry
+/// gets written from the Recipe Detail screen.
+
+@ProviderFor(LogRecipeNotifier)
+final logRecipeProvider = LogRecipeNotifierProvider._();
+
+/// [LogFoodNotifier]'s recipe counterpart — the one place a diary entry
+/// gets written from the Recipe Detail screen.
+final class LogRecipeNotifierProvider
+    extends $AsyncNotifierProvider<LogRecipeNotifier, void> {
+  /// [LogFoodNotifier]'s recipe counterpart — the one place a diary entry
+  /// gets written from the Recipe Detail screen.
+  LogRecipeNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'logRecipeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$logRecipeNotifierHash();
+
+  @$internal
+  @override
+  LogRecipeNotifier create() => LogRecipeNotifier();
+}
+
+String _$logRecipeNotifierHash() => r'e982de6d2849cad7b499eae0b536ed4a9d51376f';
+
+/// [LogFoodNotifier]'s recipe counterpart — the one place a diary entry
+/// gets written from the Recipe Detail screen.
+
+abstract class _$LogRecipeNotifier extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

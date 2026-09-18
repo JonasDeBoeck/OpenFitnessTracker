@@ -5,7 +5,9 @@ import '../../../../core/models/meal_type.dart';
 import '../../data/diary_repository.dart';
 import '../../domain/models/diary_entry.dart';
 import '../../domain/models/food.dart';
+import '../../domain/models/recipe.dart';
 import 'food_search_providers.dart';
+import 'recipe_search_providers.dart';
 
 part 'diary_providers.g.dart';
 
@@ -42,6 +44,33 @@ class LogFoodNotifier extends _$LogFoodNotifier {
       // enough for Riverpod to recompute the dashboard too.
       ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(DateTime.now())));
       ref.invalidate(recentFoodsProvider);
+    });
+  }
+}
+
+/// [LogFoodNotifier]'s recipe counterpart — the one place a diary entry
+/// gets written from the Recipe Detail screen.
+@riverpod
+class LogRecipeNotifier extends _$LogRecipeNotifier {
+  @override
+  Future<void> build() async {}
+
+  Future<void> logRecipe({
+    required Recipe recipe,
+    required double quantityGrams,
+    required MealType mealType,
+  }) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final entry = DiaryEntry.snapshotFromRecipe(
+        recipe: recipe,
+        quantityGrams: quantityGrams,
+        mealType: mealType,
+        loggedAt: DateTime.now(),
+      );
+      await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
+      ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(DateTime.now())));
+      ref.invalidate(recentRecipesProvider);
     });
   }
 }

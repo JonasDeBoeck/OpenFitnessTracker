@@ -8,8 +8,10 @@ part of 'diary_entry.dart';
 
 _DiaryEntry _$DiaryEntryFromJson(Map<String, dynamic> json) => _DiaryEntry(
   id: (json['id'] as num?)?.toInt(),
-  foodId: (json['foodId'] as num).toInt(),
-  foodName: json['foodName'] as String,
+  foodId: (json['foodId'] as num?)?.toInt(),
+  foodName: json['foodName'] as String?,
+  recipeId: (json['recipeId'] as num?)?.toInt(),
+  recipeName: json['recipeName'] as String?,
   mealType: $enumDecode(_$MealTypeEnumMap, json['mealType']),
   loggedAt: DateTime.parse(json['loggedAt'] as String),
   quantityGrams: (json['quantityGrams'] as num).toDouble(),
@@ -33,6 +35,8 @@ Map<String, dynamic> _$DiaryEntryToJson(_DiaryEntry instance) =>
       'id': instance.id,
       'foodId': instance.foodId,
       'foodName': instance.foodName,
+      'recipeId': instance.recipeId,
+      'recipeName': instance.recipeName,
       'mealType': _$MealTypeEnumMap[instance.mealType]!,
       'loggedAt': instance.loggedAt.toIso8601String(),
       'quantityGrams': instance.quantityGrams,
