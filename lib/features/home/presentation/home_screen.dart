@@ -7,11 +7,11 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/widgets/app_bottom_nav_bar.dart';
 import 'providers/home_dashboard_providers.dart';
 import 'theme/dashboard_colors.dart';
+import 'theme/dashboard_text_styles.dart';
 import 'widgets/calorie_gauge_card.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/macro_progress_card.dart';
 import 'widgets/meal_section_card.dart';
-import 'widgets/today_section_header.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        TodaySectionHeader(goal: dashboard.goal),
+                        Text('Today', style: DashboardTextStyles.sectionTitle),
                         const SizedBox(height: 14),
                         CalorieGaugeCard(
                           consumedCalories: dashboard.consumedCalories,
