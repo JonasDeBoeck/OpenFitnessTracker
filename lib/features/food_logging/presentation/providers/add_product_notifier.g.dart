@@ -60,7 +60,7 @@ final class AddProductNotifierProvider
 }
 
 String _$addProductNotifierHash() =>
-    r'd5561138e6a4b7788d70b63efe3d95a564499bcd';
+    r'0195d89ec2526b3f27b179d3222c519a948f1305';
 
 final class AddProductNotifierFamily extends $Family
     with

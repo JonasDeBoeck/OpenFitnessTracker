@@ -35,15 +35,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- image_cropper's crop UI (used only in the nutrition-label OCR
-             flow). Verify this activity/theme name against the installed
-             image_cropper version's own example manifest if the crop
-             screen fails to launch. -->
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
         <!-- Pre-downloads the on-device OCR model (google_mlkit_text_recognition)
              instead of fetching it lazily on first scan. -->
         <meta-data

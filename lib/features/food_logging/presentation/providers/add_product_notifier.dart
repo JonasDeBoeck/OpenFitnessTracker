@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show DateUtils;
+import 'package:flutter/material.dart' show DateUtils, Rect;
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -6,6 +6,7 @@ import '../../../../core/models/meal_type.dart';
 import '../../data/diary_repository.dart';
 import '../../data/food_repository.dart';
 import '../../data/services/food_photo_service.dart';
+import '../../data/services/image_crop_service.dart';
 import '../../data/services/nutrition_label_ocr_service.dart';
 import '../../domain/exceptions/duplicate_barcode_exception.dart';
 import '../../domain/models/diary_entry.dart';
@@ -72,16 +73,28 @@ class AddProductNotifier extends _$AddProductNotifier {
     }
   }
 
-  Future<void> scanNutritionLabel(ImageSource source) async {
+  /// Picks the raw label photo, before cropping. Returns null if the user
+  /// cancels the picker.
+  Future<String?> pickLabelPhoto(ImageSource source) {
+    return ref.read(nutritionLabelOcrServiceProvider).pickPhoto(source: source);
+  }
+
+  /// Crops the picked photo to [cropRect] (chosen by the user dragging the
+  /// crop screen's corner handles, in the photo's own pixel coordinates)
+  /// and runs OCR on the result.
+  Future<void> scanCroppedLabel({
+    required String imagePath,
+    required Rect cropRect,
+  }) async {
     state = state.copyWith(isScanningLabel: true, ocrError: null);
     try {
+      final croppedPath = await ref.read(imageCropServiceProvider).cropToFile(
+            sourcePath: imagePath,
+            cropRect: cropRect,
+          );
       final parsed = await ref
           .read(nutritionLabelOcrServiceProvider)
-          .captureAndScan(source: source);
-      if (parsed == null) {
-        state = state.copyWith(isScanningLabel: false);
-        return;
-      }
+          .recognizeLabel(imagePath: croppedPath);
       state = state.copyWith(
         isScanningLabel: false,
         ocrPer100gColumnFound: parsed.matchedPer100gColumn,

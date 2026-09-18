@@ -59,6 +59,11 @@ GoRouter appRouter(Ref ref) {
         name: AppRoutes.scanBarcodeName,
         builder: (context, state) => const BarcodeScannerScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.cropLabelPath,
+        name: AppRoutes.cropLabelName,
+        builder: (context, state) => LabelCropScreen(imagePath: state.extra as String),
+      ),
     ],
     redirect: (context, state) async {
       final hasProfile =
