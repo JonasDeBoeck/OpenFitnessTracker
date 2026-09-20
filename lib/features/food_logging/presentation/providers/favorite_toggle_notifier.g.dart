@@ -20,7 +20,7 @@ final class FavoriteToggleNotifierProvider
         argument: null,
         retry: null,
         name: r'favoriteToggleProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -34,7 +34,7 @@ final class FavoriteToggleNotifierProvider
 }
 
 String _$favoriteToggleNotifierHash() =>
-    r'faf54839c7e1d0adfd8dbb2425d42739dffe9827';
+    r'6ef723f7520a552b9c2c22d0bf9ed1870f41e91c';
 
 abstract class _$FavoriteToggleNotifier extends $AsyncNotifier<void> {
   FutureOr<void> build();

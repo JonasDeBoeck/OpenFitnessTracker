@@ -6,7 +6,7 @@ import 'food_search_providers.dart';
 
 part 'favorite_toggle_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class FavoriteToggleNotifier extends _$FavoriteToggleNotifier {
   @override
   Future<void> build() async {}
