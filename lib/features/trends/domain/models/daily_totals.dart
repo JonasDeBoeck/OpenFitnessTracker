@@ -7,6 +7,7 @@ class DailyTotals {
     required this.protein,
     required this.fat,
     required this.carbs,
+    required this.waterMl,
   });
 
   final DateTime date;
@@ -14,4 +15,5 @@ class DailyTotals {
   final double protein;
   final double fat;
   final double carbs;
+  final double waterMl;
 }

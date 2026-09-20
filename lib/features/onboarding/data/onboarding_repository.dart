@@ -47,6 +47,7 @@ class OnboardingRepository {
             proteinGrams: profile.proteinGrams,
             fatGrams: profile.fatGrams,
             carbGrams: profile.carbGrams,
+            waterTargetMl: Value(profile.waterTargetMl),
           ),
         );
   }
@@ -67,6 +68,7 @@ class OnboardingRepository {
       proteinGrams: row.proteinGrams,
       fatGrams: row.fatGrams,
       carbGrams: row.carbGrams,
+      waterTargetMl: row.waterTargetMl,
       createdAt: row.createdAt,
     );
   }

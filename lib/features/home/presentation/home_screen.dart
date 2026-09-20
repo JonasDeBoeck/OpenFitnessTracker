@@ -6,6 +6,7 @@ import '../../../core/models/meal_type.dart';
 import '../../../core/router/app_routes.dart';
 import '../../../core/widgets/app_bottom_nav_bar.dart';
 import '../../diary/diary.dart';
+import '../../water/water.dart';
 import 'providers/home_dashboard_providers.dart';
 import 'theme/dashboard_colors.dart';
 import 'theme/dashboard_text_styles.dart';
@@ -17,6 +18,8 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardAsync = ref.watch(homeDashboardProvider);
+    final today = DateUtils.dateOnly(DateTime.now());
+    final waterDayAsync = ref.watch(waterDayProvider(today));
 
     return Scaffold(
       backgroundColor: DashboardColors.pageBackground,
@@ -52,6 +55,23 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 20),
                         MacroProgressCard(macros: dashboard.macros),
                         const SizedBox(height: 20),
+                        if (waterDayAsync.value case final waterDay?) ...[
+                          WaterProgressCard(day: waterDay),
+                          const SizedBox(height: 20),
+                          WaterLogCard(
+                            entries: waterDay.entries,
+                            onQuickAdd: (ml) => ref
+                                .read(waterLogControllerProvider.notifier)
+                                .add(today, ml),
+                            onCustomAdd: (ml) => ref
+                                .read(waterLogControllerProvider.notifier)
+                                .add(today, ml),
+                            onDelete: (id) => ref
+                                .read(waterLogControllerProvider.notifier)
+                                .delete(today, id),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                         for (var i = 0; i < dashboard.meals.length; i++) ...[
                           if (i > 0) const SizedBox(height: 20),
                           MealSectionCard(

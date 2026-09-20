@@ -22,6 +22,8 @@ abstract final class DashboardColors {
   static const Color macroProtein = Color(0xFF3C6E4F);
   static const Color macroFat = Color(0xFFC77B2E);
   static const Color macroCarb = Color(0xFF5B7A99);
+  static const Color water = Color(0xFF2E86C7);
+  static const Color waterCardBackground = Color(0xFFDCEEF7);
 
   static const Color tooltipBackground = Color(0xFF1C1C17);
   static const Color tooltipText = Color(0xFFFBFAF2);

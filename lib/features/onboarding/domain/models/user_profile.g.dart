@@ -21,6 +21,7 @@ _UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => _UserProfile(
   proteinGrams: (json['proteinGrams'] as num).toDouble(),
   fatGrams: (json['fatGrams'] as num).toDouble(),
   carbGrams: (json['carbGrams'] as num).toDouble(),
+  waterTargetMl: (json['waterTargetMl'] as num).toDouble(),
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -42,6 +43,7 @@ Map<String, dynamic> _$UserProfileToJson(_UserProfile instance) =>
       'proteinGrams': instance.proteinGrams,
       'fatGrams': instance.fatGrams,
       'carbGrams': instance.carbGrams,
+      'waterTargetMl': instance.waterTargetMl,
       'createdAt': instance.createdAt?.toIso8601String(),
     };
 

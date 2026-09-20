@@ -166,9 +166,23 @@ class _FormulaCard extends StatelessWidget {
           'Carbs · 4 kcal/g (remainder)',
           '(${_fmt(profile.targetCalories)} − ${_fmt(proteinKcal)} − ${_fmt(fatKcal)}) ÷ 4 = ${_fmt(profile.carbGrams)} g',
         ),
+        const SizedBox(height: 10),
+        _FormulaLine(
+          'Water · Holliday-Segar',
+          '${_waterFormula(profile.weightKg)} = ${_fmt(profile.waterTargetMl)} mL',
+        ),
       ],
     );
   }
+}
+
+/// The Holliday-Segar tiers that apply for [weightKg], as displayable text:
+/// 100 mL/kg for the first 10 kg, 50 mL/kg for the next 10 kg, 20 mL/kg for
+/// every kg above 20 kg.
+String _waterFormula(double weightKg) {
+  if (weightKg <= 10) return '${_fmt(weightKg)}kg × 100';
+  if (weightKg <= 20) return '10kg × 100 + ${_fmt(weightKg - 10)}kg × 50';
+  return '10kg × 100 + 10kg × 50 + ${_fmt(weightKg - 20)}kg × 20';
 }
 
 class _ResultsCard extends StatelessWidget {
@@ -216,6 +230,13 @@ class _ResultsCard extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          _MacroFigure(
+            'Water',
+            profile.waterTargetMl,
+            DashboardColors.water,
+            unit: 'mL',
+          ),
         ],
       ),
     );
@@ -223,11 +244,12 @@ class _ResultsCard extends StatelessWidget {
 }
 
 class _MacroFigure extends StatelessWidget {
-  const _MacroFigure(this.label, this.grams, this.color);
+  const _MacroFigure(this.label, this.amount, this.color, {this.unit = 'g'});
 
   final String label;
-  final double grams;
+  final double amount;
   final Color color;
+  final String unit;
 
   @override
   Widget build(BuildContext context) {
@@ -240,7 +262,7 @@ class _MacroFigure extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text('$label ${_fmt(grams)}g', style: DashboardTextStyles.macroNums),
+        Text('$label ${_fmt(amount)}$unit', style: DashboardTextStyles.macroNums),
       ],
     );
   }

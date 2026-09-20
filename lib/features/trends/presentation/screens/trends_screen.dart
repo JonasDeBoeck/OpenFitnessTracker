@@ -90,6 +90,16 @@ class TrendsScreen extends ConsumerWidget {
                               average: trends.avgCarbs,
                               unit: 'g',
                             ),
+                            const SizedBox(height: 20),
+                            TrendsLineChartCard(
+                              title: 'Water',
+                              color: DashboardColors.water,
+                              dailyTotals: trends.dailyTotals,
+                              valueOf: (d) => d.waterMl,
+                              target: trends.targetWaterMl,
+                              average: trends.avgWaterMl,
+                              unit: ' mL',
+                            ),
                           ],
                         );
                       },
