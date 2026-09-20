@@ -5,11 +5,11 @@ import '../router/app_routes.dart';
 
 /// Which primary tab is currently active, for [AppBottomNavBar] to
 /// highlight.
-enum AppNavTab { goals, diary, profile }
+enum AppNavTab { goals, diary, trends, profile }
 
-/// The bottom navigation bar shared by the home ("Goals"), diary, and
-/// profile screens: Goals, Diary, Food, and Profile tabs, plus a raised
-/// center FAB that also opens Add Food.
+/// The bottom navigation bar shared by the home ("Goals"), diary, trends,
+/// and profile screens: Goals, Diary, Trends, and Profile tabs, plus a
+/// raised center FAB that opens Add Food.
 class AppBottomNavBar extends StatelessWidget {
   const AppBottomNavBar({super.key, required this.currentTab});
 
@@ -53,10 +53,10 @@ class AppBottomNavBar extends StatelessWidget {
               const Expanded(child: SizedBox.shrink()),
               Expanded(
                 child: _NavItem(
-                  icon: Icons.restaurant_menu_outlined,
-                  label: 'Food',
-                  active: false,
-                  onTap: () => context.push(AppRoutes.foodSearchPath),
+                  icon: Icons.show_chart,
+                  label: 'Trends',
+                  active: currentTab == AppNavTab.trends,
+                  onTap: () => context.go(AppRoutes.trendsPath),
                 ),
               ),
               Expanded(

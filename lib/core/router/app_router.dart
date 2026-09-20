@@ -9,6 +9,7 @@ import '../../features/onboarding/domain/models/user_profile.dart';
 import '../../features/onboarding/presentation/wizard/onboarding_wizard_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/profile/presentation/targets_calculation_screen.dart';
+import '../../features/trends/trends.dart';
 import '../models/meal_type.dart';
 import 'app_routes.dart';
 
@@ -44,6 +45,11 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.diaryPath,
         name: AppRoutes.diaryName,
         builder: (context, state) => const DiaryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.trendsPath,
+        name: AppRoutes.trendsName,
+        builder: (context, state) => const TrendsScreen(),
       ),
       GoRoute(
         path: AppRoutes.foodSearchPath,
