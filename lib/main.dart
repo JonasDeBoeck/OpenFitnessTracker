@@ -16,6 +16,7 @@ class MainApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
+      title: 'Open Fitness Tracker',
       routerConfig: router,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

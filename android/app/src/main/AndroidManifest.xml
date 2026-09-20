@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
-        android:label="open_fitness_tracker"
+        android:label="Open Fitness Tracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
