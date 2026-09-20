@@ -25,7 +25,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -48,6 +48,12 @@ class AppDatabase extends _$AppDatabase {
       if (from < 4) {
         await migrator.createTable(waterEntries);
         await migrator.addColumn(userProfiles, userProfiles.waterTargetMl);
+      }
+      if (from < 5) {
+        await migrator.addColumn(userProfiles, userProfiles.customTargetCalories);
+        await migrator.addColumn(userProfiles, userProfiles.customProteinPerKg);
+        await migrator.addColumn(userProfiles, userProfiles.customFatPerKg);
+        await migrator.addColumn(userProfiles, userProfiles.customWaterTargetMl);
       }
     },
   );
