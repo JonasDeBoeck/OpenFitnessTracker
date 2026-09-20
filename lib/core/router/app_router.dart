@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/diary/diary.dart';
 import '../../features/food_logging/food_logging.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/providers/profile_providers.dart';
@@ -30,6 +31,11 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.profilePath,
         name: AppRoutes.profileName,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.diaryPath,
+        name: AppRoutes.diaryName,
+        builder: (context, state) => const DiaryScreen(),
       ),
       GoRoute(
         path: AppRoutes.foodSearchPath,
