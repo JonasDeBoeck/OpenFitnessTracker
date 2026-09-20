@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/meal_type.dart';
+import '../../../food_logging/domain/models/diary_entry.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../onboarding/domain/models/goal.dart';
 
@@ -22,15 +23,10 @@ class MacroProgress {
       targetGrams <= 0 ? 0 : (consumedGrams / targetGrams).clamp(0, 1);
 }
 
-/// A single logged food item within a meal.
-class MealFoodItem {
-  const MealFoodItem({required this.name, required this.calories});
-
-  final String name;
-  final double calories;
-}
-
-/// One meal's section of a day overview.
+/// One meal's section of a day overview. [items] are the full [DiaryEntry]
+/// rows (not a trimmed projection) — the edit/delete UI needs their id,
+/// foodId/recipeId, and quantityGrams, and everything else in [DiaryEntry]
+/// is already what the read-only display needs too.
 class MealSection {
   const MealSection({
     required this.type,
@@ -46,7 +42,7 @@ class MealSection {
   final double proteinGrams;
   final double fatGrams;
   final double carbGrams;
-  final List<MealFoodItem> items;
+  final List<DiaryEntry> items;
 }
 
 /// Fully derived view-model for a single day's diary: the user's targets

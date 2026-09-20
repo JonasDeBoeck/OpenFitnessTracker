@@ -200,3 +200,70 @@ abstract class _$LogRecipeNotifier extends $AsyncNotifier<void> {
     return element.handleCreate(ref, build);
   }
 }
+
+/// Deletes and edits already-logged diary entries (the Goals/Diary screens'
+/// swipe-to-delete and tap-to-edit-quantity flows). `keepAlive` because
+/// nothing watches this provider's own state — an autoDispose notifier with
+/// no listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
+
+@ProviderFor(DiaryEntryController)
+final diaryEntryControllerProvider = DiaryEntryControllerProvider._();
+
+/// Deletes and edits already-logged diary entries (the Goals/Diary screens'
+/// swipe-to-delete and tap-to-edit-quantity flows). `keepAlive` because
+/// nothing watches this provider's own state — an autoDispose notifier with
+/// no listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
+final class DiaryEntryControllerProvider
+    extends $AsyncNotifierProvider<DiaryEntryController, void> {
+  /// Deletes and edits already-logged diary entries (the Goals/Diary screens'
+  /// swipe-to-delete and tap-to-edit-quantity flows). `keepAlive` because
+  /// nothing watches this provider's own state — an autoDispose notifier with
+  /// no listener can be torn down mid-`await` here, silently dropping the
+  /// invalidation that follows.
+  DiaryEntryControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'diaryEntryControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$diaryEntryControllerHash();
+
+  @$internal
+  @override
+  DiaryEntryController create() => DiaryEntryController();
+}
+
+String _$diaryEntryControllerHash() =>
+    r'b3b7d5e76f4dfd333d2b890311d0921afa415eaf';
+
+/// Deletes and edits already-logged diary entries (the Goals/Diary screens'
+/// swipe-to-delete and tap-to-edit-quantity flows). `keepAlive` because
+/// nothing watches this provider's own state — an autoDispose notifier with
+/// no listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
+
+abstract class _$DiaryEntryController extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

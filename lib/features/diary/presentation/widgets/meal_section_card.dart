@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/models/meal_type.dart';
+import '../../../../core/widgets/confirm_delete_dialog.dart';
+import '../../../food_logging/domain/models/diary_entry.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/diary_day_view.dart';
@@ -19,10 +21,14 @@ class MealSectionCard extends StatelessWidget {
     super.key,
     required this.meal,
     required this.onAddFood,
+    required this.onDeleteItem,
+    required this.onEditItem,
   });
 
   final MealSection meal;
   final VoidCallback onAddFood;
+  final ValueChanged<int> onDeleteItem;
+  final ValueChanged<DiaryEntry> onEditItem;
 
   @override
   Widget build(BuildContext context) {
@@ -95,22 +101,54 @@ class MealSectionCard extends StatelessWidget {
             Column(
               children: [
                 for (final item in meal.items)
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 7),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: DashboardColors.border),
+                  Dismissible(
+                    key: ValueKey(item.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(right: 14),
+                      decoration: BoxDecoration(
+                        color: DashboardColors.destructive,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.white,
+                        size: 18,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(item.name, style: DashboardTextStyles.mealItemName),
-                        Text(
-                          '${item.calories.toStringAsFixed(0)} kcal',
-                          style: DashboardTextStyles.mealItemKcal,
+                    confirmDismiss: (_) => showConfirmDeleteDialog(
+                      context,
+                      title: 'Delete this item?',
+                      message: '${item.displayName} will be removed from your log.',
+                    ),
+                    onDismissed: (_) => onDeleteItem(item.id!),
+                    child: Material(
+                      color: DashboardColors.card,
+                      child: InkWell(
+                        onTap: () => onEditItem(item),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 7),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(color: DashboardColors.border),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                item.displayName,
+                                style: DashboardTextStyles.mealItemName,
+                              ),
+                              Text(
+                                '${item.calories.toStringAsFixed(0)} kcal',
+                                style: DashboardTextStyles.mealItemKcal,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
               ],

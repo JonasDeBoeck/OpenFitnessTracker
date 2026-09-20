@@ -48,10 +48,7 @@ Future<DiaryDayView?> diaryDay(Ref ref, DateTime date) async {
         proteinGrams: sumBy(mealEntries, (e) => e.protein),
         fatGrams: sumBy(mealEntries, (e) => e.fat),
         carbGrams: sumBy(mealEntries, (e) => e.carbs),
-        items: [
-          for (final entry in mealEntries)
-            MealFoodItem(name: entry.displayName, calories: entry.calories),
-        ],
+        items: mealEntries,
       );
     }).toList(),
   );

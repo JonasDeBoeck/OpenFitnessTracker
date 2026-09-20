@@ -1,7 +1,7 @@
 import '../../../diary/diary.dart';
 import '../../../onboarding/domain/models/goal.dart';
 
-export '../../../diary/diary.dart' show MacroProgress, MealFoodItem, MealSection;
+export '../../../diary/diary.dart' show MacroProgress, MealSection;
 
 /// Fully derived view-model for the home dashboard: [DiaryDayView]'s "today"
 /// overview plus the greeting/date header that's specific to Home.

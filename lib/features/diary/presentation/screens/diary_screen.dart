@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/models/meal_type.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/app_bottom_nav_bar.dart';
+import '../../../food_logging/domain/models/diary_entry.dart';
+import '../../../food_logging/food_logging.dart';
+import '../../../food_logging/presentation/widgets/edit_diary_entry_sheet.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../../water/water.dart';
@@ -115,6 +118,14 @@ class DiaryScreen extends ConsumerWidget {
                                 meal: day.meals[i],
                                 onAddFood: () =>
                                     _openAddFood(context, day.meals[i].type),
+                                onDeleteItem: (id) => ref
+                                    .read(diaryEntryControllerProvider.notifier)
+                                    .delete(selectedDate, id),
+                                onEditItem: (entry) => _openEditSheet(
+                                  context,
+                                  selectedDate,
+                                  entry,
+                                ),
                               ),
                             ],
                           ],
@@ -134,6 +145,17 @@ class DiaryScreen extends ConsumerWidget {
 
   void _openAddFood(BuildContext context, MealType mealType) {
     context.push(AppRoutes.foodSearchPath, extra: mealType);
+  }
+
+  void _openEditSheet(BuildContext context, DateTime date, DiaryEntry entry) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: DashboardColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => EditDiaryEntrySheet(entry: entry, date: date),
+    );
   }
 }
 

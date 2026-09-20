@@ -77,7 +77,7 @@ final class DiaryDayProvider
   }
 }
 
-String _$diaryDayHash() => r'8e94bab944405469cda6f1fb9c562c1cc4f1d114';
+String _$diaryDayHash() => r'34db514d599e265f11b1c3606f7f81a1569f71cf';
 
 /// Derives a single day's diary view-model from the persisted [UserProfile]
 /// plus that day's diary entries. [date] is normalized to day-only before

@@ -29,4 +29,6 @@ abstract final class DashboardColors {
   static const Color tooltipText = Color(0xFFFBFAF2);
 
   static const Color favoriteActiveBackground = Color(0xFFFBF3E8);
+
+  static const Color destructive = Color(0xFFB5432E);
 }
