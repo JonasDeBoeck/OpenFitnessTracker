@@ -18,6 +18,18 @@ class DiaryRepository {
     return entry.copyWith(id: id);
   }
 
+  Future<void> updateEntry(DiaryEntry entry) async {
+    await (_db.update(
+      _db.diaryEntries,
+    )..where((t) => t.id.equals(entry.id!))).write(_toCompanion(entry));
+  }
+
+  Future<void> deleteEntry(int id) async {
+    await (_db.delete(
+      _db.diaryEntries,
+    )..where((t) => t.id.equals(id))).go();
+  }
+
   Future<List<DiaryEntry>> getEntriesForDate(DateTime date) async {
     final start = DateTime(date.year, date.month, date.day);
     final end = start.add(const Duration(days: 1));

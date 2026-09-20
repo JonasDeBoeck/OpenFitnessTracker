@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/confirm_delete_dialog.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/water_entry.dart';
@@ -113,25 +114,31 @@ class _WaterEntryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final time = TimeOfDay.fromDateTime(entry.loggedAt).format(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '${entry.milliliters.toStringAsFixed(0)} mL · $time',
-            style: DashboardTextStyles.mealItemName,
-          ),
-          IconButton(
-            onPressed: onDelete,
-            icon: const Icon(Icons.close, size: 15),
-            color: DashboardColors.textMuted,
-            iconSize: 15,
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
-            tooltip: 'Delete entry',
-          ),
-        ],
+    return Dismissible(
+      key: ValueKey(entry.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 14),
+        decoration: BoxDecoration(
+          color: DashboardColors.destructive,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
+      ),
+      confirmDismiss: (_) => showConfirmDeleteDialog(
+        context,
+        title: 'Delete this entry?',
+        message: '${entry.milliliters.toStringAsFixed(0)} mL will be removed from your log.',
+      ),
+      onDismissed: (_) => onDelete(),
+      child: Container(
+        color: DashboardColors.card,
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Text(
+          '${entry.milliliters.toStringAsFixed(0)} mL · $time',
+          style: DashboardTextStyles.mealItemName,
+        ),
       ),
     );
   }
