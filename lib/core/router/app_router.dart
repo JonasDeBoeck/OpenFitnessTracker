@@ -5,8 +5,10 @@ import '../../features/diary/diary.dart';
 import '../../features/food_logging/food_logging.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/providers/profile_providers.dart';
+import '../../features/onboarding/domain/models/user_profile.dart';
 import '../../features/onboarding/presentation/wizard/onboarding_wizard_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
+import '../../features/profile/presentation/targets_calculation_screen.dart';
 import '../models/meal_type.dart';
 import 'app_routes.dart';
 
@@ -31,6 +33,12 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.profilePath,
         name: AppRoutes.profileName,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.targetsCalculationPath,
+        name: AppRoutes.targetsCalculationName,
+        builder: (context, state) =>
+            TargetsCalculationScreen(profile: state.extra as UserProfile),
       ),
       GoRoute(
         path: AppRoutes.diaryPath,

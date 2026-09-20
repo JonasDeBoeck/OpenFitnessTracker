@@ -5,6 +5,8 @@ abstract final class AppRoutes {
   static const String onboardingName = 'onboarding';
   static const String profilePath = '/profile';
   static const String profileName = 'profile';
+  static const String targetsCalculationPath = '/profile/targets-calculation';
+  static const String targetsCalculationName = 'targets-calculation';
   static const String diaryPath = '/diary';
   static const String diaryName = 'diary';
   static const String foodSearchPath = '/log-food';
