@@ -37,6 +37,29 @@ class DiaryRepository {
     return entries.where((e) => e.mealType == mealType).toList();
   }
 
+  /// The distinct calendar dates (day-only, inclusive of both ends) with at
+  /// least one logged entry between [start] and [end]. Used to show "has
+  /// entries" dots on the diary calendar without fetching every entry.
+  Future<Set<DateTime>> getLoggedDatesInRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final rangeStart = DateTime(start.year, start.month, start.day);
+    final rangeEnd = DateTime(
+      end.year,
+      end.month,
+      end.day,
+    ).add(const Duration(days: 1));
+    final query = _db.selectOnly(_db.diaryEntries, distinct: true)
+      ..addColumns([_db.diaryEntries.loggedAt])
+      ..where(_db.diaryEntries.loggedAt.isBetweenValues(rangeStart, rangeEnd));
+    final rows = await query.get();
+    return rows
+        .map((row) => row.read(_db.diaryEntries.loggedAt)!)
+        .map((loggedAt) => DateTime(loggedAt.year, loggedAt.month, loggedAt.day))
+        .toSet();
+  }
+
   DiaryEntriesCompanion _toCompanion(DiaryEntry entry) {
     return DiaryEntriesCompanion(
       id: entry.id == null ? const Value.absent() : Value(entry.id!),

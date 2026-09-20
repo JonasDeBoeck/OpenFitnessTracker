@@ -8,18 +8,18 @@ part of 'home_dashboard_providers.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Derives the home dashboard's view-model from the persisted [UserProfile]
-/// plus today's diary entries. Returns null while there is no profile yet
-/// (the router redirects to onboarding in that case, so this is mostly
-/// defensive).
+/// Derives the home dashboard's view-model: today's [DiaryDayView] (shared
+/// with the Diary screen) plus a time-of-day greeting and formatted date.
+/// Returns null while there is no profile yet (the router redirects to
+/// onboarding in that case, so this is mostly defensive).
 
 @ProviderFor(homeDashboard)
 final homeDashboardProvider = HomeDashboardProvider._();
 
-/// Derives the home dashboard's view-model from the persisted [UserProfile]
-/// plus today's diary entries. Returns null while there is no profile yet
-/// (the router redirects to onboarding in that case, so this is mostly
-/// defensive).
+/// Derives the home dashboard's view-model: today's [DiaryDayView] (shared
+/// with the Diary screen) plus a time-of-day greeting and formatted date.
+/// Returns null while there is no profile yet (the router redirects to
+/// onboarding in that case, so this is mostly defensive).
 
 final class HomeDashboardProvider
     extends
@@ -31,10 +31,10 @@ final class HomeDashboardProvider
     with
         $FutureModifier<HomeDashboardView?>,
         $FutureProvider<HomeDashboardView?> {
-  /// Derives the home dashboard's view-model from the persisted [UserProfile]
-  /// plus today's diary entries. Returns null while there is no profile yet
-  /// (the router redirects to onboarding in that case, so this is mostly
-  /// defensive).
+  /// Derives the home dashboard's view-model: today's [DiaryDayView] (shared
+  /// with the Diary screen) plus a time-of-day greeting and formatted date.
+  /// Returns null while there is no profile yet (the router redirects to
+  /// onboarding in that case, so this is mostly defensive).
   HomeDashboardProvider._()
     : super(
         from: null,
@@ -61,4 +61,4 @@ final class HomeDashboardProvider
   }
 }
 
-String _$homeDashboardHash() => r'95d4187cd57f6501696cdc8c790ab4a46f968b3d';
+String _$homeDashboardHash() => r'a7a879a0fe958275e0934ed932bb496bc9f24837';
