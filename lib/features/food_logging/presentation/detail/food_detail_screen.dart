@@ -73,14 +73,6 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                       Expanded(
                         child: Text('Food details', style: DashboardTextStyles.greeting),
                       ),
-                      IconButton(
-                        icon: Icon(
-                          food.isFavorite ? Icons.star : Icons.star_border,
-                          color: food.isFavorite ? DashboardColors.macroFat : DashboardColors.textMuted,
-                        ),
-                        onPressed: () =>
-                            ref.read(favoriteToggleProvider.notifier).toggle(food.id!),
-                      ),
                     ],
                   ),
                 ),
@@ -88,7 +80,20 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                     children: [
-                      Text(food.name, style: DashboardTextStyles.sectionTitle),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(food.name, style: DashboardTextStyles.sectionTitle),
+                          ),
+                          const SizedBox(width: 10),
+                          _FavoriteToggleButton(
+                            isFavorite: food.isFavorite,
+                            onPressed: () =>
+                                ref.read(favoriteToggleProvider.notifier).toggle(food.id!),
+                          ),
+                        ],
+                      ),
                       if (food.brand != null || food.store != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
@@ -164,6 +169,42 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
               ],
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _FavoriteToggleButton extends StatelessWidget {
+  const _FavoriteToggleButton({required this.isFavorite, required this.onPressed});
+
+  final bool isFavorite;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+      child: Material(
+        color: isFavorite ? DashboardColors.favoriteActiveBackground : DashboardColors.surface,
+        shape: CircleBorder(
+          side: BorderSide(
+            color: isFavorite ? DashboardColors.macroFat : DashboardColors.border,
+            width: 1.5,
+          ),
+        ),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: SizedBox(
+            width: 38,
+            height: 38,
+            child: Icon(
+              isFavorite ? Icons.star : Icons.star_border,
+              size: 18,
+              color: isFavorite ? DashboardColors.macroFat : DashboardColors.textMuted,
+            ),
+          ),
         ),
       ),
     );
