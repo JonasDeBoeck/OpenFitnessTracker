@@ -25,6 +25,10 @@ abstract class UserProfile with _$UserProfile {
     required double fatGrams,
     required double carbGrams,
     required double waterTargetMl,
+    double? customTargetCalories,
+    double? customProteinPerKg,
+    double? customFatPerKg,
+    double? customWaterTargetMl,
     DateTime? createdAt,
   }) = _UserProfile;
 

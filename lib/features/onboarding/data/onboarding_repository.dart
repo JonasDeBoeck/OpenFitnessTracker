@@ -48,6 +48,10 @@ class OnboardingRepository {
             fatGrams: profile.fatGrams,
             carbGrams: profile.carbGrams,
             waterTargetMl: Value(profile.waterTargetMl),
+            customTargetCalories: Value(profile.customTargetCalories),
+            customProteinPerKg: Value(profile.customProteinPerKg),
+            customFatPerKg: Value(profile.customFatPerKg),
+            customWaterTargetMl: Value(profile.customWaterTargetMl),
           ),
         );
   }
@@ -69,6 +73,10 @@ class OnboardingRepository {
       fatGrams: row.fatGrams,
       carbGrams: row.carbGrams,
       waterTargetMl: row.waterTargetMl,
+      customTargetCalories: row.customTargetCalories,
+      customProteinPerKg: row.customProteinPerKg,
+      customFatPerKg: row.customFatPerKg,
+      customWaterTargetMl: row.customWaterTargetMl,
       createdAt: row.createdAt,
     );
   }

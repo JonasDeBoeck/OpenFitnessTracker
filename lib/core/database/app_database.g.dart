@@ -165,6 +165,50 @@ class $UserProfilesTable extends UserProfiles
     requiredDuringInsert: false,
     defaultValue: const Constant(0),
   );
+  static const VerificationMeta _customTargetCaloriesMeta =
+      const VerificationMeta('customTargetCalories');
+  @override
+  late final GeneratedColumn<double> customTargetCalories =
+      GeneratedColumn<double>(
+        'custom_target_calories',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _customProteinPerKgMeta =
+      const VerificationMeta('customProteinPerKg');
+  @override
+  late final GeneratedColumn<double> customProteinPerKg =
+      GeneratedColumn<double>(
+        'custom_protein_per_kg',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _customFatPerKgMeta = const VerificationMeta(
+    'customFatPerKg',
+  );
+  @override
+  late final GeneratedColumn<double> customFatPerKg = GeneratedColumn<double>(
+    'custom_fat_per_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _customWaterTargetMlMeta =
+      const VerificationMeta('customWaterTargetMl');
+  @override
+  late final GeneratedColumn<double> customWaterTargetMl =
+      GeneratedColumn<double>(
+        'custom_water_target_ml',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -194,6 +238,10 @@ class $UserProfilesTable extends UserProfiles
     fatGrams,
     carbGrams,
     waterTargetMl,
+    customTargetCalories,
+    customProteinPerKg,
+    customFatPerKg,
+    customWaterTargetMl,
     createdAt,
   ];
   @override
@@ -333,6 +381,42 @@ class $UserProfilesTable extends UserProfiles
         ),
       );
     }
+    if (data.containsKey('custom_target_calories')) {
+      context.handle(
+        _customTargetCaloriesMeta,
+        customTargetCalories.isAcceptableOrUnknown(
+          data['custom_target_calories']!,
+          _customTargetCaloriesMeta,
+        ),
+      );
+    }
+    if (data.containsKey('custom_protein_per_kg')) {
+      context.handle(
+        _customProteinPerKgMeta,
+        customProteinPerKg.isAcceptableOrUnknown(
+          data['custom_protein_per_kg']!,
+          _customProteinPerKgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('custom_fat_per_kg')) {
+      context.handle(
+        _customFatPerKgMeta,
+        customFatPerKg.isAcceptableOrUnknown(
+          data['custom_fat_per_kg']!,
+          _customFatPerKgMeta,
+        ),
+      );
+    }
+    if (data.containsKey('custom_water_target_ml')) {
+      context.handle(
+        _customWaterTargetMlMeta,
+        customWaterTargetMl.isAcceptableOrUnknown(
+          data['custom_water_target_ml']!,
+          _customWaterTargetMlMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -408,6 +492,22 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.double,
         data['${effectivePrefix}water_target_ml'],
       )!,
+      customTargetCalories: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}custom_target_calories'],
+      ),
+      customProteinPerKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}custom_protein_per_kg'],
+      ),
+      customFatPerKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}custom_fat_per_kg'],
+      ),
+      customWaterTargetMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}custom_water_target_ml'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -437,6 +537,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
   final double fatGrams;
   final double carbGrams;
   final double waterTargetMl;
+  final double? customTargetCalories;
+  final double? customProteinPerKg;
+  final double? customFatPerKg;
+  final double? customWaterTargetMl;
   final DateTime createdAt;
   const UserProfileRow({
     required this.id,
@@ -454,6 +558,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     required this.fatGrams,
     required this.carbGrams,
     required this.waterTargetMl,
+    this.customTargetCalories,
+    this.customProteinPerKg,
+    this.customFatPerKg,
+    this.customWaterTargetMl,
     required this.createdAt,
   });
   @override
@@ -474,6 +582,18 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     map['fat_grams'] = Variable<double>(fatGrams);
     map['carb_grams'] = Variable<double>(carbGrams);
     map['water_target_ml'] = Variable<double>(waterTargetMl);
+    if (!nullToAbsent || customTargetCalories != null) {
+      map['custom_target_calories'] = Variable<double>(customTargetCalories);
+    }
+    if (!nullToAbsent || customProteinPerKg != null) {
+      map['custom_protein_per_kg'] = Variable<double>(customProteinPerKg);
+    }
+    if (!nullToAbsent || customFatPerKg != null) {
+      map['custom_fat_per_kg'] = Variable<double>(customFatPerKg);
+    }
+    if (!nullToAbsent || customWaterTargetMl != null) {
+      map['custom_water_target_ml'] = Variable<double>(customWaterTargetMl);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -495,6 +615,18 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       fatGrams: Value(fatGrams),
       carbGrams: Value(carbGrams),
       waterTargetMl: Value(waterTargetMl),
+      customTargetCalories: customTargetCalories == null && nullToAbsent
+          ? const Value.absent()
+          : Value(customTargetCalories),
+      customProteinPerKg: customProteinPerKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(customProteinPerKg),
+      customFatPerKg: customFatPerKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(customFatPerKg),
+      customWaterTargetMl: customWaterTargetMl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(customWaterTargetMl),
       createdAt: Value(createdAt),
     );
   }
@@ -520,6 +652,16 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       fatGrams: serializer.fromJson<double>(json['fatGrams']),
       carbGrams: serializer.fromJson<double>(json['carbGrams']),
       waterTargetMl: serializer.fromJson<double>(json['waterTargetMl']),
+      customTargetCalories: serializer.fromJson<double?>(
+        json['customTargetCalories'],
+      ),
+      customProteinPerKg: serializer.fromJson<double?>(
+        json['customProteinPerKg'],
+      ),
+      customFatPerKg: serializer.fromJson<double?>(json['customFatPerKg']),
+      customWaterTargetMl: serializer.fromJson<double?>(
+        json['customWaterTargetMl'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -542,6 +684,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       'fatGrams': serializer.toJson<double>(fatGrams),
       'carbGrams': serializer.toJson<double>(carbGrams),
       'waterTargetMl': serializer.toJson<double>(waterTargetMl),
+      'customTargetCalories': serializer.toJson<double?>(customTargetCalories),
+      'customProteinPerKg': serializer.toJson<double?>(customProteinPerKg),
+      'customFatPerKg': serializer.toJson<double?>(customFatPerKg),
+      'customWaterTargetMl': serializer.toJson<double?>(customWaterTargetMl),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -562,6 +708,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     double? fatGrams,
     double? carbGrams,
     double? waterTargetMl,
+    Value<double?> customTargetCalories = const Value.absent(),
+    Value<double?> customProteinPerKg = const Value.absent(),
+    Value<double?> customFatPerKg = const Value.absent(),
+    Value<double?> customWaterTargetMl = const Value.absent(),
     DateTime? createdAt,
   }) => UserProfileRow(
     id: id ?? this.id,
@@ -579,6 +729,18 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     fatGrams: fatGrams ?? this.fatGrams,
     carbGrams: carbGrams ?? this.carbGrams,
     waterTargetMl: waterTargetMl ?? this.waterTargetMl,
+    customTargetCalories: customTargetCalories.present
+        ? customTargetCalories.value
+        : this.customTargetCalories,
+    customProteinPerKg: customProteinPerKg.present
+        ? customProteinPerKg.value
+        : this.customProteinPerKg,
+    customFatPerKg: customFatPerKg.present
+        ? customFatPerKg.value
+        : this.customFatPerKg,
+    customWaterTargetMl: customWaterTargetMl.present
+        ? customWaterTargetMl.value
+        : this.customWaterTargetMl,
     createdAt: createdAt ?? this.createdAt,
   );
   UserProfileRow copyWithCompanion(UserProfilesCompanion data) {
@@ -606,6 +768,18 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       waterTargetMl: data.waterTargetMl.present
           ? data.waterTargetMl.value
           : this.waterTargetMl,
+      customTargetCalories: data.customTargetCalories.present
+          ? data.customTargetCalories.value
+          : this.customTargetCalories,
+      customProteinPerKg: data.customProteinPerKg.present
+          ? data.customProteinPerKg.value
+          : this.customProteinPerKg,
+      customFatPerKg: data.customFatPerKg.present
+          ? data.customFatPerKg.value
+          : this.customFatPerKg,
+      customWaterTargetMl: data.customWaterTargetMl.present
+          ? data.customWaterTargetMl.value
+          : this.customWaterTargetMl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -628,6 +802,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
           ..write('fatGrams: $fatGrams, ')
           ..write('carbGrams: $carbGrams, ')
           ..write('waterTargetMl: $waterTargetMl, ')
+          ..write('customTargetCalories: $customTargetCalories, ')
+          ..write('customProteinPerKg: $customProteinPerKg, ')
+          ..write('customFatPerKg: $customFatPerKg, ')
+          ..write('customWaterTargetMl: $customWaterTargetMl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -650,6 +828,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     fatGrams,
     carbGrams,
     waterTargetMl,
+    customTargetCalories,
+    customProteinPerKg,
+    customFatPerKg,
+    customWaterTargetMl,
     createdAt,
   );
   @override
@@ -671,6 +853,10 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
           other.fatGrams == this.fatGrams &&
           other.carbGrams == this.carbGrams &&
           other.waterTargetMl == this.waterTargetMl &&
+          other.customTargetCalories == this.customTargetCalories &&
+          other.customProteinPerKg == this.customProteinPerKg &&
+          other.customFatPerKg == this.customFatPerKg &&
+          other.customWaterTargetMl == this.customWaterTargetMl &&
           other.createdAt == this.createdAt);
 }
 
@@ -690,6 +876,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
   final Value<double> fatGrams;
   final Value<double> carbGrams;
   final Value<double> waterTargetMl;
+  final Value<double?> customTargetCalories;
+  final Value<double?> customProteinPerKg;
+  final Value<double?> customFatPerKg;
+  final Value<double?> customWaterTargetMl;
   final Value<DateTime> createdAt;
   const UserProfilesCompanion({
     this.id = const Value.absent(),
@@ -707,6 +897,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     this.fatGrams = const Value.absent(),
     this.carbGrams = const Value.absent(),
     this.waterTargetMl = const Value.absent(),
+    this.customTargetCalories = const Value.absent(),
+    this.customProteinPerKg = const Value.absent(),
+    this.customFatPerKg = const Value.absent(),
+    this.customWaterTargetMl = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   UserProfilesCompanion.insert({
@@ -725,6 +919,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     required double fatGrams,
     required double carbGrams,
     this.waterTargetMl = const Value.absent(),
+    this.customTargetCalories = const Value.absent(),
+    this.customProteinPerKg = const Value.absent(),
+    this.customFatPerKg = const Value.absent(),
+    this.customWaterTargetMl = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
        sex = Value(sex),
@@ -755,6 +953,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     Expression<double>? fatGrams,
     Expression<double>? carbGrams,
     Expression<double>? waterTargetMl,
+    Expression<double>? customTargetCalories,
+    Expression<double>? customProteinPerKg,
+    Expression<double>? customFatPerKg,
+    Expression<double>? customWaterTargetMl,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -773,6 +975,13 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
       if (fatGrams != null) 'fat_grams': fatGrams,
       if (carbGrams != null) 'carb_grams': carbGrams,
       if (waterTargetMl != null) 'water_target_ml': waterTargetMl,
+      if (customTargetCalories != null)
+        'custom_target_calories': customTargetCalories,
+      if (customProteinPerKg != null)
+        'custom_protein_per_kg': customProteinPerKg,
+      if (customFatPerKg != null) 'custom_fat_per_kg': customFatPerKg,
+      if (customWaterTargetMl != null)
+        'custom_water_target_ml': customWaterTargetMl,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -793,6 +1002,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     Value<double>? fatGrams,
     Value<double>? carbGrams,
     Value<double>? waterTargetMl,
+    Value<double?>? customTargetCalories,
+    Value<double?>? customProteinPerKg,
+    Value<double?>? customFatPerKg,
+    Value<double?>? customWaterTargetMl,
     Value<DateTime>? createdAt,
   }) {
     return UserProfilesCompanion(
@@ -811,6 +1024,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
       fatGrams: fatGrams ?? this.fatGrams,
       carbGrams: carbGrams ?? this.carbGrams,
       waterTargetMl: waterTargetMl ?? this.waterTargetMl,
+      customTargetCalories: customTargetCalories ?? this.customTargetCalories,
+      customProteinPerKg: customProteinPerKg ?? this.customProteinPerKg,
+      customFatPerKg: customFatPerKg ?? this.customFatPerKg,
+      customWaterTargetMl: customWaterTargetMl ?? this.customWaterTargetMl,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -863,6 +1080,22 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     if (waterTargetMl.present) {
       map['water_target_ml'] = Variable<double>(waterTargetMl.value);
     }
+    if (customTargetCalories.present) {
+      map['custom_target_calories'] = Variable<double>(
+        customTargetCalories.value,
+      );
+    }
+    if (customProteinPerKg.present) {
+      map['custom_protein_per_kg'] = Variable<double>(customProteinPerKg.value);
+    }
+    if (customFatPerKg.present) {
+      map['custom_fat_per_kg'] = Variable<double>(customFatPerKg.value);
+    }
+    if (customWaterTargetMl.present) {
+      map['custom_water_target_ml'] = Variable<double>(
+        customWaterTargetMl.value,
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -887,6 +1120,10 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
           ..write('fatGrams: $fatGrams, ')
           ..write('carbGrams: $carbGrams, ')
           ..write('waterTargetMl: $waterTargetMl, ')
+          ..write('customTargetCalories: $customTargetCalories, ')
+          ..write('customProteinPerKg: $customProteinPerKg, ')
+          ..write('customFatPerKg: $customFatPerKg, ')
+          ..write('customWaterTargetMl: $customWaterTargetMl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -4778,6 +5015,10 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       required double fatGrams,
       required double carbGrams,
       Value<double> waterTargetMl,
+      Value<double?> customTargetCalories,
+      Value<double?> customProteinPerKg,
+      Value<double?> customFatPerKg,
+      Value<double?> customWaterTargetMl,
       Value<DateTime> createdAt,
     });
 typedef $$UserProfilesTableUpdateCompanionBuilder =
@@ -4797,6 +5038,10 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<double> fatGrams,
       Value<double> carbGrams,
       Value<double> waterTargetMl,
+      Value<double?> customTargetCalories,
+      Value<double?> customProteinPerKg,
+      Value<double?> customFatPerKg,
+      Value<double?> customWaterTargetMl,
       Value<DateTime> createdAt,
     });
 
@@ -4881,6 +5126,26 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<double> get waterTargetMl => $composableBuilder(
     column: $table.waterTargetMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get customTargetCalories => $composableBuilder(
+    column: $table.customTargetCalories,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get customProteinPerKg => $composableBuilder(
+    column: $table.customProteinPerKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get customFatPerKg => $composableBuilder(
+    column: $table.customFatPerKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get customWaterTargetMl => $composableBuilder(
+    column: $table.customWaterTargetMl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4974,6 +5239,26 @@ class $$UserProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get customTargetCalories => $composableBuilder(
+    column: $table.customTargetCalories,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get customProteinPerKg => $composableBuilder(
+    column: $table.customProteinPerKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get customFatPerKg => $composableBuilder(
+    column: $table.customFatPerKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get customWaterTargetMl => $composableBuilder(
+    column: $table.customWaterTargetMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -5042,6 +5327,26 @@ class $$UserProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<double> get customTargetCalories => $composableBuilder(
+    column: $table.customTargetCalories,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get customProteinPerKg => $composableBuilder(
+    column: $table.customProteinPerKg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get customFatPerKg => $composableBuilder(
+    column: $table.customFatPerKg,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get customWaterTargetMl => $composableBuilder(
+    column: $table.customWaterTargetMl,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
@@ -5092,6 +5397,10 @@ class $$UserProfilesTableTableManager
                 Value<double> fatGrams = const Value.absent(),
                 Value<double> carbGrams = const Value.absent(),
                 Value<double> waterTargetMl = const Value.absent(),
+                Value<double?> customTargetCalories = const Value.absent(),
+                Value<double?> customProteinPerKg = const Value.absent(),
+                Value<double?> customFatPerKg = const Value.absent(),
+                Value<double?> customWaterTargetMl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UserProfilesCompanion(
                 id: id,
@@ -5109,6 +5418,10 @@ class $$UserProfilesTableTableManager
                 fatGrams: fatGrams,
                 carbGrams: carbGrams,
                 waterTargetMl: waterTargetMl,
+                customTargetCalories: customTargetCalories,
+                customProteinPerKg: customProteinPerKg,
+                customFatPerKg: customFatPerKg,
+                customWaterTargetMl: customWaterTargetMl,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -5128,6 +5441,10 @@ class $$UserProfilesTableTableManager
                 required double fatGrams,
                 required double carbGrams,
                 Value<double> waterTargetMl = const Value.absent(),
+                Value<double?> customTargetCalories = const Value.absent(),
+                Value<double?> customProteinPerKg = const Value.absent(),
+                Value<double?> customFatPerKg = const Value.absent(),
+                Value<double?> customWaterTargetMl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UserProfilesCompanion.insert(
                 id: id,
@@ -5145,6 +5462,10 @@ class $$UserProfilesTableTableManager
                 fatGrams: fatGrams,
                 carbGrams: carbGrams,
                 waterTargetMl: waterTargetMl,
+                customTargetCalories: customTargetCalories,
+                customProteinPerKg: customProteinPerKg,
+                customFatPerKg: customFatPerKg,
+                customWaterTargetMl: customWaterTargetMl,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0

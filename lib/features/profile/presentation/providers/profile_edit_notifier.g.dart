@@ -34,7 +34,7 @@ final class ProfileEditNotifierProvider
 }
 
 String _$profileEditNotifierHash() =>
-    r'b14cc7095e432a484883202ce3a7c78c8f47a18b';
+    r'dabc9b7681fd2687f4a8d78c4baf8897ad7834ea';
 
 abstract class _$ProfileEditNotifier extends $AsyncNotifier<ProfileEditState> {
   FutureOr<ProfileEditState> build();

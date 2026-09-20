@@ -59,6 +59,21 @@ class ProfileEditNotifier extends _$ProfileEditNotifier {
   void setActivityLevel(ActivityLevel activityLevel) =>
       _updateDraft((d) => d.copyWith(activityLevel: activityLevel));
 
+  void setCustomTargetCalories(double? customTargetCalories) => _updateDraft(
+    (d) => d.copyWith(customTargetCalories: customTargetCalories),
+  );
+
+  void setCustomProteinPerKg(double? customProteinPerKg) => _updateDraft(
+    (d) => d.copyWith(customProteinPerKg: customProteinPerKg),
+  );
+
+  void setCustomFatPerKg(double? customFatPerKg) =>
+      _updateDraft((d) => d.copyWith(customFatPerKg: customFatPerKg));
+
+  void setCustomWaterTargetMl(double? customWaterTargetMl) => _updateDraft(
+    (d) => d.copyWith(customWaterTargetMl: customWaterTargetMl),
+  );
+
   void _updateDraft(UserProfile Function(UserProfile draft) update) {
     final current = state.value;
     if (current == null) return;
@@ -81,6 +96,10 @@ class ProfileEditNotifier extends _$ProfileEditNotifier {
       weightKg: current.draft.weightKg,
       activityLevel: current.draft.activityLevel,
       goal: current.draft.goal,
+      customTargetCalories: current.draft.customTargetCalories,
+      customProteinPerKg: current.draft.customProteinPerKg,
+      customFatPerKg: current.draft.customFatPerKg,
+      customWaterTargetMl: current.draft.customWaterTargetMl,
     ).copyWith(id: current.draft.id, createdAt: current.draft.createdAt);
 
     try {

@@ -17,5 +17,9 @@ class UserProfiles extends Table {
   RealColumn get fatGrams => real()();
   RealColumn get carbGrams => real()();
   RealColumn get waterTargetMl => real().withDefault(const Constant(0))();
+  RealColumn get customTargetCalories => real().nullable()();
+  RealColumn get customProteinPerKg => real().nullable()();
+  RealColumn get customFatPerKg => real().nullable()();
+  RealColumn get customWaterTargetMl => real().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }

@@ -22,6 +22,10 @@ _UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => _UserProfile(
   fatGrams: (json['fatGrams'] as num).toDouble(),
   carbGrams: (json['carbGrams'] as num).toDouble(),
   waterTargetMl: (json['waterTargetMl'] as num).toDouble(),
+  customTargetCalories: (json['customTargetCalories'] as num?)?.toDouble(),
+  customProteinPerKg: (json['customProteinPerKg'] as num?)?.toDouble(),
+  customFatPerKg: (json['customFatPerKg'] as num?)?.toDouble(),
+  customWaterTargetMl: (json['customWaterTargetMl'] as num?)?.toDouble(),
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -44,6 +48,10 @@ Map<String, dynamic> _$UserProfileToJson(_UserProfile instance) =>
       'fatGrams': instance.fatGrams,
       'carbGrams': instance.carbGrams,
       'waterTargetMl': instance.waterTargetMl,
+      'customTargetCalories': instance.customTargetCalories,
+      'customProteinPerKg': instance.customProteinPerKg,
+      'customFatPerKg': instance.customFatPerKg,
+      'customWaterTargetMl': instance.customWaterTargetMl,
       'createdAt': instance.createdAt?.toIso8601String(),
     };
 

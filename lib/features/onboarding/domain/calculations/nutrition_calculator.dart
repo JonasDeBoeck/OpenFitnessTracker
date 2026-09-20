@@ -62,11 +62,15 @@ Macros calculateMacros({
   required double weightKg,
   required double targetCalories,
   required Goal goal,
+  double? customProteinPerKg,
+  double? customFatPerKg,
 }) {
-  final rates = macroRatesFor(goal);
+  final defaultRates = macroRatesFor(goal);
+  final proteinPerKg = customProteinPerKg ?? defaultRates.proteinPerKg;
+  final fatPerKg = customFatPerKg ?? defaultRates.fatPerKg;
 
-  final proteinGrams = rates.proteinPerKg * weightKg;
-  final fatGrams = rates.fatPerKg * weightKg;
+  final proteinGrams = proteinPerKg * weightKg;
+  final fatGrams = fatPerKg * weightKg;
   final proteinCalories = proteinGrams * _kcalPerGramProtein;
   final fatCalories = fatGrams * _kcalPerGramFat;
   final carbCalories = targetCalories - proteinCalories - fatCalories;
@@ -95,6 +99,10 @@ UserProfile buildUserProfile({
   required double weightKg,
   required ActivityLevel activityLevel,
   required Goal goal,
+  double? customTargetCalories,
+  double? customProteinPerKg,
+  double? customFatPerKg,
+  double? customWaterTargetMl,
 }) {
   final bmr = calculateBmr(
     sex: sex,
@@ -103,13 +111,17 @@ UserProfile buildUserProfile({
     weightKg: weightKg,
   );
   final tdee = calculateTdee(bmr: bmr, activityLevel: activityLevel);
-  final targetCalories = calculateTargetCalories(tdee: tdee, goal: goal);
+  final targetCalories =
+      customTargetCalories ?? calculateTargetCalories(tdee: tdee, goal: goal);
   final macros = calculateMacros(
     weightKg: weightKg,
     targetCalories: targetCalories,
     goal: goal,
+    customProteinPerKg: customProteinPerKg,
+    customFatPerKg: customFatPerKg,
   );
-  final waterTargetMl = calculateWaterTargetMl(weightKg: weightKg);
+  final waterTargetMl =
+      customWaterTargetMl ?? calculateWaterTargetMl(weightKg: weightKg);
 
   return UserProfile(
     name: name,
@@ -126,5 +138,9 @@ UserProfile buildUserProfile({
     fatGrams: macros.fatGrams,
     carbGrams: macros.carbGrams,
     waterTargetMl: waterTargetMl,
+    customTargetCalories: customTargetCalories,
+    customProteinPerKg: customProteinPerKg,
+    customFatPerKg: customFatPerKg,
+    customWaterTargetMl: customWaterTargetMl,
   );
 }

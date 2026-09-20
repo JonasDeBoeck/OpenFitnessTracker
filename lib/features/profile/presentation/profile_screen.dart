@@ -27,13 +27,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
   final _ageController = TextEditingController();
+  final _kcalController = TextEditingController();
+  final _proteinRateController = TextEditingController();
+  final _fatRateController = TextEditingController();
+  final _waterController = TextEditingController();
   bool _controllersSeeded = false;
+  bool _kcalCustom = false;
+  bool _macrosCustom = false;
+  bool _waterCustom = false;
 
   @override
   void dispose() {
     _weightController.dispose();
     _heightController.dispose();
     _ageController.dispose();
+    _kcalController.dispose();
+    _proteinRateController.dispose();
+    _fatRateController.dispose();
+    _waterController.dispose();
     super.dispose();
   }
 
@@ -41,26 +52,97 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _weightController.text = _formatNumber(draft.weightKg);
     _heightController.text = _formatNumber(draft.heightCm);
     _ageController.text = draft.age.toString();
+    _kcalController.text = draft.targetCalories.toStringAsFixed(0);
+    final defaultRates = macroRatesFor(draft.goal);
+    _proteinRateController.text = _formatNumber(
+      draft.customProteinPerKg ?? defaultRates.proteinPerKg,
+    );
+    _fatRateController.text = _formatNumber(
+      draft.customFatPerKg ?? defaultRates.fatPerKg,
+    );
+    _waterController.text = draft.waterTargetMl.toStringAsFixed(0);
+    _kcalCustom = draft.customTargetCalories != null;
+    _macrosCustom =
+        draft.customProteinPerKg != null || draft.customFatPerKg != null;
+    _waterCustom = draft.customWaterTargetMl != null;
     _controllersSeeded = true;
   }
 
   double? get _weight => double.tryParse(_weightController.text);
   double? get _height => double.tryParse(_heightController.text);
   int? get _age => int.tryParse(_ageController.text);
+  double? get _kcal => double.tryParse(_kcalController.text);
+  double? get _proteinRate => double.tryParse(_proteinRateController.text);
+  double? get _fatRate => double.tryParse(_fatRateController.text);
+  double? get _water => double.tryParse(_waterController.text);
 
   bool get _fieldsValid {
     final weight = _weight;
     final height = _height;
     final age = _age;
-    return height != null &&
-        height > 0 &&
-        height < 300 &&
-        weight != null &&
-        weight > 0 &&
-        weight < 500 &&
-        age != null &&
-        age >= _minAge &&
-        age <= _maxAge;
+    final kcal = _kcal;
+    final proteinRate = _proteinRate;
+    final fatRate = _fatRate;
+    final water = _water;
+    if (height == null || height <= 0 || height >= 300) return false;
+    if (weight == null || weight <= 0 || weight >= 500) return false;
+    if (age == null || age < _minAge || age > _maxAge) return false;
+    if (kcal == null || kcal < 500 || kcal > 10000) return false;
+    if (proteinRate == null || proteinRate < 0 || proteinRate > 10) {
+      return false;
+    }
+    if (fatRate == null || fatRate < 0 || fatRate > 10) return false;
+    if (water == null || water < 0 || water > 15000) return false;
+    final proteinCalories = proteinRate * weight * 4;
+    final fatCalories = fatRate * weight * 9;
+    if (proteinCalories + fatCalories > kcal) return false;
+    return true;
+  }
+
+  UserProfile? get _draft => ref.read(profileEditProvider).value?.draft;
+
+  void _onKcalFieldChanged() => setState(() => _kcalCustom = true);
+  void _onMacroFieldChanged() => setState(() => _macrosCustom = true);
+  void _onWaterFieldChanged() => setState(() => _waterCustom = true);
+
+  void _resetKcal() {
+    final draft = _draft;
+    if (draft == null) return;
+    final bmr = calculateBmr(
+      sex: draft.sex,
+      age: _age ?? draft.age,
+      heightCm: _height ?? draft.heightCm,
+      weightKg: _weight ?? draft.weightKg,
+    );
+    final tdee = calculateTdee(bmr: bmr, activityLevel: draft.activityLevel);
+    final calculated = calculateTargetCalories(tdee: tdee, goal: draft.goal);
+    setState(() {
+      _kcalCustom = false;
+      _kcalController.text = calculated.toStringAsFixed(0);
+    });
+  }
+
+  void _resetMacros() {
+    final draft = _draft;
+    if (draft == null) return;
+    final rates = macroRatesFor(draft.goal);
+    setState(() {
+      _macrosCustom = false;
+      _proteinRateController.text = _formatNumber(rates.proteinPerKg);
+      _fatRateController.text = _formatNumber(rates.fatPerKg);
+    });
+  }
+
+  void _resetWater() {
+    final draft = _draft;
+    if (draft == null) return;
+    final calculated = calculateWaterTargetMl(
+      weightKg: _weight ?? draft.weightKg,
+    );
+    setState(() {
+      _waterCustom = false;
+      _waterController.text = calculated.toStringAsFixed(0);
+    });
   }
 
   Future<void> _save() async {
@@ -68,6 +150,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     notifier.setWeightKg(_weight!);
     notifier.setHeightCm(_height!);
     notifier.setAge(_age!);
+    notifier.setCustomTargetCalories(_kcalCustom ? _kcal : null);
+    notifier.setCustomProteinPerKg(_macrosCustom ? _proteinRate : null);
+    notifier.setCustomFatPerKg(_macrosCustom ? _fatRate : null);
+    notifier.setCustomWaterTargetMl(_waterCustom ? _water : null);
     final success = await notifier.save();
     if (!mounted) return;
     if (success) {
@@ -108,12 +194,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     weightController: _weightController,
                     heightController: _heightController,
                     ageController: _ageController,
+                    kcalController: _kcalController,
+                    proteinRateController: _proteinRateController,
+                    fatRateController: _fatRateController,
+                    waterController: _waterController,
+                    kcalCustom: _kcalCustom,
+                    macrosCustom: _macrosCustom,
+                    waterCustom: _waterCustom,
                     canSave: _fieldsValid,
                     onFieldChanged: () => setState(() {}),
+                    onKcalFieldChanged: _onKcalFieldChanged,
+                    onMacroFieldChanged: _onMacroFieldChanged,
+                    onWaterFieldChanged: _onWaterFieldChanged,
+                    onResetKcal: _resetKcal,
+                    onResetMacros: _resetMacros,
+                    onResetWater: _resetWater,
                     onSave: _save,
                     previewHeightCm: _height,
                     previewWeightKg: _weight,
                     previewAge: _age,
+                    previewKcal: _kcalCustom ? _kcal : null,
+                    previewProteinRate: _macrosCustom ? _proteinRate : null,
+                    previewFatRate: _macrosCustom ? _fatRate : null,
+                    previewWater: _waterCustom ? _water : null,
                   );
                 },
               ),
@@ -140,12 +243,29 @@ class _ProfileForm extends ConsumerWidget {
     required this.weightController,
     required this.heightController,
     required this.ageController,
+    required this.kcalController,
+    required this.proteinRateController,
+    required this.fatRateController,
+    required this.waterController,
+    required this.kcalCustom,
+    required this.macrosCustom,
+    required this.waterCustom,
     required this.canSave,
     required this.onFieldChanged,
+    required this.onKcalFieldChanged,
+    required this.onMacroFieldChanged,
+    required this.onWaterFieldChanged,
+    required this.onResetKcal,
+    required this.onResetMacros,
+    required this.onResetWater,
     required this.onSave,
     required this.previewHeightCm,
     required this.previewWeightKg,
     required this.previewAge,
+    required this.previewKcal,
+    required this.previewProteinRate,
+    required this.previewFatRate,
+    required this.previewWater,
   });
 
   final UserProfile draft;
@@ -154,12 +274,29 @@ class _ProfileForm extends ConsumerWidget {
   final TextEditingController weightController;
   final TextEditingController heightController;
   final TextEditingController ageController;
+  final TextEditingController kcalController;
+  final TextEditingController proteinRateController;
+  final TextEditingController fatRateController;
+  final TextEditingController waterController;
+  final bool kcalCustom;
+  final bool macrosCustom;
+  final bool waterCustom;
   final bool canSave;
   final VoidCallback onFieldChanged;
+  final VoidCallback onKcalFieldChanged;
+  final VoidCallback onMacroFieldChanged;
+  final VoidCallback onWaterFieldChanged;
+  final VoidCallback onResetKcal;
+  final VoidCallback onResetMacros;
+  final VoidCallback onResetWater;
   final VoidCallback onSave;
   final double? previewHeightCm;
   final double? previewWeightKg;
   final int? previewAge;
+  final double? previewKcal;
+  final double? previewProteinRate;
+  final double? previewFatRate;
+  final double? previewWater;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -172,6 +309,10 @@ class _ProfileForm extends ConsumerWidget {
       weightKg: previewWeightKg ?? draft.weightKg,
       activityLevel: draft.activityLevel,
       goal: draft.goal,
+      customTargetCalories: previewKcal,
+      customProteinPerKg: previewProteinRate,
+      customFatPerKg: previewFatRate,
+      customWaterTargetMl: previewWater,
     );
 
     return SingleChildScrollView(
@@ -218,6 +359,60 @@ class _ProfileForm extends ConsumerWidget {
             value: draft.activityLevel,
             onChanged: notifier.setActivityLevel,
           ),
+          const SizedBox(height: 20),
+          _SectionHeaderRow(
+            label: 'Daily calories',
+            showReset: kcalCustom,
+            onReset: onResetKcal,
+          ),
+          const SizedBox(height: 8),
+          _NumberField(
+            controller: kcalController,
+            hint: 'e.g. 2200',
+            allowDecimal: false,
+            onChanged: onKcalFieldChanged,
+          ),
+          const SizedBox(height: 20),
+          _SectionHeaderRow(
+            label: 'Macro distribution',
+            showReset: macrosCustom,
+            onReset: onResetMacros,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _NumberField(
+                  controller: proteinRateController,
+                  hint: 'Protein g/kg',
+                  onChanged: onMacroFieldChanged,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _NumberField(
+                  controller: fatRateController,
+                  hint: 'Fat g/kg',
+                  onChanged: onMacroFieldChanged,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text('Carbs fill the rest.', style: DashboardTextStyles.mealEmpty),
+          const SizedBox(height: 20),
+          _SectionHeaderRow(
+            label: 'Water goal (mL)',
+            showReset: waterCustom,
+            onReset: onResetWater,
+          ),
+          const SizedBox(height: 8),
+          _NumberField(
+            controller: waterController,
+            hint: 'e.g. 2600',
+            allowDecimal: false,
+            onChanged: onWaterFieldChanged,
+          ),
           const SizedBox(height: 24),
           _TargetsSummaryCard(profile: preview),
           const SizedBox(height: 24),
@@ -261,6 +456,41 @@ class _SectionLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text, style: DashboardTextStyles.sectionTitle);
+  }
+}
+
+class _SectionHeaderRow extends StatelessWidget {
+  const _SectionHeaderRow({
+    required this.label,
+    required this.showReset,
+    required this.onReset,
+  });
+
+  final String label;
+  final bool showReset;
+  final VoidCallback onReset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _SectionLabel(label),
+        if (showReset)
+          TextButton(
+            onPressed: onReset,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: const Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: const Text(
+              'Reset to calculated',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            ),
+          ),
+      ],
+    );
   }
 }
 
