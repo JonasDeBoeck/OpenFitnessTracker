@@ -29,6 +29,26 @@ class DiaryRepository {
     return rows.map(_fromRow).toList();
   }
 
+  /// All entries logged between [start] and [end] (day-bounded, inclusive of
+  /// both ends), ordered by date. Used to build the Trends charts.
+  Future<List<DiaryEntry>> getEntriesInRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    final rangeStart = DateTime(start.year, start.month, start.day);
+    final rangeEnd = DateTime(
+      end.year,
+      end.month,
+      end.day,
+    ).add(const Duration(days: 1));
+    final rows =
+        await (_db.select(_db.diaryEntries)
+              ..where((t) => t.loggedAt.isBetweenValues(rangeStart, rangeEnd))
+              ..orderBy([(t) => OrderingTerm.asc(t.loggedAt)]))
+            .get();
+    return rows.map(_fromRow).toList();
+  }
+
   Future<List<DiaryEntry>> getEntriesForDateAndMeal(
     DateTime date,
     MealType mealType,

@@ -9,6 +9,8 @@ abstract final class AppRoutes {
   static const String targetsCalculationName = 'targets-calculation';
   static const String diaryPath = '/diary';
   static const String diaryName = 'diary';
+  static const String trendsPath = '/trends';
+  static const String trendsName = 'trends';
   static const String foodSearchPath = '/log-food';
   static const String foodSearchName = 'log-food';
   static const String foodDetailPath = '/log-food/food/:foodId';
