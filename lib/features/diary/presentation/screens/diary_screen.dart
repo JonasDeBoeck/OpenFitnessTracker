@@ -7,6 +7,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/app_bottom_nav_bar.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
+import '../../../water/water.dart';
 import '../../domain/day_label.dart';
 import '../providers/diary_day_providers.dart';
 import '../providers/selected_diary_date_provider.dart';
@@ -29,6 +30,7 @@ class DiaryScreen extends ConsumerWidget {
     final today = DateUtils.dateOnly(DateTime.now());
     final selectedDate = ref.watch(selectedDiaryDateProvider);
     final dayAsync = ref.watch(diaryDayProvider(selectedDate));
+    final waterDayAsync = ref.watch(waterDayProvider(selectedDate));
     final loggedDatesAsync = ref.watch(
       loggedDatesInRangeProvider(
         DateTimeRange(
@@ -90,6 +92,23 @@ class DiaryScreen extends ConsumerWidget {
                             const SizedBox(height: 20),
                             MacroProgressCard(macros: day.macros),
                             const SizedBox(height: 20),
+                            if (waterDayAsync.value case final waterDay?) ...[
+                              WaterProgressCard(day: waterDay),
+                              const SizedBox(height: 20),
+                              WaterLogCard(
+                                entries: waterDay.entries,
+                                onQuickAdd: (ml) => ref
+                                    .read(waterLogControllerProvider.notifier)
+                                    .add(selectedDate, ml),
+                                onCustomAdd: (ml) => ref
+                                    .read(waterLogControllerProvider.notifier)
+                                    .add(selectedDate, ml),
+                                onDelete: (id) => ref
+                                    .read(waterLogControllerProvider.notifier)
+                                    .delete(selectedDate, id),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
                             for (var i = 0; i < day.meals.length; i++) ...[
                               if (i > 0) const SizedBox(height: 20),
                               MealSectionCard(

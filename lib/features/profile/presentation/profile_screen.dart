@@ -463,6 +463,13 @@ class _TargetsSummaryCard extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          _MacroFigure(
+            'Water',
+            profile.waterTargetMl,
+            DashboardColors.water,
+            unit: 'mL',
+          ),
         ],
       ),
     );
@@ -470,11 +477,12 @@ class _TargetsSummaryCard extends StatelessWidget {
 }
 
 class _MacroFigure extends StatelessWidget {
-  const _MacroFigure(this.label, this.grams, this.color);
+  const _MacroFigure(this.label, this.amount, this.color, {this.unit = 'g'});
 
   final String label;
-  final double grams;
+  final double amount;
   final Color color;
+  final String unit;
 
   @override
   Widget build(BuildContext context) {
@@ -488,7 +496,7 @@ class _MacroFigure extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          '$label ${grams.toStringAsFixed(0)}g',
+          '$label ${amount.toStringAsFixed(0)}$unit',
           style: DashboardTextStyles.macroNums,
         ),
       ],

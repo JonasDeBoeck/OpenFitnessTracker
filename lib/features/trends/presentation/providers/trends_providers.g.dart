@@ -133,7 +133,7 @@ final class TrendsProvider
   }
 }
 
-String _$trendsHash() => r'3fe6a61f5967fdd1dc6a4e44edeeca0ae9212690';
+String _$trendsHash() => r'b69fe198674dd092d0fd4545ed3439cc2fda6135';
 
 /// Derives the Trends view-model for [range] from the persisted
 /// [UserProfile]'s targets plus the diary entries logged within it. Returns

@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../food_logging/data/diary_repository.dart';
 import '../../../onboarding/onboarding.dart';
+import '../../../water/data/water_repository.dart';
 import '../../domain/aggregate_daily_totals.dart';
 import '../../domain/models/trends_range.dart';
 import '../../domain/models/trends_view.dart';
@@ -35,9 +36,13 @@ Future<TrendsView?> trends(Ref ref, TrendsRange range) async {
   final entries = await ref
       .watch(diaryRepositoryProvider)
       .getEntriesInRange(start, today);
+  final waterEntries = await ref
+      .watch(waterRepositoryProvider)
+      .getEntriesInRange(start, today);
 
   final dailyTotals = aggregateDailyTotals(
     entries: entries,
+    waterEntries: waterEntries,
     start: start,
     end: today,
   );
@@ -48,6 +53,7 @@ Future<TrendsView?> trends(Ref ref, TrendsRange range) async {
     targetProtein: profile.proteinGrams,
     targetFat: profile.fatGrams,
     targetCarbs: profile.carbGrams,
+    targetWaterMl: profile.waterTargetMl,
     dailyTotals: dailyTotals,
   );
 }

@@ -75,6 +75,15 @@ Macros calculateMacros({
   return (proteinGrams: proteinGrams, fatGrams: fatGrams, carbGrams: carbGrams);
 }
 
+/// Daily water target via the Holliday-Segar formula: 100 mL/kg for the
+/// first 10 kg, 50 mL/kg for the next 10 kg, and 20 mL/kg for every kg
+/// above 20 kg.
+double calculateWaterTargetMl({required double weightKg}) {
+  if (weightKg <= 10) return weightKg * 100;
+  if (weightKg <= 20) return 1000 + (weightKg - 10) * 50;
+  return 1500 + (weightKg - 20) * 20;
+}
+
 /// Orchestrates BMR, TDEE, target calories and macros into a fully
 /// populated [UserProfile]. Pure and deterministic: [id] and [createdAt]
 /// are left null, as those are assigned by persistence.
@@ -100,6 +109,7 @@ UserProfile buildUserProfile({
     targetCalories: targetCalories,
     goal: goal,
   );
+  final waterTargetMl = calculateWaterTargetMl(weightKg: weightKg);
 
   return UserProfile(
     name: name,
@@ -115,5 +125,6 @@ UserProfile buildUserProfile({
     proteinGrams: macros.proteinGrams,
     fatGrams: macros.fatGrams,
     carbGrams: macros.carbGrams,
+    waterTargetMl: waterTargetMl,
   );
 }

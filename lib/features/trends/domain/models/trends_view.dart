@@ -11,6 +11,7 @@ class TrendsView {
     required this.targetProtein,
     required this.targetFat,
     required this.targetCarbs,
+    required this.targetWaterMl,
     required this.dailyTotals,
   });
 
@@ -19,12 +20,14 @@ class TrendsView {
   final double targetProtein;
   final double targetFat;
   final double targetCarbs;
+  final double targetWaterMl;
   final List<DailyTotals> dailyTotals;
 
   double get avgCalories => _avg(dailyTotals.map((d) => d.calories));
   double get avgProtein => _avg(dailyTotals.map((d) => d.protein));
   double get avgFat => _avg(dailyTotals.map((d) => d.fat));
   double get avgCarbs => _avg(dailyTotals.map((d) => d.carbs));
+  double get avgWaterMl => _avg(dailyTotals.map((d) => d.waterMl));
 
   static double _avg(Iterable<double> values) {
     if (values.isEmpty) return 0;

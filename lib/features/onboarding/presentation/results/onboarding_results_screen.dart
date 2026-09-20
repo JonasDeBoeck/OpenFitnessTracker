@@ -84,6 +84,10 @@ class OnboardingResultsScreen extends ConsumerWidget {
                       label: 'Carbs',
                       value: '${profile.carbGrams.toStringAsFixed(1)} g',
                     ),
+                    _ResultRow(
+                      label: 'Water',
+                      value: '${profile.waterTargetMl.toStringAsFixed(0)} mL',
+                    ),
                   ],
                 ),
               ),

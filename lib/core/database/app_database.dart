@@ -11,18 +11,21 @@ import '../../features/food_logging/data/tables/foods_table.dart';
 import '../../features/food_logging/data/tables/recipe_ingredients_table.dart';
 import '../../features/food_logging/data/tables/recipes_table.dart';
 import '../../features/onboarding/data/tables/user_profiles_table.dart';
+import '../../features/water/data/tables/water_entries_table.dart';
 
 part 'app_database.g.dart';
 
 // Future features register their own table here (and bump schemaVersion with
 // an onUpgrade step) — table ownership stays feature-first, but the database
 // instance and migration authority stay centralized in core/database.
-@DriftDatabase(tables: [UserProfiles, Foods, DiaryEntries, Recipes, RecipeIngredients])
+@DriftDatabase(
+  tables: [UserProfiles, Foods, DiaryEntries, Recipes, RecipeIngredients, WaterEntries],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,6 +44,10 @@ class AppDatabase extends _$AppDatabase {
         // the table is rebuilt empty rather than column-migrated in place.
         await migrator.deleteTable('diary_entries');
         await migrator.createTable(diaryEntries);
+      }
+      if (from < 4) {
+        await migrator.createTable(waterEntries);
+        await migrator.addColumn(userProfiles, userProfiles.waterTargetMl);
       }
     },
   );

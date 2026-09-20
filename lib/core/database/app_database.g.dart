@@ -153,6 +153,18 @@ class $UserProfilesTable extends UserProfiles
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _waterTargetMlMeta = const VerificationMeta(
+    'waterTargetMl',
+  );
+  @override
+  late final GeneratedColumn<double> waterTargetMl = GeneratedColumn<double>(
+    'water_target_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -181,6 +193,7 @@ class $UserProfilesTable extends UserProfiles
     proteinGrams,
     fatGrams,
     carbGrams,
+    waterTargetMl,
     createdAt,
   ];
   @override
@@ -311,6 +324,15 @@ class $UserProfilesTable extends UserProfiles
     } else if (isInserting) {
       context.missing(_carbGramsMeta);
     }
+    if (data.containsKey('water_target_ml')) {
+      context.handle(
+        _waterTargetMlMeta,
+        waterTargetMl.isAcceptableOrUnknown(
+          data['water_target_ml']!,
+          _waterTargetMlMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -382,6 +404,10 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.double,
         data['${effectivePrefix}carb_grams'],
       )!,
+      waterTargetMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}water_target_ml'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -410,6 +436,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
   final double proteinGrams;
   final double fatGrams;
   final double carbGrams;
+  final double waterTargetMl;
   final DateTime createdAt;
   const UserProfileRow({
     required this.id,
@@ -426,6 +453,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     required this.proteinGrams,
     required this.fatGrams,
     required this.carbGrams,
+    required this.waterTargetMl,
     required this.createdAt,
   });
   @override
@@ -445,6 +473,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     map['protein_grams'] = Variable<double>(proteinGrams);
     map['fat_grams'] = Variable<double>(fatGrams);
     map['carb_grams'] = Variable<double>(carbGrams);
+    map['water_target_ml'] = Variable<double>(waterTargetMl);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -465,6 +494,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       proteinGrams: Value(proteinGrams),
       fatGrams: Value(fatGrams),
       carbGrams: Value(carbGrams),
+      waterTargetMl: Value(waterTargetMl),
       createdAt: Value(createdAt),
     );
   }
@@ -489,6 +519,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       proteinGrams: serializer.fromJson<double>(json['proteinGrams']),
       fatGrams: serializer.fromJson<double>(json['fatGrams']),
       carbGrams: serializer.fromJson<double>(json['carbGrams']),
+      waterTargetMl: serializer.fromJson<double>(json['waterTargetMl']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -510,6 +541,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
       'proteinGrams': serializer.toJson<double>(proteinGrams),
       'fatGrams': serializer.toJson<double>(fatGrams),
       'carbGrams': serializer.toJson<double>(carbGrams),
+      'waterTargetMl': serializer.toJson<double>(waterTargetMl),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -529,6 +561,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     double? proteinGrams,
     double? fatGrams,
     double? carbGrams,
+    double? waterTargetMl,
     DateTime? createdAt,
   }) => UserProfileRow(
     id: id ?? this.id,
@@ -545,6 +578,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     proteinGrams: proteinGrams ?? this.proteinGrams,
     fatGrams: fatGrams ?? this.fatGrams,
     carbGrams: carbGrams ?? this.carbGrams,
+    waterTargetMl: waterTargetMl ?? this.waterTargetMl,
     createdAt: createdAt ?? this.createdAt,
   );
   UserProfileRow copyWithCompanion(UserProfilesCompanion data) {
@@ -569,6 +603,9 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
           : this.proteinGrams,
       fatGrams: data.fatGrams.present ? data.fatGrams.value : this.fatGrams,
       carbGrams: data.carbGrams.present ? data.carbGrams.value : this.carbGrams,
+      waterTargetMl: data.waterTargetMl.present
+          ? data.waterTargetMl.value
+          : this.waterTargetMl,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -590,6 +627,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
           ..write('proteinGrams: $proteinGrams, ')
           ..write('fatGrams: $fatGrams, ')
           ..write('carbGrams: $carbGrams, ')
+          ..write('waterTargetMl: $waterTargetMl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -611,6 +649,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
     proteinGrams,
     fatGrams,
     carbGrams,
+    waterTargetMl,
     createdAt,
   );
   @override
@@ -631,6 +670,7 @@ class UserProfileRow extends DataClass implements Insertable<UserProfileRow> {
           other.proteinGrams == this.proteinGrams &&
           other.fatGrams == this.fatGrams &&
           other.carbGrams == this.carbGrams &&
+          other.waterTargetMl == this.waterTargetMl &&
           other.createdAt == this.createdAt);
 }
 
@@ -649,6 +689,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
   final Value<double> proteinGrams;
   final Value<double> fatGrams;
   final Value<double> carbGrams;
+  final Value<double> waterTargetMl;
   final Value<DateTime> createdAt;
   const UserProfilesCompanion({
     this.id = const Value.absent(),
@@ -665,6 +706,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     this.proteinGrams = const Value.absent(),
     this.fatGrams = const Value.absent(),
     this.carbGrams = const Value.absent(),
+    this.waterTargetMl = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   UserProfilesCompanion.insert({
@@ -682,6 +724,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     required double proteinGrams,
     required double fatGrams,
     required double carbGrams,
+    this.waterTargetMl = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name),
        sex = Value(sex),
@@ -711,6 +754,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     Expression<double>? proteinGrams,
     Expression<double>? fatGrams,
     Expression<double>? carbGrams,
+    Expression<double>? waterTargetMl,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -728,6 +772,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
       if (proteinGrams != null) 'protein_grams': proteinGrams,
       if (fatGrams != null) 'fat_grams': fatGrams,
       if (carbGrams != null) 'carb_grams': carbGrams,
+      if (waterTargetMl != null) 'water_target_ml': waterTargetMl,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -747,6 +792,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     Value<double>? proteinGrams,
     Value<double>? fatGrams,
     Value<double>? carbGrams,
+    Value<double>? waterTargetMl,
     Value<DateTime>? createdAt,
   }) {
     return UserProfilesCompanion(
@@ -764,6 +810,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
       proteinGrams: proteinGrams ?? this.proteinGrams,
       fatGrams: fatGrams ?? this.fatGrams,
       carbGrams: carbGrams ?? this.carbGrams,
+      waterTargetMl: waterTargetMl ?? this.waterTargetMl,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -813,6 +860,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
     if (carbGrams.present) {
       map['carb_grams'] = Variable<double>(carbGrams.value);
     }
+    if (waterTargetMl.present) {
+      map['water_target_ml'] = Variable<double>(waterTargetMl.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -836,6 +886,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfileRow> {
           ..write('proteinGrams: $proteinGrams, ')
           ..write('fatGrams: $fatGrams, ')
           ..write('carbGrams: $carbGrams, ')
+          ..write('waterTargetMl: $waterTargetMl, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -4405,6 +4456,262 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
   }
 }
 
+class $WaterEntriesTable extends WaterEntries
+    with TableInfo<$WaterEntriesTable, WaterEntryRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _millilitersMeta = const VerificationMeta(
+    'milliliters',
+  );
+  @override
+  late final GeneratedColumn<double> milliliters = GeneratedColumn<double>(
+    'milliliters',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, loggedAt, milliliters];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WaterEntryRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
+    if (data.containsKey('milliliters')) {
+      context.handle(
+        _millilitersMeta,
+        milliliters.isAcceptableOrUnknown(
+          data['milliliters']!,
+          _millilitersMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_millilitersMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterEntryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterEntryRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
+      )!,
+      milliliters: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}milliliters'],
+      )!,
+    );
+  }
+
+  @override
+  $WaterEntriesTable createAlias(String alias) {
+    return $WaterEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class WaterEntryRow extends DataClass implements Insertable<WaterEntryRow> {
+  final int id;
+  final DateTime loggedAt;
+  final double milliliters;
+  const WaterEntryRow({
+    required this.id,
+    required this.loggedAt,
+    required this.milliliters,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
+    map['milliliters'] = Variable<double>(milliliters);
+    return map;
+  }
+
+  WaterEntriesCompanion toCompanion(bool nullToAbsent) {
+    return WaterEntriesCompanion(
+      id: Value(id),
+      loggedAt: Value(loggedAt),
+      milliliters: Value(milliliters),
+    );
+  }
+
+  factory WaterEntryRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterEntryRow(
+      id: serializer.fromJson<int>(json['id']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+      milliliters: serializer.fromJson<double>(json['milliliters']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+      'milliliters': serializer.toJson<double>(milliliters),
+    };
+  }
+
+  WaterEntryRow copyWith({int? id, DateTime? loggedAt, double? milliliters}) =>
+      WaterEntryRow(
+        id: id ?? this.id,
+        loggedAt: loggedAt ?? this.loggedAt,
+        milliliters: milliliters ?? this.milliliters,
+      );
+  WaterEntryRow copyWithCompanion(WaterEntriesCompanion data) {
+    return WaterEntryRow(
+      id: data.id.present ? data.id.value : this.id,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+      milliliters: data.milliliters.present
+          ? data.milliliters.value
+          : this.milliliters,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterEntryRow(')
+          ..write('id: $id, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('milliliters: $milliliters')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, loggedAt, milliliters);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterEntryRow &&
+          other.id == this.id &&
+          other.loggedAt == this.loggedAt &&
+          other.milliliters == this.milliliters);
+}
+
+class WaterEntriesCompanion extends UpdateCompanion<WaterEntryRow> {
+  final Value<int> id;
+  final Value<DateTime> loggedAt;
+  final Value<double> milliliters;
+  const WaterEntriesCompanion({
+    this.id = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+    this.milliliters = const Value.absent(),
+  });
+  WaterEntriesCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime loggedAt,
+    required double milliliters,
+  }) : loggedAt = Value(loggedAt),
+       milliliters = Value(milliliters);
+  static Insertable<WaterEntryRow> custom({
+    Expression<int>? id,
+    Expression<DateTime>? loggedAt,
+    Expression<double>? milliliters,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (loggedAt != null) 'logged_at': loggedAt,
+      if (milliliters != null) 'milliliters': milliliters,
+    });
+  }
+
+  WaterEntriesCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? loggedAt,
+    Value<double>? milliliters,
+  }) {
+    return WaterEntriesCompanion(
+      id: id ?? this.id,
+      loggedAt: loggedAt ?? this.loggedAt,
+      milliliters: milliliters ?? this.milliliters,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (loggedAt.present) {
+      map['logged_at'] = Variable<DateTime>(loggedAt.value);
+    }
+    if (milliliters.present) {
+      map['milliliters'] = Variable<double>(milliliters.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('milliliters: $milliliters')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4414,6 +4721,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DiaryEntriesTable diaryEntries = $DiaryEntriesTable(this);
   late final $RecipeIngredientsTable recipeIngredients =
       $RecipeIngredientsTable(this);
+  late final $WaterEntriesTable waterEntries = $WaterEntriesTable(this);
   late final Index idxDiaryEntriesLoggedAt = Index(
     'idx_diary_entries_logged_at',
     'CREATE INDEX idx_diary_entries_logged_at ON diary_entries (logged_at)',
@@ -4430,6 +4738,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'idx_recipe_ingredients_recipe_id',
     'CREATE INDEX idx_recipe_ingredients_recipe_id ON recipe_ingredients (recipe_id)',
   );
+  late final Index idxWaterEntriesLoggedAt = Index(
+    'idx_water_entries_logged_at',
+    'CREATE INDEX idx_water_entries_logged_at ON water_entries (logged_at)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4440,10 +4752,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     recipes,
     diaryEntries,
     recipeIngredients,
+    waterEntries,
     idxDiaryEntriesLoggedAt,
     idxDiaryEntriesFoodId,
     idxDiaryEntriesRecipeId,
     idxRecipeIngredientsRecipeId,
+    idxWaterEntriesLoggedAt,
   ];
 }
 
@@ -4463,6 +4777,7 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       required double proteinGrams,
       required double fatGrams,
       required double carbGrams,
+      Value<double> waterTargetMl,
       Value<DateTime> createdAt,
     });
 typedef $$UserProfilesTableUpdateCompanionBuilder =
@@ -4481,6 +4796,7 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<double> proteinGrams,
       Value<double> fatGrams,
       Value<double> carbGrams,
+      Value<double> waterTargetMl,
       Value<DateTime> createdAt,
     });
 
@@ -4560,6 +4876,11 @@ class $$UserProfilesTableFilterComposer
 
   ColumnFilters<double> get carbGrams => $composableBuilder(
     column: $table.carbGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get waterTargetMl => $composableBuilder(
+    column: $table.waterTargetMl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -4648,6 +4969,11 @@ class $$UserProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get waterTargetMl => $composableBuilder(
+    column: $table.waterTargetMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -4711,6 +5037,11 @@ class $$UserProfilesTableAnnotationComposer
   GeneratedColumn<double> get carbGrams =>
       $composableBuilder(column: $table.carbGrams, builder: (column) => column);
 
+  GeneratedColumn<double> get waterTargetMl => $composableBuilder(
+    column: $table.waterTargetMl,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
@@ -4760,6 +5091,7 @@ class $$UserProfilesTableTableManager
                 Value<double> proteinGrams = const Value.absent(),
                 Value<double> fatGrams = const Value.absent(),
                 Value<double> carbGrams = const Value.absent(),
+                Value<double> waterTargetMl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UserProfilesCompanion(
                 id: id,
@@ -4776,6 +5108,7 @@ class $$UserProfilesTableTableManager
                 proteinGrams: proteinGrams,
                 fatGrams: fatGrams,
                 carbGrams: carbGrams,
+                waterTargetMl: waterTargetMl,
                 createdAt: createdAt,
               ),
           createCompanionCallback:
@@ -4794,6 +5127,7 @@ class $$UserProfilesTableTableManager
                 required double proteinGrams,
                 required double fatGrams,
                 required double carbGrams,
+                Value<double> waterTargetMl = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
               }) => UserProfilesCompanion.insert(
                 id: id,
@@ -4810,6 +5144,7 @@ class $$UserProfilesTableTableManager
                 proteinGrams: proteinGrams,
                 fatGrams: fatGrams,
                 carbGrams: carbGrams,
+                waterTargetMl: waterTargetMl,
                 createdAt: createdAt,
               ),
           withReferenceMapper: (p0) => p0
@@ -7274,6 +7609,173 @@ typedef $$RecipeIngredientsTableProcessedTableManager =
       RecipeIngredientRow,
       PrefetchHooks Function({bool recipeId, bool foodId})
     >;
+typedef $$WaterEntriesTableCreateCompanionBuilder =
+    WaterEntriesCompanion Function({
+      Value<int> id,
+      required DateTime loggedAt,
+      required double milliliters,
+    });
+typedef $$WaterEntriesTableUpdateCompanionBuilder =
+    WaterEntriesCompanion Function({
+      Value<int> id,
+      Value<DateTime> loggedAt,
+      Value<double> milliliters,
+    });
+
+class $$WaterEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $WaterEntriesTable> {
+  $$WaterEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get milliliters => $composableBuilder(
+    column: $table.milliliters,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WaterEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $WaterEntriesTable> {
+  $$WaterEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get milliliters => $composableBuilder(
+    column: $table.milliliters,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WaterEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WaterEntriesTable> {
+  $$WaterEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+
+  GeneratedColumn<double> get milliliters => $composableBuilder(
+    column: $table.milliliters,
+    builder: (column) => column,
+  );
+}
+
+class $$WaterEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WaterEntriesTable,
+          WaterEntryRow,
+          $$WaterEntriesTableFilterComposer,
+          $$WaterEntriesTableOrderingComposer,
+          $$WaterEntriesTableAnnotationComposer,
+          $$WaterEntriesTableCreateCompanionBuilder,
+          $$WaterEntriesTableUpdateCompanionBuilder,
+          (
+            WaterEntryRow,
+            BaseReferences<_$AppDatabase, $WaterEntriesTable, WaterEntryRow>,
+          ),
+          WaterEntryRow,
+          PrefetchHooks Function()
+        > {
+  $$WaterEntriesTableTableManager(_$AppDatabase db, $WaterEntriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+                Value<double> milliliters = const Value.absent(),
+              }) => WaterEntriesCompanion(
+                id: id,
+                loggedAt: loggedAt,
+                milliliters: milliliters,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime loggedAt,
+                required double milliliters,
+              }) => WaterEntriesCompanion.insert(
+                id: id,
+                loggedAt: loggedAt,
+                milliliters: milliliters,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WaterEntriesTable, WaterEntryRow>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $WaterEntriesTable,
+                    WaterEntryRow
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WaterEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WaterEntriesTable,
+      WaterEntryRow,
+      $$WaterEntriesTableFilterComposer,
+      $$WaterEntriesTableOrderingComposer,
+      $$WaterEntriesTableAnnotationComposer,
+      $$WaterEntriesTableCreateCompanionBuilder,
+      $$WaterEntriesTableUpdateCompanionBuilder,
+      (
+        WaterEntryRow,
+        BaseReferences<_$AppDatabase, $WaterEntriesTable, WaterEntryRow>,
+      ),
+      WaterEntryRow,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -7288,4 +7790,6 @@ class $AppDatabaseManager {
       $$DiaryEntriesTableTableManager(_db, _db.diaryEntries);
   $$RecipeIngredientsTableTableManager get recipeIngredients =>
       $$RecipeIngredientsTableTableManager(_db, _db.recipeIngredients);
+  $$WaterEntriesTableTableManager get waterEntries =>
+      $$WaterEntriesTableTableManager(_db, _db.waterEntries);
 }
