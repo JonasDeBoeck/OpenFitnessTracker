@@ -25,6 +25,8 @@ Future<DiaryDayView?> diaryDay(Ref ref, DateTime date) async {
 
   double sumCalories(Iterable<DiaryEntry> es) =>
       es.fold(0, (sum, e) => sum + e.calories);
+  double sumBy(Iterable<DiaryEntry> es, double Function(DiaryEntry) selector) =>
+      es.fold(0, (sum, e) => sum + selector(e));
 
   return DiaryDayView(
     goal: profile.goal,
@@ -38,17 +40,20 @@ Future<DiaryDayView?> diaryDay(Ref ref, DateTime date) async {
       consumedFatGrams: entries.fold(0, (sum, e) => sum + e.fat),
       consumedCarbGrams: entries.fold(0, (sum, e) => sum + e.carbs),
     ),
-    meals: [
-      for (final type in MealType.values)
-        MealSection(
-          type: type,
-          consumedCalories: sumCalories(entries.where((e) => e.mealType == type)),
-          items: [
-            for (final entry in entries.where((e) => e.mealType == type))
-              MealFoodItem(name: entry.displayName, calories: entry.calories),
-          ],
-        ),
-    ],
+    meals: MealType.values.map((type) {
+      final mealEntries = entries.where((e) => e.mealType == type).toList();
+      return MealSection(
+        type: type,
+        consumedCalories: sumCalories(mealEntries),
+        proteinGrams: sumBy(mealEntries, (e) => e.protein),
+        fatGrams: sumBy(mealEntries, (e) => e.fat),
+        carbGrams: sumBy(mealEntries, (e) => e.carbs),
+        items: [
+          for (final entry in mealEntries)
+            MealFoodItem(name: entry.displayName, calories: entry.calories),
+        ],
+      );
+    }).toList(),
   );
 }
 

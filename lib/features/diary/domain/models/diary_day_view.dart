@@ -35,11 +35,17 @@ class MealSection {
   const MealSection({
     required this.type,
     required this.consumedCalories,
+    required this.proteinGrams,
+    required this.fatGrams,
+    required this.carbGrams,
     required this.items,
   });
 
   final MealType type;
   final double consumedCalories;
+  final double proteinGrams;
+  final double fatGrams;
+  final double carbGrams;
   final List<MealFoodItem> items;
 }
 

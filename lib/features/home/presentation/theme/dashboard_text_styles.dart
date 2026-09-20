@@ -75,6 +75,12 @@ abstract final class DashboardTextStyles {
     fontFeatures: const [FontFeature.tabularFigures()],
   );
 
+  static TextStyle mealMacroChip = GoogleFonts.roboto(
+    fontSize: 11.5,
+    color: DashboardColors.textSecondary,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
   static TextStyle mealEmpty = GoogleFonts.roboto(
     fontSize: 13,
     fontStyle: FontStyle.italic,

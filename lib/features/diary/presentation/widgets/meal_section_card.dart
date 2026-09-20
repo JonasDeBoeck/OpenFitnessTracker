@@ -64,6 +64,27 @@ class MealSectionCard extends StatelessWidget {
                           : '0 kcal logged',
                       style: DashboardTextStyles.mealKcal,
                     ),
+                    if (hasItems) ...[
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          _MealMacroChip(
+                            color: DashboardColors.macroProtein,
+                            grams: meal.proteinGrams,
+                          ),
+                          const SizedBox(width: 10),
+                          _MealMacroChip(
+                            color: DashboardColors.macroFat,
+                            grams: meal.fatGrams,
+                          ),
+                          const SizedBox(width: 10),
+                          _MealMacroChip(
+                            color: DashboardColors.macroCarb,
+                            grams: meal.carbGrams,
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -100,6 +121,29 @@ class MealSectionCard extends StatelessWidget {
           _AddFoodButton(onTap: onAddFood),
         ],
       ),
+    );
+  }
+}
+
+class _MealMacroChip extends StatelessWidget {
+  const _MealMacroChip({required this.color, required this.grams});
+
+  final Color color;
+  final double grams;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 4),
+        Text('${grams.toStringAsFixed(0)}g', style: DashboardTextStyles.mealMacroChip),
+      ],
     );
   }
 }
