@@ -1,25 +1,23 @@
-import 'package:flutter/material.dart' show DateUtils, Rect;
+import 'package:flutter/material.dart' show Rect;
 import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/models/meal_type.dart';
-import '../../data/diary_repository.dart';
 import '../../data/food_repository.dart';
 import '../../data/services/food_photo_service.dart';
 import '../../data/services/image_crop_service.dart';
 import '../../data/services/nutrition_label_ocr_service.dart';
 import '../../domain/exceptions/duplicate_barcode_exception.dart';
-import '../../domain/models/diary_entry.dart';
 import '../../domain/models/food.dart';
 import '../../domain/validation/macro_calorie_validator.dart';
 import 'add_product_form_state.dart';
-import 'diary_providers.dart';
-import 'food_search_providers.dart';
 
 part 'add_product_notifier.g.dart';
 
-/// A food logged straight from Add Product (no quantity input on that
-/// screen) is logged at this fixed quantity. See the plan's Open Risks.
+/// The quantity the food-search "quick add" shortcut logs an already-known
+/// food at, with no prompt. A brand-new food (Add Product's own "Add to
+/// meal") is never logged at this fixed amount — see AddProductScreen,
+/// which sends the user to FoodDetailScreen's quantity stepper instead.
 const double kDefaultLoggedQuantityGrams = 100.0;
 
 @riverpod
@@ -120,7 +118,7 @@ class AddProductNotifier extends _$AddProductNotifier {
   Future<void> save() async {
     // A previous attempt already persisted this food (the user stayed on
     // the screen to fix a macro-mismatch warning) — update that same row
-    // instead of creating a duplicate, and don't log it to the meal again.
+    // instead of creating a duplicate.
     final previouslySavedId = state.savedFood?.id;
 
     state = state.copyWith(isSaving: true, saveError: null, macroMismatchWarning: null);
@@ -161,17 +159,6 @@ class AddProductNotifier extends _$AddProductNotifier {
       final Food saved;
       if (previouslySavedId == null) {
         saved = await ref.read(foodRepositoryProvider).create(food);
-        if (state.logToMealEnabled) {
-          final entry = DiaryEntry.snapshotFrom(
-            food: saved,
-            quantityGrams: kDefaultLoggedQuantityGrams,
-            mealType: state.mealType,
-            loggedAt: DateTime.now(),
-          );
-          await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
-          ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(DateTime.now())));
-          ref.invalidate(recentFoodsProvider);
-        }
       } else {
         await ref.read(foodRepositoryProvider).update(food);
         saved = food;
