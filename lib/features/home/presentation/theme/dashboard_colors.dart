@@ -31,4 +31,7 @@ abstract final class DashboardColors {
   static const Color favoriteActiveBackground = Color(0xFFFBF3E8);
 
   static const Color destructive = Color(0xFFB5432E);
+
+  /// rgba(28,28,23,0.45) — backdrop behind dialogs and bottom sheets.
+  static const Color dialogBackdrop = Color(0x731C1C17);
 }

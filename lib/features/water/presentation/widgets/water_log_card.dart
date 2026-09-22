@@ -26,6 +26,7 @@ class WaterLogCard extends StatelessWidget {
     final value = await showModalBottomSheet<double>(
       context: context,
       backgroundColor: DashboardColors.surface,
+      barrierColor: DashboardColors.dialogBackdrop,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -66,10 +67,13 @@ class WaterLogCard extends StatelessWidget {
           ),
           if (entries.isNotEmpty) ...[
             const SizedBox(height: 10),
-            for (var i = 0; i < entries.length; i++) ...[
-              if (i > 0) const Divider(height: 1, color: DashboardColors.border),
-              _WaterEntryRow(entry: entries[i], onDelete: () => onDelete(entries[i].id!)),
-            ],
+            Column(
+              spacing: 8,
+              children: [
+                for (final entry in entries)
+                  _WaterEntryRow(entry: entry, onDelete: () => onDelete(entry.id!)),
+              ],
+            ),
           ],
         ],
       ),
@@ -122,22 +126,31 @@ class _WaterEntryRow extends StatelessWidget {
         padding: const EdgeInsets.only(right: 14),
         decoration: BoxDecoration(
           color: DashboardColors.destructive,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
       ),
       confirmDismiss: (_) => showConfirmDeleteDialog(
         context,
-        title: 'Delete this entry?',
+        title: 'Delete this item?',
         message: '${entry.milliliters.toStringAsFixed(0)} mL will be removed from your log.',
       ),
       onDismissed: (_) => onDelete(),
       child: Container(
-        color: DashboardColors.card,
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Text(
-          '${entry.milliliters.toStringAsFixed(0)} mL · $time',
-          style: DashboardTextStyles.mealItemName,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: DashboardColors.surface,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '${entry.milliliters.toStringAsFixed(0)} mL',
+              style: DashboardTextStyles.waterEntryAmount,
+            ),
+            Text(time, style: DashboardTextStyles.waterEntryTime),
+          ],
         ),
       ),
     );
@@ -164,12 +177,12 @@ class _CustomAmountSheetState extends State<_CustomAmountSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Custom amount', style: DashboardTextStyles.mealTitle),
+          Text('Custom amount', style: DashboardTextStyles.dialogTitle),
           const SizedBox(height: 14),
           Text(
             '${_value.toStringAsFixed(0)} mL',
             textAlign: TextAlign.center,
-            style: DashboardTextStyles.gaugeValue.copyWith(color: DashboardColors.water),
+            style: DashboardTextStyles.sheetValue,
           ),
           Slider(
             value: _value,
@@ -179,10 +192,19 @@ class _CustomAmountSheetState extends State<_CustomAmountSheet> {
             activeColor: DashboardColors.water,
             onChanged: (v) => setState(() => _value = v),
           ),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: DashboardColors.water),
-            onPressed: () => widget.onConfirm(_value),
-            child: Text('Log ${_value.toStringAsFixed(0)} mL'),
+          SizedBox(
+            height: 48,
+            child: FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: DashboardColors.water,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              ),
+              onPressed: () => widget.onConfirm(_value),
+              child: Text(
+                'Log ${_value.toStringAsFixed(0)} mL',
+                style: DashboardTextStyles.sheetButtonLabel,
+              ),
+            ),
           ),
         ],
       ),

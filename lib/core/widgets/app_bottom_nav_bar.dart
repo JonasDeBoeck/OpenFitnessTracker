@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/home/presentation/theme/dashboard_text_styles.dart';
 import '../router/app_routes.dart';
 
 /// Which primary tab is currently active, for [AppBottomNavBar] to
@@ -108,14 +109,7 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(icon, size: 22, color: color),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
-            ),
+            Text(label, style: DashboardTextStyles.navLabel.copyWith(color: color)),
           ],
         ),
       ),
@@ -139,7 +133,7 @@ class _AddFoodFab extends StatelessWidget {
           side: BorderSide(color: AppBottomNavBar._surface, width: 3),
         ),
         elevation: 6,
-        shadowColor: const Color(0x593C6E4F),
+        shadowColor: const Color(0x591C3C28),
         child: InkWell(
           customBorder: const CircleBorder(),
           onTap: onTap,

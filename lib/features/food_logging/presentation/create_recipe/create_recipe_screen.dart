@@ -83,7 +83,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Expanded(child: Text('Create recipe', style: DashboardTextStyles.greeting)),
+                  Expanded(child: Text('Create recipe', style: DashboardTextStyles.topbarTitle)),
                 ],
               ),
             ),
@@ -98,7 +98,10 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                     onRemove: notifier.clearPhoto,
                   ),
                   const SizedBox(height: 16),
-                  Text('Recipe name', style: DashboardTextStyles.mealKcal),
+                  Text(
+                    'Recipe name',
+                    style: DashboardTextStyles.mealKcal.copyWith(fontWeight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 4),
                   TextField(
                     controller: _nameController,
@@ -111,7 +114,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                       fillColor: DashboardColors.card,
                       errorText: state.nameError,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(14),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -133,17 +136,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                     ),
                     const SizedBox(height: 8),
                   ],
-                  OutlinedButton.icon(
-                    onPressed: () => _addIngredient(notifier),
-                    icon: const Icon(Icons.add, size: 16),
-                    label: const Text('Add ingredient'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: DashboardColors.primary,
-                      minimumSize: const Size.fromHeight(44),
-                      side: const BorderSide(color: Color(0xFFC7C2AC), width: 1.5, style: BorderStyle.solid),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    ),
-                  ),
+                  _AddIngredientButton(onTap: () => _addIngredient(notifier)),
                   const SizedBox(height: 16),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,7 +190,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                         filled: true,
                         fillColor: DashboardColors.card,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
                         ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -298,7 +291,10 @@ class _NutritionSummary extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(recipe.totalCalories.toStringAsFixed(0), style: DashboardTextStyles.gaugeValue),
+          Text(
+            recipe.totalCalories.toStringAsFixed(0),
+            style: DashboardTextStyles.gaugeValue.copyWith(fontSize: 32),
+          ),
           Text('total kcal', style: DashboardTextStyles.gaugeSub),
           const SizedBox(height: 10),
           Row(
@@ -361,7 +357,7 @@ class _LabeledField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: DashboardTextStyles.mealKcal),
+        Text(label, style: DashboardTextStyles.mealKcal.copyWith(fontWeight: FontWeight.w600)),
         const SizedBox(height: 4),
         TextField(
           controller: controller,
@@ -373,11 +369,89 @@ class _LabeledField extends StatelessWidget {
             hintText: hint,
             filled: true,
             fillColor: DashboardColors.card,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           ),
         ),
       ],
     );
   }
+}
+
+class _AddIngredientButton extends StatelessWidget {
+  const _AddIngredientButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: CustomPaint(
+          painter: _DashedRoundedBorderPainter(
+            color: const Color(0xFFC7C2AC),
+            radius: 14,
+          ),
+          child: SizedBox(
+            height: 44,
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.add, size: 16, color: DashboardColors.primary),
+                const SizedBox(width: 6),
+                Text(
+                  'Add ingredient',
+                  style: DashboardTextStyles.addFoodButton.copyWith(fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DashedRoundedBorderPainter extends CustomPainter {
+  const _DashedRoundedBorderPainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  static const double _strokeWidth = 1.5;
+  static const double _dashWidth = 5;
+  static const double _dashGap = 4;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
+    final path = Path()..addRRect(rrect);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = _strokeWidth;
+
+    for (final metric in path.computeMetrics()) {
+      var distance = 0.0;
+      while (distance < metric.length) {
+        final next = distance + _dashWidth;
+        canvas.drawPath(
+          metric.extractPath(distance, next.clamp(0, metric.length)),
+          paint,
+        );
+        distance = next + _dashGap;
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedRoundedBorderPainter oldDelegate) =>
+      oldDelegate.color != color || oldDelegate.radius != radius;
 }

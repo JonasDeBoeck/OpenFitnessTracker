@@ -103,6 +103,7 @@ UserProfile buildUserProfile({
   double? customProteinPerKg,
   double? customFatPerKg,
   double? customWaterTargetMl,
+  double? manualMaintenanceCalories,
 }) {
   final bmr = calculateBmr(
     sex: sex,
@@ -110,7 +111,8 @@ UserProfile buildUserProfile({
     heightCm: heightCm,
     weightKg: weightKg,
   );
-  final tdee = calculateTdee(bmr: bmr, activityLevel: activityLevel);
+  final tdee =
+      manualMaintenanceCalories ?? calculateTdee(bmr: bmr, activityLevel: activityLevel);
   final targetCalories =
       customTargetCalories ?? calculateTargetCalories(tdee: tdee, goal: goal);
   final macros = calculateMacros(

@@ -37,7 +37,21 @@ class BrowseFoodsScreen extends ConsumerWidget {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Text('All foods', style: DashboardTextStyles.greeting),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('All foods', style: DashboardTextStyles.topbarTitle.copyWith(fontSize: 20)),
+                      groupedAsync.when(
+                        loading: () => const SizedBox.shrink(),
+                        error: (error, _) => const SizedBox.shrink(),
+                        data: (grouped) {
+                          final count = grouped.values.fold<int>(0, (sum, items) => sum + items.length);
+                          return Text('$count items · A–Z', style: DashboardTextStyles.mealKcal);
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -60,8 +74,14 @@ class BrowseFoodsScreen extends ConsumerWidget {
                     children: [
                       for (final letter in letters) ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text(letter, style: DashboardTextStyles.sectionTitle),
+                          padding: const EdgeInsets.fromLTRB(4, 10, 4, 2),
+                          child: Text(
+                            letter,
+                            style: DashboardTextStyles.sectionTitle.copyWith(
+                              fontSize: 13,
+                              color: DashboardColors.primary,
+                            ),
+                          ),
                         ),
                         for (final food in grouped[letter]!) ...[
                           FoodListRow(
@@ -69,6 +89,7 @@ class BrowseFoodsScreen extends ConsumerWidget {
                             onTap: () => _openFood(context, food),
                             onToggleFavorite: () =>
                                 ref.read(favoriteToggleProvider.notifier).toggle(food.id!),
+                            borderRadius: 14,
                           ),
                           const SizedBox(height: 8),
                         ],

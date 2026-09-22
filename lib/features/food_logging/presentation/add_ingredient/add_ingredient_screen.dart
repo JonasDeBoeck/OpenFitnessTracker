@@ -60,7 +60,10 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
                   Expanded(
-                    child: Text('Add ingredient', style: DashboardTextStyles.greeting),
+                    child: Text(
+                      'Add ingredient',
+                      style: DashboardTextStyles.topbarTitle.copyWith(fontSize: 20),
+                    ),
                   ),
                 ],
               ),
@@ -190,7 +193,10 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                 alignment: Alignment.center,
                 child: Column(
                   children: [
-                    Text('≈ ${kcal.toStringAsFixed(0)}', style: DashboardTextStyles.gaugeValue),
+                    Text(
+                      '≈ ${kcal.toStringAsFixed(0)}',
+                      style: DashboardTextStyles.gaugeValue.copyWith(fontSize: 34),
+                    ),
                     Text('kcal for this ingredient', style: DashboardTextStyles.gaugeSub),
                   ],
                 ),

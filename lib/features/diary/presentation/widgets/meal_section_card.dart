@@ -99,6 +99,7 @@ class MealSectionCard extends StatelessWidget {
           const SizedBox(height: 12),
           if (hasItems)
             Column(
+              spacing: 8,
               children: [
                 for (final item in meal.items)
                   Dismissible(
@@ -109,7 +110,7 @@ class MealSectionCard extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 14),
                       decoration: BoxDecoration(
                         color: DashboardColors.destructive,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       child: const Icon(
                         Icons.delete_outline,
@@ -124,22 +125,29 @@ class MealSectionCard extends StatelessWidget {
                     ),
                     onDismissed: (_) => onDeleteItem(item.id!),
                     child: Material(
-                      color: DashboardColors.card,
+                      color: DashboardColors.surface,
+                      borderRadius: BorderRadius.circular(14),
                       child: InkWell(
+                        borderRadius: BorderRadius.circular(14),
                         onTap: () => onEditItem(item),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 7),
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(color: DashboardColors.border),
-                            ),
-                          ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                item.displayName,
-                                style: DashboardTextStyles.mealItemName,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    item.displayName,
+                                    style: DashboardTextStyles.mealItemName,
+                                  ),
+                                  Text(
+                                    '${item.quantityGrams.toStringAsFixed(0)} g',
+                                    style: DashboardTextStyles.mealItemGrams,
+                                  ),
+                                ],
                               ),
                               Text(
                                 '${item.calories.toStringAsFixed(0)} kcal',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/number_format.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/water_day_view.dart';
@@ -41,7 +42,7 @@ class WaterProgressCard extends StatelessWidget {
               Text('Water', style: DashboardTextStyles.macroName),
               const Spacer(),
               Text(
-                '${day.consumedMl.toStringAsFixed(0)} / ${day.targetMl.toStringAsFixed(0)} mL',
+                '${groupedInt(day.consumedMl)} / ${groupedInt(day.targetMl)} mL',
                 style: DashboardTextStyles.macroNums,
               ),
             ],

@@ -111,6 +111,7 @@ class HomeScreen extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: DashboardColors.surface,
+      barrierColor: DashboardColors.dialogBackdrop,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

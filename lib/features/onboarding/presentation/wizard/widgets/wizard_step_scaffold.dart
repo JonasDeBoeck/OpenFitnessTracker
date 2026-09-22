@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../home/presentation/theme/dashboard_colors.dart';
+import '../../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../providers/onboarding_wizard_state.dart';
 
 class WizardStepScaffold extends StatelessWidget {
@@ -25,36 +27,67 @@ class WizardStepScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: onBack == null
-            ? null
-            : IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: onBack,
-              ),
-        automaticallyImplyLeading: false,
-        title: LinearProgressIndicator(
-          value: (currentStep + 1) / onboardingStepCount,
-        ),
-      ),
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.headlineSmall),
-              const SizedBox(height: 24),
-              Expanded(child: body),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: canProceed ? onNext : null,
-                  child: Text(nextLabel),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(onBack == null ? 24 : 12, 22, 20, 10),
+              child: Row(
+                children: [
+                  if (onBack != null) ...[
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
+                        onPressed: onBack,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        value: currentStep / onboardingStepCount,
+                        minHeight: 4,
+                        backgroundColor: const Color(0xFFE4E0D0),
+                        valueColor: const AlwaysStoppedAnimation(DashboardColors.primary),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 12, 24, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: DashboardTextStyles.sectionTitle.copyWith(fontSize: 25)),
+                    const SizedBox(height: 24),
+                    Expanded(child: body),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: DashboardColors.primary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        ),
+                        onPressed: canProceed ? onNext : null,
+                        child: Text(nextLabel, style: DashboardTextStyles.sheetButtonLabel.copyWith(fontSize: 16)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

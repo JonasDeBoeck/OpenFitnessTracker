@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/router/app_routes.dart';
@@ -177,7 +178,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Expanded(child: Text('Add product', style: DashboardTextStyles.greeting)),
+                  Expanded(child: Text('Add manually', style: DashboardTextStyles.topbarTitle)),
                 ],
               ),
             ),
@@ -192,29 +193,13 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     onRemove: notifier.clearPhoto,
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: _LabeledField(
-                          label: 'Food name',
-                          controller: _nameController,
-                          onChanged: (v) {
-                            notifier.setName(v);
-                          },
-                          hint: 'e.g. Homemade lasagna',
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(
-                          state.isFavorite ? Icons.star : Icons.star_border,
-                          color: state.isFavorite ? DashboardColors.macroFat : DashboardColors.textMuted,
-                        ),
-                        tooltip: state.isFavorite ? 'Remove from favorites' : 'Mark as favorite',
-                        onPressed: notifier.toggleFavorite,
-                      ),
-                    ],
+                  _LabeledField(
+                    label: 'Food name',
+                    controller: _nameController,
+                    onChanged: (v) {
+                      notifier.setName(v);
+                    },
+                    hint: 'e.g. Homemade lasagna',
                   ),
                   const SizedBox(height: 14),
                   Row(
@@ -241,6 +226,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "There's no external product database — scanning just links this "
+                    'barcode to the food you create here.',
+                    style: DashboardTextStyles.mealKcal.copyWith(fontSize: 12),
                   ),
                   const SizedBox(height: 14),
                   Row(
@@ -276,7 +267,16 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                       children: [
                         Row(
                           children: [
-                            Expanded(child: Text('Nutrition label', style: DashboardTextStyles.mealTitle)),
+                            Expanded(
+                              child: Text(
+                                'Nutrition label',
+                                style: GoogleFonts.manrope(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14,
+                                  color: DashboardColors.primaryDark,
+                                ),
+                              ),
+                            ),
                             if (state.ocrPer100gColumnFound == true)
                               const _Badge(text: 'Auto-filled'),
                           ],
@@ -392,9 +392,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Also log to a meal today', style: DashboardTextStyles.macroName),
-                        Switch(
+                        _PillSwitch(
                           value: state.logToMealEnabled,
-                          activeThumbColor: DashboardColors.primary,
                           onChanged: notifier.setLogToMealEnabled,
                         ),
                       ],
@@ -525,7 +524,14 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
       decoration: BoxDecoration(color: DashboardColors.surface, borderRadius: BorderRadius.circular(10)),
-      child: Text(text, style: DashboardTextStyles.mealKcal.copyWith(fontWeight: FontWeight.w700, color: DashboardColors.primaryDark)),
+      child: Text(
+        text,
+        style: DashboardTextStyles.mealKcal.copyWith(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: DashboardColors.primaryDark,
+        ),
+      ),
     );
   }
 }
@@ -550,6 +556,43 @@ class _WarningBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(child: Text(text, style: DashboardTextStyles.mealKcal.copyWith(color: const Color(0xFFA34B3E)))),
         ],
+      ),
+    );
+  }
+}
+
+/// Pill-shaped on/off switch matching the design (46x26 rounded track,
+/// green when on, sliding white knob) — used in place of the stock
+/// Material [Switch] for a pixel-accurate look.
+class _PillSwitch extends StatelessWidget {
+  const _PillSwitch({required this.value, required this.onChanged});
+
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: 46,
+        height: 26,
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          color: value ? DashboardColors.primary : DashboardColors.border,
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: AnimatedAlign(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          alignment: value ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          ),
+        ),
       ),
     );
   }

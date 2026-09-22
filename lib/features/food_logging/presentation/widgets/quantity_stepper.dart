@@ -11,44 +11,59 @@ class QuantityStepper extends StatelessWidget {
     super.key,
     required this.grams,
     required this.onChanged,
+    this.label = 'Quantity',
+    this.showCard = true,
+    this.minGrams = 0,
+    this.maxGrams = double.infinity,
   });
 
   final double grams;
   final ValueChanged<double> onChanged;
+  final String label;
+  final bool showCard;
+  final double minGrams;
+  final double maxGrams;
 
   static const double _stepGrams = 25;
 
   @override
   Widget build(BuildContext context) {
+    final row = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: DashboardTextStyles.macroName),
+        Row(
+          children: [
+            _StepButton(
+              icon: Icons.remove,
+              onTap: () => onChanged((grams - _stepGrams).clamp(minGrams, maxGrams)),
+            ),
+            SizedBox(
+              width: 64,
+              child: Text(
+                '${grams.toStringAsFixed(0)} g',
+                textAlign: TextAlign.center,
+                style: DashboardTextStyles.macroName,
+              ),
+            ),
+            _StepButton(
+              icon: Icons.add,
+              onTap: () => onChanged((grams + _stepGrams).clamp(minGrams, maxGrams)),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    if (!showCard) return row;
+
     return Container(
       decoration: BoxDecoration(
         color: DashboardColors.card,
         borderRadius: BorderRadius.circular(18),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Quantity', style: DashboardTextStyles.macroName),
-          Row(
-            children: [
-              _StepButton(
-                icon: Icons.remove,
-                onTap: () => onChanged((grams - _stepGrams).clamp(0, double.infinity)),
-              ),
-              SizedBox(
-                width: 64,
-                child: Text(
-                  '${grams.toStringAsFixed(0)} g',
-                  textAlign: TextAlign.center,
-                  style: DashboardTextStyles.macroName,
-                ),
-              ),
-              _StepButton(icon: Icons.add, onTap: () => onChanged(grams + _stepGrams)),
-            ],
-          ),
-        ],
-      ),
+      child: row,
     );
   }
 }

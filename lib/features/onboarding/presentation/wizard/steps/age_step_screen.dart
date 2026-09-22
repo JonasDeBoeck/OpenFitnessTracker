@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/widgets/field_pill.dart';
+import '../../../../home/presentation/theme/dashboard_colors.dart';
 import '../../providers/onboarding_wizard_notifier.dart';
 import '../widgets/wizard_step_scaffold.dart';
 
@@ -51,15 +53,24 @@ class _AgeStepScreenState extends ConsumerState<AgeStepScreen> {
         notifier.nextStep();
       },
       onBack: notifier.previousStep,
-      body: TextField(
-        controller: _controller,
-        autofocus: true,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          labelText: 'Age',
-          helperText: 'Between $_minAge and $_maxAge',
-        ),
-        onChanged: (_) => setState(() {}),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FieldPill(
+            label: 'Age',
+            controller: _controller,
+            autofocus: true,
+            keyboardType: TextInputType.number,
+            onChanged: (_) => setState(() {}),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, top: 6),
+            child: Text(
+              'Between $_minAge and $_maxAge',
+              style: TextStyle(fontSize: 12, color: DashboardColors.textSecondary),
+            ),
+          ),
+        ],
       ),
     );
   }
