@@ -156,7 +156,15 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       // away right after being told something's wrong.
       return;
     }
-    if (state.savedFood != null) {
+    if (state.savedFood == null) return;
+    if (state.logToMealEnabled) {
+      // Let the user pick how much they actually ate instead of silently
+      // logging a fixed 100 g of a food they've never logged before.
+      context.pushReplacement(
+        '/log-food/food/${state.savedFood!.id}',
+        extra: state.mealType,
+      );
+    } else {
       context.pop();
     }
   }
