@@ -70,17 +70,20 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('Edit ${entry.displayName}', style: DashboardTextStyles.mealTitle),
+          Text('Edit ${entry.displayName}', style: DashboardTextStyles.dialogTitle),
           const SizedBox(height: 14),
           QuantityStepper(
             grams: _grams,
             onChanged: (value) => setState(() => _grams = value),
+            showCard: false,
+            minGrams: 5,
+            maxGrams: 2000,
           ),
           const SizedBox(height: 14),
           Text(
             '${previewCalories.toStringAsFixed(0)} kcal',
             textAlign: TextAlign.center,
-            style: DashboardTextStyles.gaugeValue,
+            style: DashboardTextStyles.editKcalPreview,
           ),
           const SizedBox(height: 14),
           SizedBox(
@@ -88,9 +91,13 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
             child: FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: DashboardColors.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
               onPressed: _isSaving ? null : _save,
-              child: Text(_isSaving ? 'Saving…' : 'Save changes'),
+              child: Text(
+                _isSaving ? 'Saving…' : 'Save changes',
+                style: DashboardTextStyles.sheetButtonLabel,
+              ),
             ),
           ),
         ],

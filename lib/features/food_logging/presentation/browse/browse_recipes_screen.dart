@@ -38,7 +38,21 @@ class BrowseRecipesScreen extends ConsumerWidget {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Text('All recipes', style: DashboardTextStyles.greeting),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('All recipes', style: DashboardTextStyles.topbarTitle.copyWith(fontSize: 20)),
+                      groupedAsync.when(
+                        loading: () => const SizedBox.shrink(),
+                        error: (error, _) => const SizedBox.shrink(),
+                        data: (grouped) {
+                          final count = grouped.values.fold<int>(0, (sum, items) => sum + items.length);
+                          return Text('$count items · A–Z', style: DashboardTextStyles.mealKcal);
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -61,8 +75,14 @@ class BrowseRecipesScreen extends ConsumerWidget {
                     children: [
                       for (final letter in letters) ...[
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Text(letter, style: DashboardTextStyles.sectionTitle),
+                          padding: const EdgeInsets.fromLTRB(4, 10, 4, 2),
+                          child: Text(
+                            letter,
+                            style: DashboardTextStyles.sectionTitle.copyWith(
+                              fontSize: 13,
+                              color: DashboardColors.primary,
+                            ),
+                          ),
                         ),
                         for (final recipe in grouped[letter]!) ...[
                           RecipeListRow(
@@ -70,6 +90,7 @@ class BrowseRecipesScreen extends ConsumerWidget {
                             onTap: () => _openRecipe(context, recipe),
                             onToggleFavorite: () =>
                                 ref.read(recipeFavoriteToggleProvider.notifier).toggle(recipe.id!),
+                            borderRadius: 14,
                           ),
                           const SizedBox(height: 8),
                         ],

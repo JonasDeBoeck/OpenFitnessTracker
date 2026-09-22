@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../../../core/utils/number_format.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 
@@ -31,8 +32,8 @@ class CalorieGaugeCard extends StatelessWidget {
     final remainingLabel = remaining <= 0
         ? 'Goal reached'
         : isToday
-        ? '${remaining.toStringAsFixed(0)} kcal left today'
-        : '${remaining.toStringAsFixed(0)} kcal remaining';
+        ? '${groupedInt(remaining)} kcal left today'
+        : '${groupedInt(remaining)} kcal remaining';
     return Container(
       padding: const EdgeInsets.fromLTRB(22, 26, 22, 24),
       decoration: BoxDecoration(
@@ -53,12 +54,12 @@ class CalorieGaugeCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  consumedCalories.toStringAsFixed(0),
+                  groupedInt(consumedCalories),
                   style: DashboardTextStyles.gaugeValue,
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'of ${targetCalories.toStringAsFixed(0)} kcal',
+                  'of ${groupedInt(targetCalories)} kcal',
                   style: DashboardTextStyles.gaugeSub,
                 ),
               ],

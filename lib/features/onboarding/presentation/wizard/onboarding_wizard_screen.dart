@@ -7,18 +7,38 @@ import 'steps/activity_level_step_screen.dart';
 import 'steps/age_step_screen.dart';
 import 'steps/goal_step_screen.dart';
 import 'steps/height_weight_step_screen.dart';
+import 'steps/intro_step_screen.dart';
+import 'steps/manual_calories_step_screen.dart';
 import 'steps/name_step_screen.dart';
+import 'steps/path_step_screen.dart';
 import 'steps/sex_step_screen.dart';
 
 const List<Widget> _steps = [
+  IntroStepScreen(),
   NameStepScreen(),
+  PathStepScreen(),
   SexStepScreen(),
   AgeStepScreen(),
   HeightWeightStepScreen(),
-  ActivityLevelStepScreen(),
+  _ActivityOrManualStep(),
   GoalStepScreen(),
   OnboardingResultsScreen(),
 ];
+
+/// Picks between [ActivityLevelStepScreen] and [ManualCaloriesStepScreen]
+/// depending on which calorie method was chosen on the Path step — see
+/// [ManualCaloriesStepScreen]'s doc comment for why they're interchangeable.
+class _ActivityOrManualStep extends ConsumerWidget {
+  const _ActivityOrManualStep();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final manual = ref.watch(
+      onboardingWizardProvider.select((s) => s.manualCalorieMethod),
+    );
+    return manual ? const ManualCaloriesStepScreen() : const ActivityLevelStepScreen();
+  }
+}
 
 class OnboardingWizardScreen extends ConsumerWidget {
   const OnboardingWizardScreen({super.key});

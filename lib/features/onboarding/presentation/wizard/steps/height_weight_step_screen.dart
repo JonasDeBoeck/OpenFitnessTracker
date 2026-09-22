@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/widgets/field_pill.dart';
 import '../../providers/onboarding_wizard_notifier.dart';
 import '../widgets/wizard_step_scaffold.dart';
 
@@ -66,22 +67,18 @@ class _HeightWeightStepScreenState
       onBack: notifier.previousStep,
       body: Column(
         children: [
-          TextField(
+          FieldPill(
+            label: 'Height (cm)',
             controller: _heightController,
             autofocus: true,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ),
-            decoration: const InputDecoration(labelText: 'Height (cm)'),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: 16),
-          TextField(
+          FieldPill(
+            label: 'Weight (kg)',
             controller: _weightController,
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ),
-            decoration: const InputDecoration(labelText: 'Weight (kg)'),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (_) => setState(() {}),
           ),
         ],

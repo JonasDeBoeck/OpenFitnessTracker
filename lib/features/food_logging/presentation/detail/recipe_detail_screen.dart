@@ -126,7 +126,7 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                         icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                       ),
                       Expanded(
-                        child: Text('Recipe details', style: DashboardTextStyles.greeting),
+                        child: Text('Recipe details', style: DashboardTextStyles.topbarTitle),
                       ),
                     ],
                   ),
@@ -141,18 +141,39 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                           Expanded(
                             child: Text(recipe.name, style: DashboardTextStyles.sectionTitle),
                           ),
-                          IconButton(
-                            icon: Icon(
-                              recipe.isFavorite ? Icons.star : Icons.star_border,
-                              color: recipe.isFavorite
-                                  ? DashboardColors.macroFat
-                                  : DashboardColors.textMuted,
+                          Material(
+                            color: recipe.isFavorite
+                                ? DashboardColors.favoriteActiveBackground
+                                : Colors.transparent,
+                            shape: CircleBorder(
+                              side: BorderSide(
+                                color: recipe.isFavorite
+                                    ? DashboardColors.macroFat
+                                    : Colors.transparent,
+                                width: 1.5,
+                              ),
                             ),
-                            tooltip: recipe.isFavorite
-                                ? 'Remove from favorites'
-                                : 'Add to favorites',
-                            onPressed: () =>
-                                ref.read(recipeFavoriteToggleProvider.notifier).toggle(recipe.id!),
+                            child: InkWell(
+                              customBorder: const CircleBorder(),
+                              onTap: () =>
+                                  ref.read(recipeFavoriteToggleProvider.notifier).toggle(recipe.id!),
+                              child: Tooltip(
+                                message: recipe.isFavorite
+                                    ? 'Remove from favorites'
+                                    : 'Add to favorites',
+                                child: SizedBox(
+                                  width: 38,
+                                  height: 38,
+                                  child: Icon(
+                                    recipe.isFavorite ? Icons.star : Icons.star_border,
+                                    size: 20,
+                                    color: recipe.isFavorite
+                                        ? DashboardColors.macroFat
+                                        : DashboardColors.textMuted,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -173,6 +194,7 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                                   child: Text(
                                     label,
                                     style: DashboardTextStyles.macroNums.copyWith(
+                                      fontSize: 11,
                                       fontWeight: FontWeight.w600,
                                       color: DashboardColors.primaryDark,
                                     ),
@@ -209,7 +231,7 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(vertical: 9),
                                   decoration: const BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: DashboardColors.border)),
+                                    border: Border(bottom: BorderSide(color: Color(0xFFE3DFCF))),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,7 +329,10 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            Text(nutrition.calories.toStringAsFixed(0), style: DashboardTextStyles.gaugeValue),
+                            Text(
+                              nutrition.calories.toStringAsFixed(0),
+                              style: DashboardTextStyles.gaugeValue.copyWith(fontSize: 34),
+                            ),
                             Text('kcal', style: DashboardTextStyles.gaugeSub),
                           ],
                         ),

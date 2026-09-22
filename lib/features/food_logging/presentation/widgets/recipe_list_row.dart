@@ -14,11 +14,13 @@ class RecipeListRow extends StatelessWidget {
     required this.recipe,
     required this.onTap,
     required this.onToggleFavorite,
+    this.borderRadius = 16,
   });
 
   final Recipe recipe;
   final VoidCallback onTap;
   final VoidCallback onToggleFavorite;
+  final double borderRadius;
 
   String get _meta {
     final grams = '${recipe.totalGrams.toStringAsFixed(0)} g total';
@@ -29,9 +31,9 @@ class RecipeListRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: DashboardColors.card,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(borderRadius),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(borderRadius),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),

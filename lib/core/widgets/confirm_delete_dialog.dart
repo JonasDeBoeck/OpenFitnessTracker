@@ -14,18 +14,19 @@ Future<bool> showConfirmDeleteDialog(
 }) async {
   final confirmed = await showDialog<bool>(
     context: context,
+    barrierColor: DashboardColors.dialogBackdrop,
     builder: (context) => Dialog(
       backgroundColor: DashboardColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 22, 20, 22),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: DashboardTextStyles.mealTitle),
+            Text(title, style: DashboardTextStyles.dialogTitle),
             const SizedBox(height: 8),
-            Text(message, style: DashboardTextStyles.mealKcal),
+            Text(message, style: DashboardTextStyles.confirmMessage),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -42,7 +43,7 @@ Future<bool> showConfirmDeleteDialog(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel', style: DashboardTextStyles.dialogButtonLabel),
                     ),
                   ),
                 ),
@@ -55,7 +56,10 @@ Future<bool> showConfirmDeleteDialog(
                       style: FilledButton.styleFrom(
                         backgroundColor: DashboardColors.destructive,
                       ),
-                      child: const Text('Delete'),
+                      child: Text(
+                        'Delete',
+                        style: DashboardTextStyles.dialogButtonLabel.copyWith(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),

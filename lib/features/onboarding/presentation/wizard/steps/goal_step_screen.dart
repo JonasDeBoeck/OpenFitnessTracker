@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/widgets/choice_card.dart';
 import '../../../domain/models/goal.dart';
 import '../../providers/onboarding_wizard_notifier.dart';
 import '../widgets/wizard_step_scaffold.dart';
+
+IconData _iconFor(Goal goal) => switch (goal) {
+  Goal.cut => Icons.trending_down,
+  Goal.bulk => Icons.trending_up,
+  Goal.maintain => Icons.trending_flat,
+};
 
 class GoalStepScreen extends ConsumerWidget {
   const GoalStepScreen({super.key});
@@ -23,18 +30,19 @@ class GoalStepScreen extends ConsumerWidget {
         notifier.nextStep();
       },
       onBack: notifier.previousStep,
-      body: RadioGroup<Goal>(
-        groupValue: state.goal,
-        onChanged: (value) => notifier.setGoal(value!),
-        child: Column(
-          children: Goal.values.map((goal) {
-            return RadioListTile<Goal>(
-              title: Text(goal.label),
-              subtitle: Text(goal.description),
-              value: goal,
-            );
-          }).toList(),
-        ),
+      body: Column(
+        children: [
+          for (final goal in Goal.values) ...[
+            if (goal != Goal.values.first) const SizedBox(height: 10),
+            ChoiceCard(
+              icon: _iconFor(goal),
+              title: goal.label,
+              description: goal.description,
+              selected: state.goal == goal,
+              onTap: () => notifier.setGoal(goal),
+            ),
+          ],
+        ],
       ),
     );
   }

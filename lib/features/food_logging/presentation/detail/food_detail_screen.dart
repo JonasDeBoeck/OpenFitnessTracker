@@ -71,7 +71,7 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                       ),
                       Expanded(
-                        child: Text('Food details', style: DashboardTextStyles.greeting),
+                        child: Text('Food details', style: DashboardTextStyles.topbarTitle),
                       ),
                     ],
                   ),
@@ -84,7 +84,10 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            child: Text(food.name, style: DashboardTextStyles.sectionTitle),
+                            child: Text(
+                              food.name,
+                              style: DashboardTextStyles.sectionTitle.copyWith(fontSize: 21),
+                            ),
                           ),
                           const SizedBox(width: 10),
                           _FavoriteToggleButton(
@@ -107,6 +110,9 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         grams: grams,
                         onChanged: (value) =>
                             ref.read(foodQuantityProvider.notifier).setGrams(value),
+                        label: 'Serving size',
+                        minGrams: 25,
+                        maxGrams: 400,
                       ),
                       const SizedBox(height: 16),
                       Container(
@@ -118,7 +124,10 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         alignment: Alignment.center,
                         child: Column(
                           children: [
-                            Text(nutrition.calories.toStringAsFixed(0), style: DashboardTextStyles.gaugeValue),
+                            Text(
+                              nutrition.calories.toStringAsFixed(0),
+                              style: DashboardTextStyles.gaugeValue.copyWith(fontSize: 34),
+                            ),
                             Text('kcal', style: DashboardTextStyles.gaugeSub),
                           ],
                         ),
@@ -142,7 +151,7 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Text('Add to meal', style: DashboardTextStyles.sectionTitle.copyWith(fontSize: 13)),
+                      Text('Add to meal'.toUpperCase(), style: DashboardTextStyles.listHeading),
                       const SizedBox(height: 10),
                       MealTypePicker(
                         selected: _selectedMeal,
@@ -151,18 +160,23 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
-                  child: SizedBox(
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: isLogging ? null : () => _addToMeal(food, grams),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: DashboardColors.primary,
-                        foregroundColor: DashboardColors.surface,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: DashboardColors.border)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 14, 24, 20),
+                    child: SizedBox(
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: isLogging ? null : () => _addToMeal(food, grams),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: DashboardColors.primary,
+                          foregroundColor: DashboardColors.surface,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        ),
+                        child: Text(isLogging ? 'Adding…' : 'Add to ${_selectedMeal.label}'),
                       ),
-                      child: Text(isLogging ? 'Adding…' : 'Add to ${_selectedMeal.label}'),
                     ),
                   ),
                 ),

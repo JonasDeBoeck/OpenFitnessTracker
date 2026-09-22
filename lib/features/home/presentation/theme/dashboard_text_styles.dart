@@ -75,6 +75,24 @@ abstract final class DashboardTextStyles {
     fontFeatures: const [FontFeature.tabularFigures()],
   );
 
+  static TextStyle mealItemGrams = GoogleFonts.roboto(
+    fontSize: 11.5,
+    color: DashboardColors.textMuted,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle waterEntryAmount = GoogleFonts.roboto(
+    fontSize: 13,
+    color: DashboardColors.textPrimary,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle waterEntryTime = GoogleFonts.roboto(
+    fontSize: 12.5,
+    color: DashboardColors.textSecondary,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
   static TextStyle mealMacroChip = GoogleFonts.roboto(
     fontSize: 11.5,
     color: DashboardColors.textSecondary,
@@ -98,6 +116,106 @@ abstract final class DashboardTextStyles {
     fontSize: 11,
   );
 
+  static TextStyle dialogTitle = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 16,
+    color: DashboardColors.textPrimary,
+  );
+
+  static TextStyle confirmMessage = GoogleFonts.roboto(
+    fontSize: 13.5,
+    color: DashboardColors.textSecondary,
+    height: 1.4,
+  );
+
+  static TextStyle dialogButtonLabel = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 14,
+  );
+
+  static TextStyle sheetButtonLabel = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 15,
+    color: Colors.white,
+  );
+
+  static TextStyle editKcalPreview = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 22,
+    color: DashboardColors.textPrimary,
+  );
+
+  static TextStyle topbarTitle = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 18,
+    color: DashboardColors.textPrimary,
+  );
+
+  static TextStyle resultLabel = GoogleFonts.roboto(
+    fontSize: 15,
+    color: DashboardColors.textSecondary,
+  );
+
+  static TextStyle resultValue = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 15,
+    color: DashboardColors.textPrimary,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle resultTooltip = GoogleFonts.roboto(
+    fontSize: 12.5,
+    height: 1.42,
+    color: DashboardColors.tooltipText,
+  );
+
+  static TextStyle heroLabel = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 12.5,
+    color: const Color(0xFF12281B),
+    letterSpacing: 0.3,
+  );
+
+  static TextStyle heroValue = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 34,
+    color: DashboardColors.primaryDark,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle macroTileLabel = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 10.5,
+    color: DashboardColors.textSecondary,
+    letterSpacing: 0.4,
+  );
+
+  static TextStyle macroTileValue = GoogleFonts.roboto(
+    fontWeight: FontWeight.w700,
+    fontSize: 17,
+    color: DashboardColors.textPrimary,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle targetsTitle = GoogleFonts.roboto(
+    fontWeight: FontWeight.w600,
+    fontSize: 14,
+    color: DashboardColors.primaryDark,
+  );
+
+  static TextStyle targetsKcal = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 26,
+    color: DashboardColors.primaryDark,
+    fontFeatures: const [FontFeature.tabularFigures()],
+  );
+
+  static TextStyle sheetValue = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 26,
+    color: DashboardColors.water,
+  );
+
   static TextStyle tooltipTitle = GoogleFonts.roboto(
     fontWeight: FontWeight.w700,
     fontSize: 13,
@@ -108,5 +226,12 @@ abstract final class DashboardTextStyles {
     fontSize: 12,
     height: 1.5,
     color: DashboardColors.tooltipText,
+  );
+
+  static TextStyle listHeading = GoogleFonts.manrope(
+    fontWeight: FontWeight.w700,
+    fontSize: 12.5,
+    color: DashboardColors.textSecondary,
+    letterSpacing: 0.4,
   );
 }

@@ -40,9 +40,12 @@ class TrendsLineChartCard extends StatelessWidget {
       (max, spot) => spot.y > max ? spot.y : max,
     );
     final maxY = highest <= 0 ? 1.0 : highest * 1.08;
+    // Calories uses the neutral text color (it's the odd one out with no
+    // legend dot); the macro/water cards pass their own series color.
+    final showLegendDot = color != DashboardColors.textPrimary;
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(18, 18, 18, 12),
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
       decoration: BoxDecoration(
         color: DashboardColors.card,
         borderRadius: BorderRadius.circular(20),
@@ -50,11 +53,27 @@ class TrendsLineChartCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: DashboardTextStyles.macroName),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (showLegendDot) ...[
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+              ],
+              Text(title, style: DashboardTextStyles.macroName),
+            ],
+          ),
           const SizedBox(height: 4),
           Text(
             'Avg ${_formatValue(average)}$unit/day · Target ${_formatValue(target)}$unit',
-            style: DashboardTextStyles.macroNums,
+            style: DashboardTextStyles.macroNums.copyWith(fontSize: 12),
           ),
           const SizedBox(height: 14),
           SizedBox(

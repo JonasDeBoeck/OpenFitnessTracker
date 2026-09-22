@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/app_routes.dart';
+import '../../../core/utils/number_format.dart';
 import '../../../core/widgets/app_bottom_nav_bar.dart';
+import '../../../core/widgets/choice_card.dart';
+import '../../../core/widgets/field_pill.dart';
 import '../../home/presentation/theme/dashboard_colors.dart';
 import '../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../onboarding/domain/calculations/nutrition_calculator.dart';
@@ -327,26 +330,35 @@ class _ProfileForm extends ConsumerWidget {
           _SectionLabel('Weight (kg)'),
           const SizedBox(height: 8),
           _NumberField(
+            label: 'Weight',
             controller: weightController,
-            hint: 'e.g. 72',
+            suffixText: 'kg',
             onChanged: onFieldChanged,
           ),
           const SizedBox(height: 20),
           _SectionLabel('Height (cm)'),
           const SizedBox(height: 8),
           _NumberField(
+            label: 'Height',
             controller: heightController,
-            hint: 'e.g. 178',
+            suffixText: 'cm',
             onChanged: onFieldChanged,
           ),
           const SizedBox(height: 20),
           _SectionLabel('Age'),
           const SizedBox(height: 8),
           _NumberField(
+            label: 'Age',
             controller: ageController,
-            hint: 'Between $_minAge and $_maxAge',
             allowDecimal: false,
             onChanged: onFieldChanged,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, top: 6),
+            child: Text(
+              'Between $_minAge and $_maxAge',
+              style: TextStyle(fontSize: 12, color: DashboardColors.textSecondary),
+            ),
           ),
           const SizedBox(height: 20),
           _SectionLabel('Gender'),
@@ -367,8 +379,9 @@ class _ProfileForm extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           _NumberField(
+            label: 'Calories',
             controller: kcalController,
-            hint: 'e.g. 2200',
+            suffixText: 'kcal',
             allowDecimal: false,
             onChanged: onKcalFieldChanged,
           ),
@@ -383,23 +396,28 @@ class _ProfileForm extends ConsumerWidget {
             children: [
               Expanded(
                 child: _NumberField(
+                  label: 'Protein',
                   controller: proteinRateController,
-                  hint: 'Protein g/kg',
+                  suffixText: 'g/kg',
                   onChanged: onMacroFieldChanged,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _NumberField(
+                  label: 'Fat',
                   controller: fatRateController,
-                  hint: 'Fat g/kg',
+                  suffixText: 'g/kg',
                   onChanged: onMacroFieldChanged,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 6),
-          Text('Carbs fill the rest.', style: DashboardTextStyles.mealEmpty),
+          Text(
+            'Carbs fill the rest.',
+            style: TextStyle(fontSize: 12, color: DashboardColors.textMuted),
+          ),
           const SizedBox(height: 20),
           _SectionHeaderRow(
             label: 'Water goal (mL)',
@@ -408,8 +426,9 @@ class _ProfileForm extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           _NumberField(
+            label: 'Water',
             controller: waterController,
-            hint: 'e.g. 2600',
+            suffixText: 'mL',
             allowDecimal: false,
             onChanged: onWaterFieldChanged,
           ),
@@ -496,35 +515,49 @@ class _SectionHeaderRow extends StatelessWidget {
 
 class _NumberField extends StatelessWidget {
   const _NumberField({
+    required this.label,
     required this.controller,
     required this.onChanged,
-    this.hint,
+    this.suffixText,
     this.allowDecimal = true,
   });
 
+  final String label;
   final TextEditingController controller;
   final VoidCallback onChanged;
-  final String? hint;
+  final String? suffixText;
   final bool allowDecimal;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return FieldPill(
+      label: label,
       controller: controller,
       keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
-      decoration: InputDecoration(
-        hintText: hint,
-        filled: true,
-        fillColor: DashboardColors.surface,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: DashboardColors.border),
-        ),
-      ),
+      suffixText: suffixText,
       onChanged: (_) => onChanged(),
     );
   }
 }
+
+IconData _iconForGoal(Goal goal) => switch (goal) {
+  Goal.cut => Icons.trending_down,
+  Goal.bulk => Icons.trending_up,
+  Goal.maintain => Icons.trending_flat,
+};
+
+IconData _iconForSex(Sex sex) => switch (sex) {
+  Sex.male => Icons.male,
+  Sex.female => Icons.female,
+};
+
+IconData _iconForActivityLevel(ActivityLevel level) => switch (level) {
+  ActivityLevel.sedentary => Icons.weekend_outlined,
+  ActivityLevel.light => Icons.directions_walk,
+  ActivityLevel.moderate => Icons.directions_run,
+  ActivityLevel.active => Icons.fitness_center,
+  ActivityLevel.veryActive => Icons.bolt,
+};
 
 class _GoalPicker extends StatelessWidget {
   const _GoalPicker({required this.value, required this.onChanged});
@@ -534,26 +567,19 @@ class _GoalPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup<Goal>(
-      groupValue: value,
-      onChanged: (goal) => onChanged(goal!),
-      child: Column(
-        children: Goal.values.map((goal) {
-          return Card(
-            color: DashboardColors.surface,
-            margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: DashboardColors.border),
-            ),
-            child: RadioListTile<Goal>(
-              title: Text(goal.label),
-              subtitle: Text(goal.description),
-              value: goal,
-            ),
-          );
-        }).toList(),
-      ),
+    return Column(
+      children: [
+        for (final goal in Goal.values) ...[
+          if (goal != Goal.values.first) const SizedBox(height: 10),
+          ChoiceCard(
+            icon: _iconForGoal(goal),
+            title: goal.label,
+            description: goal.description,
+            selected: value == goal,
+            onTap: () => onChanged(goal),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -566,22 +592,20 @@ class _SexPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup<Sex>(
-      groupValue: value,
-      onChanged: (sex) => onChanged(sex!),
-      child: Column(
-        children: Sex.values.map((sex) {
-          return Card(
-            color: DashboardColors.surface,
-            margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: DashboardColors.border),
+    return Row(
+      children: [
+        for (final sex in Sex.values) ...[
+          if (sex != Sex.values.first) const SizedBox(width: 12),
+          Expanded(
+            child: OptionChip(
+              icon: _iconForSex(sex),
+              label: sex.label,
+              selected: value == sex,
+              onTap: () => onChanged(sex),
             ),
-            child: RadioListTile<Sex>(title: Text(sex.label), value: sex),
-          );
-        }).toList(),
-      ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -594,26 +618,23 @@ class _ActivityLevelPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup<ActivityLevel>(
-      groupValue: value,
-      onChanged: (level) => onChanged(level!),
-      child: Column(
-        children: ActivityLevel.values.map((level) {
-          return Card(
-            color: DashboardColors.surface,
-            margin: const EdgeInsets.only(bottom: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: DashboardColors.border),
-            ),
-            child: RadioListTile<ActivityLevel>(
-              title: Text(level.label),
-              subtitle: Text(level.description),
-              value: level,
-            ),
-          );
-        }).toList(),
-      ),
+    return Column(
+      children: [
+        for (final level in ActivityLevel.values) ...[
+          if (level != ActivityLevel.values.first) const SizedBox(height: 10),
+          ChoiceCard(
+            icon: _iconForActivityLevel(level),
+            title: level.label,
+            description: level.description,
+            selected: value == level,
+            onTap: () => onChanged(level),
+            iconSize: 36,
+            iconRadius: 10,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+            titleFontSize: 15.5,
+          ),
+        ],
+      ],
     );
   }
 }
@@ -626,11 +647,10 @@ class _TargetsSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: BoxDecoration(
-        color: DashboardColors.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: DashboardColors.border),
+        color: DashboardColors.gaugeCardBackground,
+        borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -638,7 +658,7 @@ class _TargetsSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Your daily targets', style: DashboardTextStyles.macroName),
+              Text('Your daily targets', style: DashboardTextStyles.targetsTitle),
               InkWell(
                 onTap: () => context.push(
                   AppRoutes.targetsCalculationPath,
@@ -672,8 +692,8 @@ class _TargetsSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            '${profile.targetCalories.toStringAsFixed(0)} kcal / day',
-            style: DashboardTextStyles.gaugeValue,
+            '${groupedInt(profile.targetCalories)} kcal / day',
+            style: DashboardTextStyles.targetsKcal,
           ),
           const SizedBox(height: 8),
           Wrap(

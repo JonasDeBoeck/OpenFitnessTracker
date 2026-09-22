@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/number_format.dart';
 import '../../home/presentation/theme/dashboard_colors.dart';
 import '../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../onboarding/domain/calculations/nutrition_calculator.dart';
@@ -66,9 +67,7 @@ class TargetsCalculationScreen extends StatelessWidget {
 }
 
 String _fmt(double value) {
-  return value == value.roundToDouble()
-      ? value.toStringAsFixed(0)
-      : value.toStringAsFixed(1);
+  return value == value.roundToDouble() ? groupedInt(value) : value.toStringAsFixed(1);
 }
 
 class _Card extends StatelessWidget {

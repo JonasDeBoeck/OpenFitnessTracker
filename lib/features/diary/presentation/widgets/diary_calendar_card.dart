@@ -140,7 +140,7 @@ class _DiaryCalendarCardState extends State<DiaryCalendarCard> {
               _NavButton(icon: Icons.chevron_right, onTap: _goNext),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           if (_expanded) _buildMonthGrid() else _buildWeekStrip(),
         ],
       ),
@@ -228,7 +228,7 @@ class _NavButton extends StatelessWidget {
         child: SizedBox(
           width: 30,
           height: 30,
-          child: Icon(icon, size: 20, color: DashboardColors.textSecondary),
+          child: Icon(icon, size: 16, color: DashboardColors.textSecondary),
         ),
       ),
     );
@@ -272,7 +272,7 @@ class _MonthButton extends StatelessWidget {
                 duration: const Duration(milliseconds: 150),
                 child: const Icon(
                   Icons.keyboard_arrow_down,
-                  size: 18,
+                  size: 14,
                   color: DashboardColors.textSecondary,
                 ),
               ),
@@ -355,7 +355,7 @@ class _WeekDayChip extends StatelessWidget {
                   color: letterColor,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 '${date.day}',
                 style: GoogleFonts.roboto(
@@ -364,7 +364,7 @@ class _WeekDayChip extends StatelessWidget {
                   color: numberColor,
                 ),
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               _EntryDot(visible: hasEntries, color: dotColor),
             ],
           ),

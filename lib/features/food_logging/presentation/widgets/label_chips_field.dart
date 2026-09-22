@@ -66,6 +66,7 @@ class _LabelChipsFieldState extends State<LabelChipsField> {
                     deleteIconColor: DashboardColors.primaryDark,
                     onDeleted: () => widget.onRemove(label),
                     side: BorderSide.none,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     visualDensity: VisualDensity.compact,
                   ),

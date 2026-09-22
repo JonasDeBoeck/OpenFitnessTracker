@@ -37,8 +37,16 @@ class OnboardingWizardNotifier extends _$OnboardingWizardNotifier {
     state = state.copyWith(goal: goal);
   }
 
+  void setCalorieMethod(bool manual) {
+    state = state.copyWith(manualCalorieMethod: manual);
+  }
+
+  void setManualMaintenanceCalories(double kcal) {
+    state = state.copyWith(manualMaintenanceCalories: kcal);
+  }
+
   void nextStep() {
-    if (state.currentStep < onboardingStepCount - 1) {
+    if (state.currentStep < onboardingScreenCount - 1) {
       state = state.copyWith(currentStep: state.currentStep + 1);
     }
   }
@@ -58,8 +66,15 @@ class OnboardingWizardNotifier extends _$OnboardingWizardNotifier {
       age: state.age!,
       heightCm: state.heightCm!,
       weightKg: state.weightKg!,
-      activityLevel: state.activityLevel!,
+      // The activity-level question is replaced by a direct maintenance-
+      // calorie entry on the manual path, so there's no real answer to
+      // fall back on — `moderate` is a neutral placeholder that has no
+      // effect on the target since `manualMaintenanceCalories` overrides
+      // the TDEE it would otherwise feed into.
+      activityLevel: state.activityLevel ?? ActivityLevel.moderate,
       goal: state.goal!,
+      manualMaintenanceCalories:
+          state.manualCalorieMethod ? state.manualMaintenanceCalories : null,
     );
     state = state.copyWith(result: result);
   }
