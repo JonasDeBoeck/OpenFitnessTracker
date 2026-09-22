@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
+// The app's design only has light-mode mockups, so it always renders with
+// this theme regardless of the system's light/dark setting — see MainApp's
+// themeMode: ThemeMode.light.
 abstract final class AppTheme {
-  static ThemeData get light => _build(Brightness.light);
+  static ThemeData get light => _build();
 
-  static ThemeData get dark => _build(Brightness.dark);
-
-  static ThemeData _build(Brightness brightness) {
+  static ThemeData _build() {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: appSeedColor,
-      brightness: brightness,
+      brightness: Brightness.light,
     );
 
     return ThemeData(
