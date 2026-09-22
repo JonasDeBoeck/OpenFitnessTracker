@@ -38,7 +38,9 @@ abstract class AddProductFormState with _$AddProductFormState {
     String? photoError,
     String? ocrError,
     String? saveError,
-    // Advisory only — set alongside a successful save, never blocks it.
+    // Set alongside a successful save; never blocks the save itself, but
+    // AddProductScreen keeps the form open (instead of popping) while this
+    // is non-null, so the user has a way to actually fix the value.
     String? macroMismatchWarning,
     Food? savedFood,
   }) = _AddProductFormState;

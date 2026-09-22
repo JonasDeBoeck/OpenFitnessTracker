@@ -118,6 +118,11 @@ class AddProductNotifier extends _$AddProductNotifier {
   }
 
   Future<void> save() async {
+    // A previous attempt already persisted this food (the user stayed on
+    // the screen to fix a macro-mismatch warning) — update that same row
+    // instead of creating a duplicate, and don't log it to the meal again.
+    final previouslySavedId = state.savedFood?.id;
+
     state = state.copyWith(isSaving: true, saveError: null, macroMismatchWarning: null);
     try {
       final mismatchWarning = macrosRoughlyMatchCalories(
@@ -127,9 +132,11 @@ class AddProductNotifier extends _$AddProductNotifier {
         carbs: state.carbsPer100g,
       )
           ? null
-          : "The calories don't match the macros. Please check the label again.";
+          : "The calories don't match the macros. Please check and edit them "
+              'before continuing.';
 
       final food = Food(
+        id: previouslySavedId,
         name: state.name,
         brand: state.brand,
         store: state.store,
@@ -151,22 +158,31 @@ class AddProductNotifier extends _$AddProductNotifier {
         vitaminDMcgPer100g: state.vitaminDMcgPer100g,
       );
 
-      final saved = await ref.read(foodRepositoryProvider).create(food);
-
-      if (state.logToMealEnabled) {
-        final entry = DiaryEntry.snapshotFrom(
-          food: saved,
-          quantityGrams: kDefaultLoggedQuantityGrams,
-          mealType: state.mealType,
-          loggedAt: DateTime.now(),
-        );
-        await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
-        ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(DateTime.now())));
-        ref.invalidate(recentFoodsProvider);
+      final Food saved;
+      if (previouslySavedId == null) {
+        saved = await ref.read(foodRepositoryProvider).create(food);
+        if (state.logToMealEnabled) {
+          final entry = DiaryEntry.snapshotFrom(
+            food: saved,
+            quantityGrams: kDefaultLoggedQuantityGrams,
+            mealType: state.mealType,
+            loggedAt: DateTime.now(),
+          );
+          await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
+          ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(DateTime.now())));
+          ref.invalidate(recentFoodsProvider);
+        }
+      } else {
+        await ref.read(foodRepositoryProvider).update(food);
+        saved = food;
       }
 
-      // Save always succeeds regardless of the mismatch check — it's
-      // advisory only, surfaced alongside the successful result.
+      // The record is persisted either way — the mismatch check never
+      // blocks saving the data itself. What it does block is leaving the
+      // screen (see AddProductScreen._save): while a warning is showing,
+      // the form stays open with the just-saved values still editable, so
+      // the user has somewhere to actually fix a mistyped macro instead of
+      // being sent away right after being told it's wrong.
       state = state.copyWith(
         isSaving: false,
         savedFood: saved,

@@ -151,9 +151,10 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       return;
     }
     if (state.macroMismatchWarning != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(state.macroMismatchWarning!)),
-      );
+      // Saved, but left on-screen (see the warning banner below) so the
+      // user can actually fix the mistyped value instead of being sent
+      // away right after being told something's wrong.
+      return;
     }
     if (state.savedFood != null) {
       context.pop();
@@ -422,9 +423,11 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   child: Text(
                     state.isSaving
                         ? 'Saving…'
-                        : state.logToMealEnabled
-                            ? 'Add to ${state.mealType.label}'
-                            : 'Save food',
+                        : state.savedFood != null
+                            ? 'Save changes'
+                            : state.logToMealEnabled
+                                ? 'Add to ${state.mealType.label}'
+                                : 'Save food',
                   ),
                 ),
               ),
