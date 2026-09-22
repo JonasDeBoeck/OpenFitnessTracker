@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/models/meal_type.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../core/widgets/app_bottom_nav_bar.dart';
+import '../../../../core/widgets/exit_confirmation_scope.dart';
 import '../../../food_logging/domain/models/diary_entry.dart';
 import '../../../food_logging/food_logging.dart';
 import '../../../food_logging/presentation/widgets/edit_diary_entry_sheet.dart';
@@ -43,101 +44,108 @@ class DiaryScreen extends ConsumerWidget {
       ),
     );
 
-    return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 22, 24, 4),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Diary', style: DashboardTextStyles.greeting),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 14, 24, 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    DiaryCalendarCard(
-                      selectedDate: selectedDate,
-                      onDateSelected: (date) => ref
-                          .read(selectedDiaryDateProvider.notifier)
-                          .select(date),
-                      loggedDates: loggedDatesAsync.value ?? const {},
-                    ),
-                    const SizedBox(height: 20),
-                    dayAsync.when(
-                      loading: () => const _CenteredLoading(),
-                      error: (error, stackTrace) =>
-                          _CenteredMessage('Could not load this day: $error'),
-                      data: (day) {
-                        if (day == null) {
-                          return const _CenteredMessage('No profile yet.');
-                        }
-                        final isToday = DateUtils.isSameDay(selectedDate, today);
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              diaryDayLabel(selectedDate, today),
-                              style: DashboardTextStyles.sectionTitle,
-                            ),
-                            const SizedBox(height: 14),
-                            CalorieGaugeCard(
-                              consumedCalories: day.consumedCalories,
-                              targetCalories: day.targetCalories,
-                              progress: day.calorieProgress,
-                              isToday: isToday,
-                            ),
-                            const SizedBox(height: 20),
-                            MacroProgressCard(macros: day.macros),
-                            const SizedBox(height: 20),
-                            if (waterDayAsync.value case final waterDay?) ...[
-                              WaterProgressCard(day: waterDay),
-                              const SizedBox(height: 20),
-                              WaterLogCard(
-                                entries: waterDay.entries,
-                                onQuickAdd: (ml) => ref
-                                    .read(waterLogControllerProvider.notifier)
-                                    .add(selectedDate, ml),
-                                onCustomAdd: (ml) => ref
-                                    .read(waterLogControllerProvider.notifier)
-                                    .add(selectedDate, ml),
-                                onDelete: (id) => ref
-                                    .read(waterLogControllerProvider.notifier)
-                                    .delete(selectedDate, id),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                            for (var i = 0; i < day.meals.length; i++) ...[
-                              if (i > 0) const SizedBox(height: 20),
-                              MealSectionCard(
-                                meal: day.meals[i],
-                                onAddFood: () =>
-                                    _openAddFood(context, day.meals[i].type),
-                                onDeleteItem: (id) => ref
-                                    .read(diaryEntryControllerProvider.notifier)
-                                    .delete(selectedDate, id),
-                                onEditItem: (entry) => _openEditSheet(
-                                  context,
-                                  selectedDate,
-                                  entry,
-                                ),
-                              ),
-                            ],
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+    return ExitConfirmationScope(
+      child: Scaffold(
+        backgroundColor: DashboardColors.pageBackground,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 22, 24, 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Diary', style: DashboardTextStyles.greeting),
                 ),
               ),
-            ),
-            const AppBottomNavBar(currentTab: AppNavTab.diary),
-          ],
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(24, 14, 24, 32),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DiaryCalendarCard(
+                        selectedDate: selectedDate,
+                        onDateSelected: (date) => ref
+                            .read(selectedDiaryDateProvider.notifier)
+                            .select(date),
+                        loggedDates: loggedDatesAsync.value ?? const {},
+                      ),
+                      const SizedBox(height: 20),
+                      dayAsync.when(
+                        loading: () => const _CenteredLoading(),
+                        error: (error, stackTrace) =>
+                            _CenteredMessage('Could not load this day: $error'),
+                        data: (day) {
+                          if (day == null) {
+                            return const _CenteredMessage('No profile yet.');
+                          }
+                          final isToday = DateUtils.isSameDay(
+                            selectedDate,
+                            today,
+                          );
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                diaryDayLabel(selectedDate, today),
+                                style: DashboardTextStyles.sectionTitle,
+                              ),
+                              const SizedBox(height: 14),
+                              CalorieGaugeCard(
+                                consumedCalories: day.consumedCalories,
+                                targetCalories: day.targetCalories,
+                                progress: day.calorieProgress,
+                                isToday: isToday,
+                              ),
+                              const SizedBox(height: 20),
+                              MacroProgressCard(macros: day.macros),
+                              const SizedBox(height: 20),
+                              if (waterDayAsync.value case final waterDay?) ...[
+                                WaterProgressCard(day: waterDay),
+                                const SizedBox(height: 20),
+                                WaterLogCard(
+                                  entries: waterDay.entries,
+                                  onQuickAdd: (ml) => ref
+                                      .read(waterLogControllerProvider.notifier)
+                                      .add(selectedDate, ml),
+                                  onCustomAdd: (ml) => ref
+                                      .read(waterLogControllerProvider.notifier)
+                                      .add(selectedDate, ml),
+                                  onDelete: (id) => ref
+                                      .read(waterLogControllerProvider.notifier)
+                                      .delete(selectedDate, id),
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                              for (var i = 0; i < day.meals.length; i++) ...[
+                                if (i > 0) const SizedBox(height: 20),
+                                MealSectionCard(
+                                  meal: day.meals[i],
+                                  onAddFood: () =>
+                                      _openAddFood(context, day.meals[i].type),
+                                  onDeleteItem: (id) => ref
+                                      .read(
+                                        diaryEntryControllerProvider.notifier,
+                                      )
+                                      .delete(selectedDate, id),
+                                  onEditItem: (entry) => _openEditSheet(
+                                    context,
+                                    selectedDate,
+                                    entry,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const AppBottomNavBar(currentTab: AppNavTab.diary),
+            ],
+          ),
         ),
       ),
     );
