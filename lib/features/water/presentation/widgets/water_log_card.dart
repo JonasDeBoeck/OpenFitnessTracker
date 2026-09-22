@@ -8,7 +8,7 @@ import '../../domain/models/water_entry.dart';
 /// Quick-add chips (+250/+500/+1000 mL) plus a custom-amount slider and the
 /// day's logged entries, each deletable. Reused on Home (today) and Diary
 /// (whichever day is selected).
-class WaterLogCard extends StatelessWidget {
+class WaterLogCard extends StatefulWidget {
   const WaterLogCard({
     super.key,
     required this.entries,
@@ -22,6 +22,25 @@ class WaterLogCard extends StatelessWidget {
   final ValueChanged<double> onCustomAdd;
   final ValueChanged<int> onDelete;
 
+  @override
+  State<WaterLogCard> createState() => _WaterLogCardState();
+}
+
+class _WaterLogCardState extends State<WaterLogCard> {
+  // Ids dismissed locally but not yet reflected in `widget.entries`, since
+  // that list only updates once the async delete + provider refresh
+  // completes. Without this, a Dismissible whose entry is still present in
+  // the next rebuild trips "A dismissed Dismissible widget is still part of
+  // the tree" (or, in release builds, just reappears instead of erroring).
+  final _pendingDeleteIds = <int>{};
+
+  @override
+  void didUpdateWidget(WaterLogCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final currentIds = widget.entries.map((e) => e.id).toSet();
+    _pendingDeleteIds.removeWhere((id) => !currentIds.contains(id));
+  }
+
   Future<void> _openCustomSheet(BuildContext context) async {
     final value = await showModalBottomSheet<double>(
       context: context,
@@ -32,11 +51,15 @@ class WaterLogCard extends StatelessWidget {
       ),
       builder: (context) => _CustomAmountSheet(onConfirm: (v) => Navigator.of(context).pop(v)),
     );
-    if (value != null) onCustomAdd(value);
+    if (value != null) widget.onCustomAdd(value);
   }
 
   @override
   Widget build(BuildContext context) {
+    final visibleEntries = widget.entries
+        .where((e) => !_pendingDeleteIds.contains(e.id))
+        .toList();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
@@ -50,11 +73,17 @@ class WaterLogCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _QuickAddChip(label: '+250 mL', onTap: () => onQuickAdd(250))),
+              Expanded(
+                child: _QuickAddChip(label: '+250 mL', onTap: () => widget.onQuickAdd(250)),
+              ),
               const SizedBox(width: 8),
-              Expanded(child: _QuickAddChip(label: '+500 mL', onTap: () => onQuickAdd(500))),
+              Expanded(
+                child: _QuickAddChip(label: '+500 mL', onTap: () => widget.onQuickAdd(500)),
+              ),
               const SizedBox(width: 8),
-              Expanded(child: _QuickAddChip(label: '+1000 mL', onTap: () => onQuickAdd(1000))),
+              Expanded(
+                child: _QuickAddChip(label: '+1000 mL', onTap: () => widget.onQuickAdd(1000)),
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: _QuickAddChip(
@@ -65,13 +94,19 @@ class WaterLogCard extends StatelessWidget {
               ),
             ],
           ),
-          if (entries.isNotEmpty) ...[
+          if (visibleEntries.isNotEmpty) ...[
             const SizedBox(height: 10),
             Column(
               spacing: 8,
               children: [
-                for (final entry in entries)
-                  _WaterEntryRow(entry: entry, onDelete: () => onDelete(entry.id!)),
+                for (final entry in visibleEntries)
+                  _WaterEntryRow(
+                    entry: entry,
+                    onDelete: () {
+                      setState(() => _pendingDeleteIds.add(entry.id!));
+                      widget.onDelete(entry.id!);
+                    },
+                  ),
               ],
             ),
           ],
