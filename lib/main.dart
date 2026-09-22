@@ -19,8 +19,7 @@ class MainApp extends ConsumerWidget {
       title: 'Open Fitness Tracker',
       routerConfig: router,
       theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
     );
   }
 }
