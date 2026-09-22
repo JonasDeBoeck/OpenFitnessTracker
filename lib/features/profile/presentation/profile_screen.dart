@@ -6,6 +6,7 @@ import '../../../core/router/app_routes.dart';
 import '../../../core/utils/number_format.dart';
 import '../../../core/widgets/app_bottom_nav_bar.dart';
 import '../../../core/widgets/choice_card.dart';
+import '../../../core/widgets/exit_confirmation_scope.dart';
 import '../../../core/widgets/field_pill.dart';
 import '../../home/presentation/theme/dashboard_colors.dart';
 import '../../home/presentation/theme/dashboard_text_styles.dart';
@@ -160,9 +161,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final success = await notifier.save();
     if (!mounted) return;
     if (success) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Profile updated')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Profile updated')));
     }
   }
 
@@ -170,62 +170,65 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final editAsync = ref.watch(profileEditProvider);
 
-    return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 22, 24, 4),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Profile', style: DashboardTextStyles.greeting),
+    return ExitConfirmationScope(
+      child: Scaffold(
+        backgroundColor: DashboardColors.pageBackground,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 22, 24, 4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Profile', style: DashboardTextStyles.greeting),
+                ),
               ),
-            ),
-            Expanded(
-              child: editAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) =>
-                    Center(child: Text('Could not load your profile: $error')),
-                data: (editState) {
-                  if (!_controllersSeeded) _seedControllers(editState.draft);
-                  return _ProfileForm(
-                    draft: editState.draft,
-                    isSaving: editState.isSaving,
-                    saveError: editState.saveError,
-                    weightController: _weightController,
-                    heightController: _heightController,
-                    ageController: _ageController,
-                    kcalController: _kcalController,
-                    proteinRateController: _proteinRateController,
-                    fatRateController: _fatRateController,
-                    waterController: _waterController,
-                    kcalCustom: _kcalCustom,
-                    macrosCustom: _macrosCustom,
-                    waterCustom: _waterCustom,
-                    canSave: _fieldsValid,
-                    onFieldChanged: () => setState(() {}),
-                    onKcalFieldChanged: _onKcalFieldChanged,
-                    onMacroFieldChanged: _onMacroFieldChanged,
-                    onWaterFieldChanged: _onWaterFieldChanged,
-                    onResetKcal: _resetKcal,
-                    onResetMacros: _resetMacros,
-                    onResetWater: _resetWater,
-                    onSave: _save,
-                    previewHeightCm: _height,
-                    previewWeightKg: _weight,
-                    previewAge: _age,
-                    previewKcal: _kcalCustom ? _kcal : null,
-                    previewProteinRate: _macrosCustom ? _proteinRate : null,
-                    previewFatRate: _macrosCustom ? _fatRate : null,
-                    previewWater: _waterCustom ? _water : null,
-                  );
-                },
+              Expanded(
+                child: editAsync.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) => Center(
+                    child: Text('Could not load your profile: $error'),
+                  ),
+                  data: (editState) {
+                    if (!_controllersSeeded) _seedControllers(editState.draft);
+                    return _ProfileForm(
+                      draft: editState.draft,
+                      isSaving: editState.isSaving,
+                      saveError: editState.saveError,
+                      weightController: _weightController,
+                      heightController: _heightController,
+                      ageController: _ageController,
+                      kcalController: _kcalController,
+                      proteinRateController: _proteinRateController,
+                      fatRateController: _fatRateController,
+                      waterController: _waterController,
+                      kcalCustom: _kcalCustom,
+                      macrosCustom: _macrosCustom,
+                      waterCustom: _waterCustom,
+                      canSave: _fieldsValid,
+                      onFieldChanged: () => setState(() {}),
+                      onKcalFieldChanged: _onKcalFieldChanged,
+                      onMacroFieldChanged: _onMacroFieldChanged,
+                      onWaterFieldChanged: _onWaterFieldChanged,
+                      onResetKcal: _resetKcal,
+                      onResetMacros: _resetMacros,
+                      onResetWater: _resetWater,
+                      onSave: _save,
+                      previewHeightCm: _height,
+                      previewWeightKg: _weight,
+                      previewAge: _age,
+                      previewKcal: _kcalCustom ? _kcal : null,
+                      previewProteinRate: _macrosCustom ? _proteinRate : null,
+                      previewFatRate: _macrosCustom ? _fatRate : null,
+                      previewWater: _waterCustom ? _water : null,
+                    );
+                  },
+                ),
               ),
-            ),
-            const AppBottomNavBar(currentTab: AppNavTab.profile),
-          ],
+              const AppBottomNavBar(currentTab: AppNavTab.profile),
+            ],
+          ),
         ),
       ),
     );
@@ -357,7 +360,10 @@ class _ProfileForm extends ConsumerWidget {
             padding: EdgeInsets.only(left: 4, top: 6),
             child: Text(
               'Between $_minAge and $_maxAge',
-              style: TextStyle(fontSize: 12, color: DashboardColors.textSecondary),
+              style: TextStyle(
+                fontSize: 12,
+                color: DashboardColors.textSecondary,
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -456,9 +462,7 @@ class _ProfileForm extends ConsumerWidget {
             const SizedBox(height: 10),
             Text(
               'Could not save: $saveError',
-              style: DashboardTextStyles.mealEmpty.copyWith(
-                color: Colors.red,
-              ),
+              style: DashboardTextStyles.mealEmpty.copyWith(color: Colors.red),
             ),
           ],
         ],
@@ -658,7 +662,10 @@ class _TargetsSummaryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Your daily targets', style: DashboardTextStyles.targetsTitle),
+              Text(
+                'Your daily targets',
+                style: DashboardTextStyles.targetsTitle,
+              ),
               InkWell(
                 onTap: () => context.push(
                   AppRoutes.targetsCalculationPath,
