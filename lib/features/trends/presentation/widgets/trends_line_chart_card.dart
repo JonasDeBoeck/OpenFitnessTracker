@@ -100,6 +100,13 @@ class TrendsLineChartCard extends StatelessWidget {
                         ],
                       ),
                       lineTouchData: LineTouchData(
+                        // Default threshold (10px) only registers a touch
+                        // within a few pixels of the dot itself. The
+                        // distance calculator already only looks at the x
+                        // axis (fl_chart's default), so raising the
+                        // threshold makes the whole vertical column above a
+                        // day tappable, not just the dot.
+                        touchSpotThreshold: double.infinity,
                         touchTooltipData: LineTouchTooltipData(
                           getTooltipColor: (_) =>
                               DashboardColors.tooltipBackground,
@@ -120,7 +127,17 @@ class TrendsLineChartCard extends StatelessWidget {
                           color: color,
                           barWidth: 2.5,
                           dotData: const FlDotData(),
-                          belowBarData: BarAreaData(show: false),
+                          belowBarData: BarAreaData(
+                            show: true,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                color.withValues(alpha: 0.18),
+                                color.withValues(alpha: 0),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
