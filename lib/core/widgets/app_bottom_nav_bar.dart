@@ -21,58 +21,73 @@ class AppBottomNavBar extends StatelessWidget {
   static const Color _surface = Color(0xFFFBFAF2);
   static const Color _border = Color(0xFFDAD6C6);
 
+  // How far the FAB rises above the bar itself.
+  static const double _fabRaise = 22;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.topCenter,
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: _surface,
-            border: Border(top: BorderSide(color: _border)),
-          ),
-          padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: _NavItem(
-                  icon: Icons.track_changes_outlined,
-                  label: 'Goals',
-                  active: currentTab == AppNavTab.goals,
-                  onTap: () => context.go(AppRoutes.homePath),
+        // Padding (rather than putting the raise entirely on the FAB's
+        // Positioned offset) so the Stack's own box actually extends up
+        // to cover the raised FAB. A Positioned child with a negative
+        // offset only *paints* outside the Stack's bounds here (thanks to
+        // clipBehavior: Clip.none) — Flutter's default hit-testing still
+        // rejects any tap outside the Stack's own reported size before it
+        // ever reaches Positioned children, so without this the top of
+        // the FAB (the most prominent part, since it's the part sticking
+        // up) silently ate taps instead of responding to them.
+        Padding(
+          padding: const EdgeInsets.only(top: _fabRaise),
+          child: Container(
+            decoration: const BoxDecoration(
+              color: _surface,
+              border: Border(top: BorderSide(color: _border)),
+            ),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.track_changes_outlined,
+                    label: 'Goals',
+                    active: currentTab == AppNavTab.goals,
+                    onTap: () => context.go(AppRoutes.homePath),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: _NavItem(
-                  icon: Icons.menu_book_outlined,
-                  label: 'Diary',
-                  active: currentTab == AppNavTab.diary,
-                  onTap: () => context.go(AppRoutes.diaryPath),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.menu_book_outlined,
+                    label: 'Diary',
+                    active: currentTab == AppNavTab.diary,
+                    onTap: () => context.go(AppRoutes.diaryPath),
+                  ),
                 ),
-              ),
-              const Expanded(child: SizedBox.shrink()),
-              Expanded(
-                child: _NavItem(
-                  icon: Icons.show_chart,
-                  label: 'Trends',
-                  active: currentTab == AppNavTab.trends,
-                  onTap: () => context.go(AppRoutes.trendsPath),
+                const Expanded(child: SizedBox.shrink()),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.show_chart,
+                    label: 'Trends',
+                    active: currentTab == AppNavTab.trends,
+                    onTap: () => context.go(AppRoutes.trendsPath),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: _NavItem(
-                  icon: Icons.person_outline,
-                  label: 'Profile',
-                  active: currentTab == AppNavTab.profile,
-                  onTap: () => context.go(AppRoutes.profilePath),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.person_outline,
+                    label: 'Profile',
+                    active: currentTab == AppNavTab.profile,
+                    onTap: () => context.go(AppRoutes.profilePath),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Positioned(
-          top: -22,
+          top: 0,
           child: _AddFoodFab(
             onTap: () => context.push(AppRoutes.foodSearchPath),
           ),
