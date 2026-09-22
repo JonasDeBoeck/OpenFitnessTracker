@@ -16,7 +16,7 @@ IconData _iconFor(MealType type) => switch (type) {
 
 /// One meal's card: icon + title + kcal summary, its logged items (or an
 /// empty state), and a button to add food to it.
-class MealSectionCard extends StatelessWidget {
+class MealSectionCard extends StatefulWidget {
   const MealSectionCard({
     super.key,
     required this.meal,
@@ -31,8 +31,31 @@ class MealSectionCard extends StatelessWidget {
   final ValueChanged<DiaryEntry> onEditItem;
 
   @override
+  State<MealSectionCard> createState() => _MealSectionCardState();
+}
+
+class _MealSectionCardState extends State<MealSectionCard> {
+  // Ids dismissed locally but not yet reflected in `widget.meal.items`,
+  // since that list only updates once the async delete + provider refresh
+  // completes. Without this, a Dismissible whose item is still present in
+  // the next rebuild trips "A dismissed Dismissible widget is still part of
+  // the tree" (or, in release builds, just reappears instead of erroring).
+  final _pendingDeleteIds = <int>{};
+
+  @override
+  void didUpdateWidget(MealSectionCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final currentIds = widget.meal.items.map((e) => e.id).toSet();
+    _pendingDeleteIds.removeWhere((id) => !currentIds.contains(id));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final hasItems = meal.items.isNotEmpty;
+    final meal = widget.meal;
+    final visibleItems = meal.items
+        .where((item) => !_pendingDeleteIds.contains(item.id))
+        .toList();
+    final hasItems = visibleItems.isNotEmpty;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
@@ -101,7 +124,7 @@ class MealSectionCard extends StatelessWidget {
             Column(
               spacing: 8,
               children: [
-                for (final item in meal.items)
+                for (final item in visibleItems)
                   Dismissible(
                     key: ValueKey(item.id),
                     direction: DismissDirection.endToStart,
@@ -123,13 +146,16 @@ class MealSectionCard extends StatelessWidget {
                       title: 'Delete this item?',
                       message: '${item.displayName} will be removed from your log.',
                     ),
-                    onDismissed: (_) => onDeleteItem(item.id!),
+                    onDismissed: (_) {
+                      setState(() => _pendingDeleteIds.add(item.id!));
+                      widget.onDeleteItem(item.id!);
+                    },
                     child: Material(
                       color: DashboardColors.surface,
                       borderRadius: BorderRadius.circular(14),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(14),
-                        onTap: () => onEditItem(item),
+                        onTap: () => widget.onEditItem(item),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           child: Row(
@@ -164,7 +190,7 @@ class MealSectionCard extends StatelessWidget {
           else
             Text('Nothing logged yet', style: DashboardTextStyles.mealEmpty),
           const SizedBox(height: 12),
-          _AddFoodButton(onTap: onAddFood),
+          _AddFoodButton(onTap: widget.onAddFood),
         ],
       ),
     );
