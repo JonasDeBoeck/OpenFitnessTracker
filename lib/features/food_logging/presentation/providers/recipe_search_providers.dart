@@ -14,7 +14,7 @@ Future<List<Recipe>> recipeSearchResults(Ref ref, String query) {
 
 @riverpod
 Future<List<Recipe>> recentRecipes(Ref ref) {
-  return ref.watch(recipeRepositoryProvider).getRecentLoggedRecipes();
+  return ref.watch(recipeRepositoryProvider).getRecentRecipes();
 }
 
 @riverpod

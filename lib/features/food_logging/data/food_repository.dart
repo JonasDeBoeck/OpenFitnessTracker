@@ -54,28 +54,39 @@ class FoodRepository {
     return rows.map(_fromRow).toList();
   }
 
-  /// The distinct foods behind the most recent diary log entries,
-  /// most-recently-logged first. "Recent" is never stored on its own — it's
-  /// always derived live from the diary.
-  Future<List<Food>> getRecentLoggedFoods({int limit = 10}) async {
-    final entryRows =
+  /// The foods most recently logged or created, whichever is more recent
+  /// per food, most-recent first. "Recent" is never stored on its own —
+  /// it's always derived live from the diary and the food catalog, so a
+  /// brand-new food shows up immediately, even before it's ever logged.
+  Future<List<Food>> getRecentFoods({int limit = 10}) async {
+    final loggedRows =
         await (_db.select(_db.diaryEntries)
               ..where((t) => t.foodId.isNotNull())
               ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)])
               ..limit(limit * 5))
             .get();
-
-    final orderedUniqueFoodIds = <int>[];
-    for (final entry in entryRows) {
-      final foodId = entry.foodId!;
-      if (!orderedUniqueFoodIds.contains(foodId)) {
-        orderedUniqueFoodIds.add(foodId);
-      }
-      if (orderedUniqueFoodIds.length >= limit) break;
+    final mostRecentEventAt = <int, DateTime>{};
+    for (final entry in loggedRows) {
+      mostRecentEventAt.putIfAbsent(entry.foodId!, () => entry.loggedAt);
     }
 
+    final createdRows =
+        await (_db.select(_db.foods)
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+              ..limit(limit))
+            .get();
+    for (final food in createdRows) {
+      final loggedAt = mostRecentEventAt[food.id];
+      if (loggedAt == null || food.createdAt.isAfter(loggedAt)) {
+        mostRecentEventAt[food.id] = food.createdAt;
+      }
+    }
+
+    final orderedFoodIds = mostRecentEventAt.keys.toList()
+      ..sort((a, b) => mostRecentEventAt[b]!.compareTo(mostRecentEventAt[a]!));
+
     final foods = <Food>[];
-    for (final foodId in orderedUniqueFoodIds) {
+    for (final foodId in orderedFoodIds.take(limit)) {
       final food = await getById(foodId);
       if (food != null) foods.add(food);
     }
