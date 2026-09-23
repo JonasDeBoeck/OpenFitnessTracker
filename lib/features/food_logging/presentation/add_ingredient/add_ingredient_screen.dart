@@ -81,7 +81,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     final hasQuery = _query.trim().isNotEmpty;
     final asyncFoods = hasQuery
         ? ref.watch(foodSearchResultsProvider(_query.trim()))
-        : ref.watch(recentFoodsProvider);
+        : ref.watch(allFoodsSortedProvider);
 
     return Column(
       children: [
@@ -124,7 +124,9 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                 if (foods.isEmpty) {
                   return Center(
                     child: Text(
-                      hasQuery ? 'No foods match "${_query.trim()}".' : 'Nothing here yet.',
+                      hasQuery
+                          ? 'No foods match "${_query.trim()}".'
+                          : 'No foods yet — add one from Log food.',
                       style: DashboardTextStyles.mealEmpty,
                       textAlign: TextAlign.center,
                     ),
