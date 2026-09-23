@@ -7,6 +7,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/recipe.dart';
+import '../../domain/quantity/logged_quantity_display.dart';
 import '../providers/diary_providers.dart';
 import '../providers/recipe_detail_providers.dart';
 import '../providers/recipe_favorite_toggle_notifier.dart';
@@ -249,7 +250,11 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '${ingredient.grams.toStringAsFixed(0)} g',
+                                        formatLoggedQuantity(
+                                          grams: ingredient.grams,
+                                          unitLabel: ingredient.unitLabel,
+                                          unitCount: ingredient.unitCount,
+                                        ),
                                         style: DashboardTextStyles.mealItemKcal,
                                       ),
                                     ],

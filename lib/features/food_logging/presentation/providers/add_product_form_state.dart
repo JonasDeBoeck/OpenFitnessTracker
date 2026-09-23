@@ -13,6 +13,8 @@ abstract class AddProductFormState with _$AddProductFormState {
     @Default('') String name,
     String? brand,
     String? store,
+    String? pieceLabel,
+    double? pieceWeightGrams,
     @Default(false) bool isFavorite,
     double? caloriesPer100g,
     double? proteinPer100g,

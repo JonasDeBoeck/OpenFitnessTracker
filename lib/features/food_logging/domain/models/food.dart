@@ -27,6 +27,8 @@ abstract class Food with _$Food {
     double? ironMgPer100g,
     double? vitaminCMgPer100g,
     double? vitaminDMcgPer100g,
+    String? pieceLabel,
+    double? pieceWeightGrams,
     @Default(false) bool isFavorite,
     DateTime? createdAt,
   }) = _Food;
@@ -55,6 +57,13 @@ abstract class Food with _$Food {
       vitaminDMcg: scaleNullable(vitaminDMcgPer100g),
     );
   }
+
+  /// Whether this food has an average per-piece weight defined, letting it
+  /// be logged by count instead of only by grams. Both-or-neither by
+  /// construction — [pieceLabel] and [pieceWeightGrams] are only ever set
+  /// together (enforced by `pieceSizeValidationError` on the Add/Edit
+  /// Product screen).
+  bool get hasPieceUnit => pieceLabel != null && pieceWeightGrams != null;
 }
 
 /// A food's nutrition values scaled to a specific quantity in grams.

@@ -31,6 +31,8 @@ class LogFoodNotifier extends _$LogFoodNotifier {
     required Food food,
     required double quantityGrams,
     required MealType mealType,
+    String? unitLabel,
+    double? unitCount,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
@@ -39,6 +41,8 @@ class LogFoodNotifier extends _$LogFoodNotifier {
         quantityGrams: quantityGrams,
         mealType: mealType,
         loggedAt: DateTime.now(),
+        unitLabel: unitLabel,
+        unitCount: unitCount,
       );
       await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
       // homeDashboardProvider watches diaryEntriesForDateProvider for the
@@ -102,18 +106,25 @@ class DiaryEntryController extends _$DiaryEntryController {
     required DateTime date,
     required DiaryEntry entry,
     required double newGrams,
+    String? unitLabel,
+    double? unitCount,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final updated = entry.foodId != null
-          ? await _rescaleFood(entry, newGrams)
+          ? await _rescaleFood(entry, newGrams, unitLabel: unitLabel, unitCount: unitCount)
           : await _rescaleRecipe(entry, newGrams);
       await ref.read(diaryRepositoryProvider).updateEntry(updated);
       ref.invalidate(diaryEntriesForDateProvider(DateUtils.dateOnly(date)));
     });
   }
 
-  Future<DiaryEntry> _rescaleFood(DiaryEntry entry, double grams) async {
+  Future<DiaryEntry> _rescaleFood(
+    DiaryEntry entry,
+    double grams, {
+    String? unitLabel,
+    double? unitCount,
+  }) async {
     final food = await ref.read(foodByIdProvider(entry.foodId!).future);
     final nutrition = food!.scaledTo(grams);
     return entry.copyWith(
@@ -131,6 +142,8 @@ class DiaryEntryController extends _$DiaryEntryController {
       ironMg: nutrition.ironMg,
       vitaminCMg: nutrition.vitaminCMg,
       vitaminDMcg: nutrition.vitaminDMcg,
+      loggedUnitLabel: unitLabel,
+      loggedUnitCount: unitCount,
     );
   }
 

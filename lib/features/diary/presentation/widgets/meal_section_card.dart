@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/models/meal_type.dart';
 import '../../../../core/widgets/confirm_delete_dialog.dart';
 import '../../../food_logging/domain/models/diary_entry.dart';
+import '../../../food_logging/domain/quantity/logged_quantity_display.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/diary_day_view.dart';
@@ -170,7 +171,11 @@ class _MealSectionCardState extends State<MealSectionCard> {
                                     style: DashboardTextStyles.mealItemName,
                                   ),
                                   Text(
-                                    '${item.quantityGrams.toStringAsFixed(0)} g',
+                                    formatLoggedQuantity(
+                                      grams: item.quantityGrams,
+                                      unitLabel: item.loggedUnitLabel,
+                                      unitCount: item.loggedUnitCount,
+                                    ),
                                     style: DashboardTextStyles.mealItemGrams,
                                   ),
                                 ],

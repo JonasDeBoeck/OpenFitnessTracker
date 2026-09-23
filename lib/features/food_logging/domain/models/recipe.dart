@@ -22,12 +22,19 @@ abstract class RecipeIngredient with _$RecipeIngredient {
     required double proteinPer100g,
     required double fatPer100g,
     required double carbsPer100g,
+    String? unitLabel,
+    double? unitCount,
   }) = _RecipeIngredient;
 
   factory RecipeIngredient.fromJson(Map<String, dynamic> json) =>
       _$RecipeIngredientFromJson(json);
 
-  factory RecipeIngredient.fromFood({required Food food, required double grams}) {
+  factory RecipeIngredient.fromFood({
+    required Food food,
+    required double grams,
+    String? unitLabel,
+    double? unitCount,
+  }) {
     return RecipeIngredient(
       foodId: food.id!,
       foodName: food.name,
@@ -36,6 +43,8 @@ abstract class RecipeIngredient with _$RecipeIngredient {
       proteinPer100g: food.proteinPer100g ?? 0,
       fatPer100g: food.fatPer100g ?? 0,
       carbsPer100g: food.carbsPer100g ?? 0,
+      unitLabel: unitLabel,
+      unitCount: unitCount,
     );
   }
 

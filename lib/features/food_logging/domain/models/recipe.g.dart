@@ -16,6 +16,8 @@ _RecipeIngredient _$RecipeIngredientFromJson(Map<String, dynamic> json) =>
       proteinPer100g: (json['proteinPer100g'] as num).toDouble(),
       fatPer100g: (json['fatPer100g'] as num).toDouble(),
       carbsPer100g: (json['carbsPer100g'] as num).toDouble(),
+      unitLabel: json['unitLabel'] as String?,
+      unitCount: (json['unitCount'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$RecipeIngredientToJson(_RecipeIngredient instance) =>
@@ -28,6 +30,8 @@ Map<String, dynamic> _$RecipeIngredientToJson(_RecipeIngredient instance) =>
       'proteinPer100g': instance.proteinPer100g,
       'fatPer100g': instance.fatPer100g,
       'carbsPer100g': instance.carbsPer100g,
+      'unitLabel': instance.unitLabel,
+      'unitCount': instance.unitCount,
     };
 
 _Recipe _$RecipeFromJson(Map<String, dynamic> json) => _Recipe(

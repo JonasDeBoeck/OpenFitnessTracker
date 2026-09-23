@@ -33,4 +33,9 @@ class DiaryEntries extends Table {
   RealColumn get ironMg => real().nullable()();
   RealColumn get vitaminCMg => real().nullable()();
   RealColumn get vitaminDMcg => real().nullable()();
+  // Snapshotted alongside quantityGrams — the unit/count actually logged,
+  // or both null if this entry was logged in grams (recipe entries never
+  // have a piece unit, so these always stay null for them).
+  TextColumn get loggedUnitLabel => text().nullable()();
+  RealColumn get loggedUnitCount => real().nullable()();
 }

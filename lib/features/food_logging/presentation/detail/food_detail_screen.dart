@@ -13,7 +13,7 @@ import '../providers/favorite_toggle_notifier.dart';
 import '../providers/food_detail_providers.dart';
 import '../widgets/food_thumbnail.dart';
 import '../widgets/meal_type_picker.dart';
-import '../widgets/quantity_stepper.dart';
+import '../widgets/piece_aware_quantity_field.dart';
 
 class FoodDetailScreen extends ConsumerStatefulWidget {
   const FoodDetailScreen({super.key, required this.foodId, this.mealType});
@@ -27,12 +27,16 @@ class FoodDetailScreen extends ConsumerStatefulWidget {
 
 class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
   late MealType _selectedMeal = widget.mealType ?? MealType.breakfast;
+  String? _loggedUnitLabel;
+  double? _loggedUnitCount;
 
   Future<void> _addToMeal(Food food, double grams) async {
     await ref.read(logFoodProvider.notifier).logFood(
           food: food,
           quantityGrams: grams,
           mealType: _selectedMeal,
+          unitLabel: _loggedUnitLabel,
+          unitCount: _loggedUnitCount,
         );
     final error = ref.read(logFoodProvider).error;
     if (!mounted) return;
@@ -131,10 +135,17 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      QuantityStepper(
+                      PieceAwareQuantityField(
                         grams: grams,
-                        onChanged: (value) =>
-                            ref.read(foodQuantityProvider.notifier).setGrams(value),
+                        pieceLabel: food.pieceLabel,
+                        pieceWeightGrams: food.pieceWeightGrams,
+                        onChanged: (quantity) {
+                          ref.read(foodQuantityProvider.notifier).setGrams(quantity.grams);
+                          setState(() {
+                            _loggedUnitLabel = quantity.unitLabel;
+                            _loggedUnitCount = quantity.unitCount;
+                          });
+                        },
                         label: 'Serving size',
                         minGrams: 25,
                         maxGrams: 400,

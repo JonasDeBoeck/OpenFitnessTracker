@@ -144,6 +144,8 @@ class FoodRepository {
       vitaminCMgPer100g: Value(food.vitaminCMgPer100g),
       vitaminDMcgPer100g: Value(food.vitaminDMcgPer100g),
       isFavorite: Value(food.isFavorite),
+      pieceLabel: Value(food.pieceLabel),
+      pieceWeightGrams: Value(food.pieceWeightGrams),
     );
   }
 
@@ -169,6 +171,8 @@ class FoodRepository {
       vitaminCMgPer100g: row.vitaminCMgPer100g,
       vitaminDMcgPer100g: row.vitaminDMcgPer100g,
       isFavorite: row.isFavorite,
+      pieceLabel: row.pieceLabel,
+      pieceWeightGrams: row.pieceWeightGrams,
       createdAt: row.createdAt,
     );
   }
