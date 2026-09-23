@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/diary_entry.dart';
+import '../../domain/models/food.dart';
 import '../providers/diary_providers.dart';
 import '../providers/food_detail_providers.dart';
 import '../providers/recipe_detail_providers.dart';
-import 'quantity_stepper.dart';
+import 'piece_aware_quantity_field.dart';
 
 /// Bottom sheet for editing an already-logged entry's quantity — opened by
 /// tapping a meal item row on the Goals/Diary screens. Re-fetches the
@@ -29,8 +30,18 @@ class EditDiaryEntrySheet extends ConsumerStatefulWidget {
 }
 
 class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
-  late double _grams = widget.entry.quantityGrams;
+  late double _grams;
+  String? _unitLabel;
+  double? _unitCount;
   bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _grams = widget.entry.quantityGrams;
+    _unitLabel = widget.entry.loggedUnitLabel;
+    _unitCount = widget.entry.loggedUnitCount;
+  }
 
   Future<void> _save() async {
     setState(() => _isSaving = true);
@@ -40,6 +51,8 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
           date: widget.date,
           entry: widget.entry,
           newGrams: _grams,
+          unitLabel: _unitLabel,
+          unitCount: _unitCount,
         );
     if (!mounted) return;
     Navigator.of(context).pop();
@@ -48,13 +61,11 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
   @override
   Widget build(BuildContext context) {
     final entry = widget.entry;
+    Food? food;
     double? previewCalories;
     if (entry.foodId != null) {
-      previewCalories = ref
-          .watch(foodByIdProvider(entry.foodId!))
-          .value
-          ?.scaledTo(_grams)
-          .calories;
+      food = ref.watch(foodByIdProvider(entry.foodId!)).value;
+      previewCalories = food?.scaledTo(_grams).calories;
     } else if (entry.recipeId != null) {
       previewCalories = ref
           .watch(recipeByIdProvider(entry.recipeId!))
@@ -72,12 +83,19 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
         children: [
           Text('Edit ${entry.displayName}', style: DashboardTextStyles.dialogTitle),
           const SizedBox(height: 14),
-          QuantityStepper(
+          PieceAwareQuantityField(
             grams: _grams,
-            onChanged: (value) => setState(() => _grams = value),
+            pieceLabel: food?.pieceLabel,
+            pieceWeightGrams: food?.pieceWeightGrams,
+            initialUnitCount: widget.entry.loggedUnitCount,
             showCard: false,
             minGrams: 5,
             maxGrams: 2000,
+            onChanged: (quantity) => setState(() {
+              _grams = quantity.grams;
+              _unitLabel = quantity.unitLabel;
+              _unitCount = quantity.unitCount;
+            }),
           ),
           const SizedBox(height: 14),
           Text(
