@@ -186,26 +186,35 @@ final class WaterDayFamily extends $Family
 
 /// Logs and deletes water entries for a given date, invalidating
 /// [waterEntriesForDateProvider] (and therefore [waterDayProvider], which
-/// watches it) so the UI reflects the change.
+/// watches it) so the UI reflects the change. `keepAlive` because nothing
+/// watches this provider's own state — an autoDispose notifier with no
+/// listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
 
 @ProviderFor(WaterLogController)
 final waterLogControllerProvider = WaterLogControllerProvider._();
 
 /// Logs and deletes water entries for a given date, invalidating
 /// [waterEntriesForDateProvider] (and therefore [waterDayProvider], which
-/// watches it) so the UI reflects the change.
+/// watches it) so the UI reflects the change. `keepAlive` because nothing
+/// watches this provider's own state — an autoDispose notifier with no
+/// listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
 final class WaterLogControllerProvider
     extends $AsyncNotifierProvider<WaterLogController, void> {
   /// Logs and deletes water entries for a given date, invalidating
   /// [waterEntriesForDateProvider] (and therefore [waterDayProvider], which
-  /// watches it) so the UI reflects the change.
+  /// watches it) so the UI reflects the change. `keepAlive` because nothing
+  /// watches this provider's own state — an autoDispose notifier with no
+  /// listener can be torn down mid-`await` here, silently dropping the
+  /// invalidation that follows.
   WaterLogControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'waterLogControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -219,11 +228,14 @@ final class WaterLogControllerProvider
 }
 
 String _$waterLogControllerHash() =>
-    r'3e50b7615cb0f0ed3026260aa8efdd40a0df6769';
+    r'fc6391c855a21378755a3be68012c0844ffca2ce';
 
 /// Logs and deletes water entries for a given date, invalidating
 /// [waterEntriesForDateProvider] (and therefore [waterDayProvider], which
-/// watches it) so the UI reflects the change.
+/// watches it) so the UI reflects the change. `keepAlive` because nothing
+/// watches this provider's own state — an autoDispose notifier with no
+/// listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
 
 abstract class _$WaterLogController extends $AsyncNotifier<void> {
   FutureOr<void> build();
