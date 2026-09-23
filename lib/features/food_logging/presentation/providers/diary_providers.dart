@@ -31,6 +31,8 @@ class LogFoodNotifier extends _$LogFoodNotifier {
     required Food food,
     required double quantityGrams,
     required MealType mealType,
+    String? unitLabel,
+    double? unitCount,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
@@ -39,6 +41,8 @@ class LogFoodNotifier extends _$LogFoodNotifier {
         quantityGrams: quantityGrams,
         mealType: mealType,
         loggedAt: DateTime.now(),
+        unitLabel: unitLabel,
+        unitCount: unitCount,
       );
       await ref.read(diaryRepositoryProvider).insertLogEntry(entry);
       // homeDashboardProvider watches diaryEntriesForDateProvider for the
