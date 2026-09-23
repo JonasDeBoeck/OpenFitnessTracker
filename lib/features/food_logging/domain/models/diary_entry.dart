@@ -37,6 +37,8 @@ abstract class DiaryEntry with _$DiaryEntry {
     double? ironMg,
     double? vitaminCMg,
     double? vitaminDMcg,
+    String? loggedUnitLabel,
+    double? loggedUnitCount,
   }) = _DiaryEntry;
 
   factory DiaryEntry.fromJson(Map<String, dynamic> json) =>
@@ -54,6 +56,8 @@ abstract class DiaryEntry with _$DiaryEntry {
     required double quantityGrams,
     required MealType mealType,
     required DateTime loggedAt,
+    String? unitLabel,
+    double? unitCount,
   }) {
     final nutrition = food.scaledTo(quantityGrams);
     return DiaryEntry(
@@ -75,6 +79,8 @@ abstract class DiaryEntry with _$DiaryEntry {
       ironMg: nutrition.ironMg,
       vitaminCMg: nutrition.vitaminCMg,
       vitaminDMcg: nutrition.vitaminDMcg,
+      loggedUnitLabel: unitLabel,
+      loggedUnitCount: unitCount,
     );
   }
 

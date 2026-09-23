@@ -41,4 +41,26 @@ void main() {
       expect(food.scaledTo(0).calories, 0);
     });
   });
+
+  group('Food.hasPieceUnit', () {
+    test('is true when both pieceLabel and pieceWeightGrams are set', () {
+      const food = Food(name: 'Carrot', pieceLabel: 'carrot', pieceWeightGrams: 60);
+      expect(food.hasPieceUnit, isTrue);
+    });
+
+    test('is false when neither is set', () {
+      const food = Food(name: 'Rice');
+      expect(food.hasPieceUnit, isFalse);
+    });
+
+    test('is false when only the label is set', () {
+      const food = Food(name: 'Carrot', pieceLabel: 'carrot');
+      expect(food.hasPieceUnit, isFalse);
+    });
+
+    test('is false when only the weight is set', () {
+      const food = Food(name: 'Carrot', pieceWeightGrams: 60);
+      expect(food.hasPieceUnit, isFalse);
+    });
+  });
 }

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RecipeIngredient {
 
- int? get id; int get foodId; String get foodName; double get grams; double get caloriesPer100g; double get proteinPer100g; double get fatPer100g; double get carbsPer100g;
+ int? get id; int get foodId; String get foodName; double get grams; double get caloriesPer100g; double get proteinPer100g; double get fatPer100g; double get carbsPer100g; String? get unitLabel; double? get unitCount;
 /// Create a copy of RecipeIngredient
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $RecipeIngredientCopyWith<RecipeIngredient> get copyWith => _$RecipeIngredientCo
 @override
 bool operator ==(Object other) {
   final _this = this as RecipeIngredient;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecipeIngredient&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.foodId, _this.foodId) || other.foodId == _this.foodId)&&(identical(other.foodName, _this.foodName) || other.foodName == _this.foodName)&&(identical(other.grams, _this.grams) || other.grams == _this.grams)&&(identical(other.caloriesPer100g, _this.caloriesPer100g) || other.caloriesPer100g == _this.caloriesPer100g)&&(identical(other.proteinPer100g, _this.proteinPer100g) || other.proteinPer100g == _this.proteinPer100g)&&(identical(other.fatPer100g, _this.fatPer100g) || other.fatPer100g == _this.fatPer100g)&&(identical(other.carbsPer100g, _this.carbsPer100g) || other.carbsPer100g == _this.carbsPer100g));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecipeIngredient&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.foodId, _this.foodId) || other.foodId == _this.foodId)&&(identical(other.foodName, _this.foodName) || other.foodName == _this.foodName)&&(identical(other.grams, _this.grams) || other.grams == _this.grams)&&(identical(other.caloriesPer100g, _this.caloriesPer100g) || other.caloriesPer100g == _this.caloriesPer100g)&&(identical(other.proteinPer100g, _this.proteinPer100g) || other.proteinPer100g == _this.proteinPer100g)&&(identical(other.fatPer100g, _this.fatPer100g) || other.fatPer100g == _this.fatPer100g)&&(identical(other.carbsPer100g, _this.carbsPer100g) || other.carbsPer100g == _this.carbsPer100g)&&(identical(other.unitLabel, _this.unitLabel) || other.unitLabel == _this.unitLabel)&&(identical(other.unitCount, _this.unitCount) || other.unitCount == _this.unitCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as RecipeIngredient;
-  return Object.hash(runtimeType,_this.id,_this.foodId,_this.foodName,_this.grams,_this.caloriesPer100g,_this.proteinPer100g,_this.fatPer100g,_this.carbsPer100g);
+  return Object.hash(runtimeType,_this.id,_this.foodId,_this.foodName,_this.grams,_this.caloriesPer100g,_this.proteinPer100g,_this.fatPer100g,_this.carbsPer100g,_this.unitLabel,_this.unitCount);
 }
 
 @override
 String toString() {
   final _this = this as RecipeIngredient;
-  return 'RecipeIngredient(id: ${_this.id}, foodId: ${_this.foodId}, foodName: ${_this.foodName}, grams: ${_this.grams}, caloriesPer100g: ${_this.caloriesPer100g}, proteinPer100g: ${_this.proteinPer100g}, fatPer100g: ${_this.fatPer100g}, carbsPer100g: ${_this.carbsPer100g})';
+  return 'RecipeIngredient(id: ${_this.id}, foodId: ${_this.foodId}, foodName: ${_this.foodName}, grams: ${_this.grams}, caloriesPer100g: ${_this.caloriesPer100g}, proteinPer100g: ${_this.proteinPer100g}, fatPer100g: ${_this.fatPer100g}, carbsPer100g: ${_this.carbsPer100g}, unitLabel: ${_this.unitLabel}, unitCount: ${_this.unitCount})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $RecipeIngredientCopyWith<$Res>  {
   factory $RecipeIngredientCopyWith(RecipeIngredient value, $Res Function(RecipeIngredient) _then) = _$RecipeIngredientCopyWithImpl;
 @useResult
 $Res call({
- int? id, int foodId, String foodName, double grams, double caloriesPer100g, double proteinPer100g, double fatPer100g, double carbsPer100g
+ int? id, int foodId, String foodName, double grams, double caloriesPer100g, double proteinPer100g, double fatPer100g, double carbsPer100g, String? unitLabel, double? unitCount
 });
 
 
@@ -71,7 +71,7 @@ class _$RecipeIngredientCopyWithImpl<$Res>
 
 /// Create a copy of RecipeIngredient
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? foodId = null,Object? foodName = null,Object? grams = null,Object? caloriesPer100g = null,Object? proteinPer100g = null,Object? fatPer100g = null,Object? carbsPer100g = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? foodId = null,Object? foodName = null,Object? grams = null,Object? caloriesPer100g = null,Object? proteinPer100g = null,Object? fatPer100g = null,Object? carbsPer100g = null,Object? unitLabel = freezed,Object? unitCount = freezed,}) {
   return _then(RecipeIngredient(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,foodId: null == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,9 @@ as double,caloriesPer100g: null == caloriesPer100g ? _self.caloriesPer100g : cal
 as double,proteinPer100g: null == proteinPer100g ? _self.proteinPer100g : proteinPer100g // ignore: cast_nullable_to_non_nullable
 as double,fatPer100g: null == fatPer100g ? _self.fatPer100g : fatPer100g // ignore: cast_nullable_to_non_nullable
 as double,carbsPer100g: null == carbsPer100g ? _self.carbsPer100g : carbsPer100g // ignore: cast_nullable_to_non_nullable
-as double,
+as double,unitLabel: freezed == unitLabel ? _self.unitLabel : unitLabel // ignore: cast_nullable_to_non_nullable
+as String?,unitCount: freezed == unitCount ? _self.unitCount : unitCount // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g,  String? unitLabel,  double? unitCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecipeIngredient() when $default != null:
-return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g);case _:
+return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.unitLabel,_that.unitCount);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesP
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g,  String? unitLabel,  double? unitCount)  $default,) {final _that = this;
 switch (_that) {
 case _RecipeIngredient():
-return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g);case _:
+return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.unitLabel,_that.unitCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesP
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  int foodId,  String foodName,  double grams,  double caloriesPer100g,  double proteinPer100g,  double fatPer100g,  double carbsPer100g,  String? unitLabel,  double? unitCount)?  $default,) {final _that = this;
 switch (_that) {
 case _RecipeIngredient() when $default != null:
-return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g);case _:
+return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.unitLabel,_that.unitCount);case _:
   return null;
 
 }
@@ -222,7 +224,7 @@ return $default(_that.id,_that.foodId,_that.foodName,_that.grams,_that.caloriesP
 @JsonSerializable()
 
 class _RecipeIngredient extends RecipeIngredient {
-  const _RecipeIngredient({this.id, required this.foodId, required this.foodName, required this.grams, required this.caloriesPer100g, required this.proteinPer100g, required this.fatPer100g, required this.carbsPer100g}): super._();
+  const _RecipeIngredient({this.id, required this.foodId, required this.foodName, required this.grams, required this.caloriesPer100g, required this.proteinPer100g, required this.fatPer100g, required this.carbsPer100g, this.unitLabel, this.unitCount}): super._();
   factory _RecipeIngredient.fromJson(Map<String, dynamic> json) => _$RecipeIngredientFromJson(json);
 
 @override final  int? id;
@@ -233,6 +235,8 @@ class _RecipeIngredient extends RecipeIngredient {
 @override final  double proteinPer100g;
 @override final  double fatPer100g;
 @override final  double carbsPer100g;
+@override final  String? unitLabel;
+@override final  double? unitCount;
 
 /// Create a copy of RecipeIngredient
 /// with the given fields replaced by the non-null parameter values.
@@ -247,18 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecipeIngredient&&(identical(other.id, id) || other.id == id)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.foodName, foodName) || other.foodName == foodName)&&(identical(other.grams, grams) || other.grams == grams)&&(identical(other.caloriesPer100g, caloriesPer100g) || other.caloriesPer100g == caloriesPer100g)&&(identical(other.proteinPer100g, proteinPer100g) || other.proteinPer100g == proteinPer100g)&&(identical(other.fatPer100g, fatPer100g) || other.fatPer100g == fatPer100g)&&(identical(other.carbsPer100g, carbsPer100g) || other.carbsPer100g == carbsPer100g));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecipeIngredient&&(identical(other.id, id) || other.id == id)&&(identical(other.foodId, foodId) || other.foodId == foodId)&&(identical(other.foodName, foodName) || other.foodName == foodName)&&(identical(other.grams, grams) || other.grams == grams)&&(identical(other.caloriesPer100g, caloriesPer100g) || other.caloriesPer100g == caloriesPer100g)&&(identical(other.proteinPer100g, proteinPer100g) || other.proteinPer100g == proteinPer100g)&&(identical(other.fatPer100g, fatPer100g) || other.fatPer100g == fatPer100g)&&(identical(other.carbsPer100g, carbsPer100g) || other.carbsPer100g == carbsPer100g)&&(identical(other.unitLabel, unitLabel) || other.unitLabel == unitLabel)&&(identical(other.unitCount, unitCount) || other.unitCount == unitCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,foodId,foodName,grams,caloriesPer100g,proteinPer100g,fatPer100g,carbsPer100g);
+    return Object.hash(runtimeType,id,foodId,foodName,grams,caloriesPer100g,proteinPer100g,fatPer100g,carbsPer100g,unitLabel,unitCount);
 }
 
 @override
 String toString() {
-    return 'RecipeIngredient(id: $id, foodId: $foodId, foodName: $foodName, grams: $grams, caloriesPer100g: $caloriesPer100g, proteinPer100g: $proteinPer100g, fatPer100g: $fatPer100g, carbsPer100g: $carbsPer100g)';
+    return 'RecipeIngredient(id: $id, foodId: $foodId, foodName: $foodName, grams: $grams, caloriesPer100g: $caloriesPer100g, proteinPer100g: $proteinPer100g, fatPer100g: $fatPer100g, carbsPer100g: $carbsPer100g, unitLabel: $unitLabel, unitCount: $unitCount)';
 }
 
 
@@ -269,7 +273,7 @@ abstract mixin class _$RecipeIngredientCopyWith<$Res> implements $RecipeIngredie
   factory _$RecipeIngredientCopyWith(_RecipeIngredient value, $Res Function(_RecipeIngredient) _then) = __$RecipeIngredientCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, int foodId, String foodName, double grams, double caloriesPer100g, double proteinPer100g, double fatPer100g, double carbsPer100g
+ int? id, int foodId, String foodName, double grams, double caloriesPer100g, double proteinPer100g, double fatPer100g, double carbsPer100g, String? unitLabel, double? unitCount
 });
 
 
@@ -286,7 +290,7 @@ class __$RecipeIngredientCopyWithImpl<$Res>
 
 /// Create a copy of RecipeIngredient
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? foodId = null,Object? foodName = null,Object? grams = null,Object? caloriesPer100g = null,Object? proteinPer100g = null,Object? fatPer100g = null,Object? carbsPer100g = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? foodId = null,Object? foodName = null,Object? grams = null,Object? caloriesPer100g = null,Object? proteinPer100g = null,Object? fatPer100g = null,Object? carbsPer100g = null,Object? unitLabel = freezed,Object? unitCount = freezed,}) {
   return _then(_RecipeIngredient(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,foodId: null == foodId ? _self.foodId : foodId // ignore: cast_nullable_to_non_nullable
@@ -296,7 +300,9 @@ as double,caloriesPer100g: null == caloriesPer100g ? _self.caloriesPer100g : cal
 as double,proteinPer100g: null == proteinPer100g ? _self.proteinPer100g : proteinPer100g // ignore: cast_nullable_to_non_nullable
 as double,fatPer100g: null == fatPer100g ? _self.fatPer100g : fatPer100g // ignore: cast_nullable_to_non_nullable
 as double,carbsPer100g: null == carbsPer100g ? _self.carbsPer100g : carbsPer100g // ignore: cast_nullable_to_non_nullable
-as double,
+as double,unitLabel: freezed == unitLabel ? _self.unitLabel : unitLabel // ignore: cast_nullable_to_non_nullable
+as String?,unitCount: freezed == unitCount ? _self.unitCount : unitCount // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

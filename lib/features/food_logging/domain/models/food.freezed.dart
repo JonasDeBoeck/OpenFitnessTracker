@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Food {
 
- int? get id; String get name; String? get brand; String? get store; String? get barcode; String? get photoPath; double? get caloriesPer100g; double? get proteinPer100g; double? get fatPer100g; double? get carbsPer100g; double? get fiberPer100g; double? get sugarPer100g; double? get sodiumMgPer100g; double? get cholesterolMgPer100g; double? get potassiumMgPer100g; double? get calciumMgPer100g; double? get ironMgPer100g; double? get vitaminCMgPer100g; double? get vitaminDMcgPer100g; bool get isFavorite; DateTime? get createdAt;
+ int? get id; String get name; String? get brand; String? get store; String? get barcode; String? get photoPath; double? get caloriesPer100g; double? get proteinPer100g; double? get fatPer100g; double? get carbsPer100g; double? get fiberPer100g; double? get sugarPer100g; double? get sodiumMgPer100g; double? get cholesterolMgPer100g; double? get potassiumMgPer100g; double? get calciumMgPer100g; double? get ironMgPer100g; double? get vitaminCMgPer100g; double? get vitaminDMcgPer100g; String? get pieceLabel; double? get pieceWeightGrams; bool get isFavorite; DateTime? get createdAt;
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $FoodCopyWith<Food> get copyWith => _$FoodCopyWithImpl<Food>(this as Food, _$ide
 @override
 bool operator ==(Object other) {
   final _this = this as Food;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Food&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.brand, _this.brand) || other.brand == _this.brand)&&(identical(other.store, _this.store) || other.store == _this.store)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.photoPath, _this.photoPath) || other.photoPath == _this.photoPath)&&(identical(other.caloriesPer100g, _this.caloriesPer100g) || other.caloriesPer100g == _this.caloriesPer100g)&&(identical(other.proteinPer100g, _this.proteinPer100g) || other.proteinPer100g == _this.proteinPer100g)&&(identical(other.fatPer100g, _this.fatPer100g) || other.fatPer100g == _this.fatPer100g)&&(identical(other.carbsPer100g, _this.carbsPer100g) || other.carbsPer100g == _this.carbsPer100g)&&(identical(other.fiberPer100g, _this.fiberPer100g) || other.fiberPer100g == _this.fiberPer100g)&&(identical(other.sugarPer100g, _this.sugarPer100g) || other.sugarPer100g == _this.sugarPer100g)&&(identical(other.sodiumMgPer100g, _this.sodiumMgPer100g) || other.sodiumMgPer100g == _this.sodiumMgPer100g)&&(identical(other.cholesterolMgPer100g, _this.cholesterolMgPer100g) || other.cholesterolMgPer100g == _this.cholesterolMgPer100g)&&(identical(other.potassiumMgPer100g, _this.potassiumMgPer100g) || other.potassiumMgPer100g == _this.potassiumMgPer100g)&&(identical(other.calciumMgPer100g, _this.calciumMgPer100g) || other.calciumMgPer100g == _this.calciumMgPer100g)&&(identical(other.ironMgPer100g, _this.ironMgPer100g) || other.ironMgPer100g == _this.ironMgPer100g)&&(identical(other.vitaminCMgPer100g, _this.vitaminCMgPer100g) || other.vitaminCMgPer100g == _this.vitaminCMgPer100g)&&(identical(other.vitaminDMcgPer100g, _this.vitaminDMcgPer100g) || other.vitaminDMcgPer100g == _this.vitaminDMcgPer100g)&&(identical(other.isFavorite, _this.isFavorite) || other.isFavorite == _this.isFavorite)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Food&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.brand, _this.brand) || other.brand == _this.brand)&&(identical(other.store, _this.store) || other.store == _this.store)&&(identical(other.barcode, _this.barcode) || other.barcode == _this.barcode)&&(identical(other.photoPath, _this.photoPath) || other.photoPath == _this.photoPath)&&(identical(other.caloriesPer100g, _this.caloriesPer100g) || other.caloriesPer100g == _this.caloriesPer100g)&&(identical(other.proteinPer100g, _this.proteinPer100g) || other.proteinPer100g == _this.proteinPer100g)&&(identical(other.fatPer100g, _this.fatPer100g) || other.fatPer100g == _this.fatPer100g)&&(identical(other.carbsPer100g, _this.carbsPer100g) || other.carbsPer100g == _this.carbsPer100g)&&(identical(other.fiberPer100g, _this.fiberPer100g) || other.fiberPer100g == _this.fiberPer100g)&&(identical(other.sugarPer100g, _this.sugarPer100g) || other.sugarPer100g == _this.sugarPer100g)&&(identical(other.sodiumMgPer100g, _this.sodiumMgPer100g) || other.sodiumMgPer100g == _this.sodiumMgPer100g)&&(identical(other.cholesterolMgPer100g, _this.cholesterolMgPer100g) || other.cholesterolMgPer100g == _this.cholesterolMgPer100g)&&(identical(other.potassiumMgPer100g, _this.potassiumMgPer100g) || other.potassiumMgPer100g == _this.potassiumMgPer100g)&&(identical(other.calciumMgPer100g, _this.calciumMgPer100g) || other.calciumMgPer100g == _this.calciumMgPer100g)&&(identical(other.ironMgPer100g, _this.ironMgPer100g) || other.ironMgPer100g == _this.ironMgPer100g)&&(identical(other.vitaminCMgPer100g, _this.vitaminCMgPer100g) || other.vitaminCMgPer100g == _this.vitaminCMgPer100g)&&(identical(other.vitaminDMcgPer100g, _this.vitaminDMcgPer100g) || other.vitaminDMcgPer100g == _this.vitaminDMcgPer100g)&&(identical(other.pieceLabel, _this.pieceLabel) || other.pieceLabel == _this.pieceLabel)&&(identical(other.pieceWeightGrams, _this.pieceWeightGrams) || other.pieceWeightGrams == _this.pieceWeightGrams)&&(identical(other.isFavorite, _this.isFavorite) || other.isFavorite == _this.isFavorite)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as Food;
-  return Object.hashAll([runtimeType,_this.id,_this.name,_this.brand,_this.store,_this.barcode,_this.photoPath,_this.caloriesPer100g,_this.proteinPer100g,_this.fatPer100g,_this.carbsPer100g,_this.fiberPer100g,_this.sugarPer100g,_this.sodiumMgPer100g,_this.cholesterolMgPer100g,_this.potassiumMgPer100g,_this.calciumMgPer100g,_this.ironMgPer100g,_this.vitaminCMgPer100g,_this.vitaminDMcgPer100g,_this.isFavorite,_this.createdAt]);
+  return Object.hashAll([runtimeType,_this.id,_this.name,_this.brand,_this.store,_this.barcode,_this.photoPath,_this.caloriesPer100g,_this.proteinPer100g,_this.fatPer100g,_this.carbsPer100g,_this.fiberPer100g,_this.sugarPer100g,_this.sodiumMgPer100g,_this.cholesterolMgPer100g,_this.potassiumMgPer100g,_this.calciumMgPer100g,_this.ironMgPer100g,_this.vitaminCMgPer100g,_this.vitaminDMcgPer100g,_this.pieceLabel,_this.pieceWeightGrams,_this.isFavorite,_this.createdAt]);
 }
 
 @override
 String toString() {
   final _this = this as Food;
-  return 'Food(id: ${_this.id}, name: ${_this.name}, brand: ${_this.brand}, store: ${_this.store}, barcode: ${_this.barcode}, photoPath: ${_this.photoPath}, caloriesPer100g: ${_this.caloriesPer100g}, proteinPer100g: ${_this.proteinPer100g}, fatPer100g: ${_this.fatPer100g}, carbsPer100g: ${_this.carbsPer100g}, fiberPer100g: ${_this.fiberPer100g}, sugarPer100g: ${_this.sugarPer100g}, sodiumMgPer100g: ${_this.sodiumMgPer100g}, cholesterolMgPer100g: ${_this.cholesterolMgPer100g}, potassiumMgPer100g: ${_this.potassiumMgPer100g}, calciumMgPer100g: ${_this.calciumMgPer100g}, ironMgPer100g: ${_this.ironMgPer100g}, vitaminCMgPer100g: ${_this.vitaminCMgPer100g}, vitaminDMcgPer100g: ${_this.vitaminDMcgPer100g}, isFavorite: ${_this.isFavorite}, createdAt: ${_this.createdAt})';
+  return 'Food(id: ${_this.id}, name: ${_this.name}, brand: ${_this.brand}, store: ${_this.store}, barcode: ${_this.barcode}, photoPath: ${_this.photoPath}, caloriesPer100g: ${_this.caloriesPer100g}, proteinPer100g: ${_this.proteinPer100g}, fatPer100g: ${_this.fatPer100g}, carbsPer100g: ${_this.carbsPer100g}, fiberPer100g: ${_this.fiberPer100g}, sugarPer100g: ${_this.sugarPer100g}, sodiumMgPer100g: ${_this.sodiumMgPer100g}, cholesterolMgPer100g: ${_this.cholesterolMgPer100g}, potassiumMgPer100g: ${_this.potassiumMgPer100g}, calciumMgPer100g: ${_this.calciumMgPer100g}, ironMgPer100g: ${_this.ironMgPer100g}, vitaminCMgPer100g: ${_this.vitaminCMgPer100g}, vitaminDMcgPer100g: ${_this.vitaminDMcgPer100g}, pieceLabel: ${_this.pieceLabel}, pieceWeightGrams: ${_this.pieceWeightGrams}, isFavorite: ${_this.isFavorite}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $FoodCopyWith<$Res>  {
   factory $FoodCopyWith(Food value, $Res Function(Food) _then) = _$FoodCopyWithImpl;
 @useResult
 $Res call({
- int? id, String name, String? brand, String? store, String? barcode, String? photoPath, double? caloriesPer100g, double? proteinPer100g, double? fatPer100g, double? carbsPer100g, double? fiberPer100g, double? sugarPer100g, double? sodiumMgPer100g, double? cholesterolMgPer100g, double? potassiumMgPer100g, double? calciumMgPer100g, double? ironMgPer100g, double? vitaminCMgPer100g, double? vitaminDMcgPer100g, bool isFavorite, DateTime? createdAt
+ int? id, String name, String? brand, String? store, String? barcode, String? photoPath, double? caloriesPer100g, double? proteinPer100g, double? fatPer100g, double? carbsPer100g, double? fiberPer100g, double? sugarPer100g, double? sodiumMgPer100g, double? cholesterolMgPer100g, double? potassiumMgPer100g, double? calciumMgPer100g, double? ironMgPer100g, double? vitaminCMgPer100g, double? vitaminDMcgPer100g, String? pieceLabel, double? pieceWeightGrams, bool isFavorite, DateTime? createdAt
 });
 
 
@@ -71,7 +71,7 @@ class _$FoodCopyWithImpl<$Res>
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? brand = freezed,Object? store = freezed,Object? barcode = freezed,Object? photoPath = freezed,Object? caloriesPer100g = freezed,Object? proteinPer100g = freezed,Object? fatPer100g = freezed,Object? carbsPer100g = freezed,Object? fiberPer100g = freezed,Object? sugarPer100g = freezed,Object? sodiumMgPer100g = freezed,Object? cholesterolMgPer100g = freezed,Object? potassiumMgPer100g = freezed,Object? calciumMgPer100g = freezed,Object? ironMgPer100g = freezed,Object? vitaminCMgPer100g = freezed,Object? vitaminDMcgPer100g = freezed,Object? isFavorite = null,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = null,Object? brand = freezed,Object? store = freezed,Object? barcode = freezed,Object? photoPath = freezed,Object? caloriesPer100g = freezed,Object? proteinPer100g = freezed,Object? fatPer100g = freezed,Object? carbsPer100g = freezed,Object? fiberPer100g = freezed,Object? sugarPer100g = freezed,Object? sodiumMgPer100g = freezed,Object? cholesterolMgPer100g = freezed,Object? potassiumMgPer100g = freezed,Object? calciumMgPer100g = freezed,Object? ironMgPer100g = freezed,Object? vitaminCMgPer100g = freezed,Object? vitaminDMcgPer100g = freezed,Object? pieceLabel = freezed,Object? pieceWeightGrams = freezed,Object? isFavorite = null,Object? createdAt = freezed,}) {
   return _then(Food(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -92,6 +92,8 @@ as double?,calciumMgPer100g: freezed == calciumMgPer100g ? _self.calciumMgPer100
 as double?,ironMgPer100g: freezed == ironMgPer100g ? _self.ironMgPer100g : ironMgPer100g // ignore: cast_nullable_to_non_nullable
 as double?,vitaminCMgPer100g: freezed == vitaminCMgPer100g ? _self.vitaminCMgPer100g : vitaminCMgPer100g // ignore: cast_nullable_to_non_nullable
 as double?,vitaminDMcgPer100g: freezed == vitaminDMcgPer100g ? _self.vitaminDMcgPer100g : vitaminDMcgPer100g // ignore: cast_nullable_to_non_nullable
+as double?,pieceLabel: freezed == pieceLabel ? _self.pieceLabel : pieceLabel // ignore: cast_nullable_to_non_nullable
+as String?,pieceWeightGrams: freezed == pieceWeightGrams ? _self.pieceWeightGrams : pieceWeightGrams // ignore: cast_nullable_to_non_nullable
 as double?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -179,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  bool isFavorite,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  String? pieceLabel,  double? pieceWeightGrams,  bool isFavorite,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
-return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.isFavorite,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.pieceLabel,_that.pieceWeightGrams,_that.isFavorite,_that.createdAt);case _:
   return orElse();
 
 }
@@ -200,10 +202,10 @@ return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  bool isFavorite,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  String? pieceLabel,  double? pieceWeightGrams,  bool isFavorite,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Food():
-return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.isFavorite,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.pieceLabel,_that.pieceWeightGrams,_that.isFavorite,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -220,10 +222,10 @@ return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  bool isFavorite,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String name,  String? brand,  String? store,  String? barcode,  String? photoPath,  double? caloriesPer100g,  double? proteinPer100g,  double? fatPer100g,  double? carbsPer100g,  double? fiberPer100g,  double? sugarPer100g,  double? sodiumMgPer100g,  double? cholesterolMgPer100g,  double? potassiumMgPer100g,  double? calciumMgPer100g,  double? ironMgPer100g,  double? vitaminCMgPer100g,  double? vitaminDMcgPer100g,  String? pieceLabel,  double? pieceWeightGrams,  bool isFavorite,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Food() when $default != null:
-return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.isFavorite,_that.createdAt);case _:
+return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.photoPath,_that.caloriesPer100g,_that.proteinPer100g,_that.fatPer100g,_that.carbsPer100g,_that.fiberPer100g,_that.sugarPer100g,_that.sodiumMgPer100g,_that.cholesterolMgPer100g,_that.potassiumMgPer100g,_that.calciumMgPer100g,_that.ironMgPer100g,_that.vitaminCMgPer100g,_that.vitaminDMcgPer100g,_that.pieceLabel,_that.pieceWeightGrams,_that.isFavorite,_that.createdAt);case _:
   return null;
 
 }
@@ -235,7 +237,7 @@ return $default(_that.id,_that.name,_that.brand,_that.store,_that.barcode,_that.
 @JsonSerializable()
 
 class _Food extends Food {
-  const _Food({this.id, required this.name, this.brand, this.store, this.barcode, this.photoPath, this.caloriesPer100g, this.proteinPer100g, this.fatPer100g, this.carbsPer100g, this.fiberPer100g, this.sugarPer100g, this.sodiumMgPer100g, this.cholesterolMgPer100g, this.potassiumMgPer100g, this.calciumMgPer100g, this.ironMgPer100g, this.vitaminCMgPer100g, this.vitaminDMcgPer100g, this.isFavorite = false, this.createdAt}): super._();
+  const _Food({this.id, required this.name, this.brand, this.store, this.barcode, this.photoPath, this.caloriesPer100g, this.proteinPer100g, this.fatPer100g, this.carbsPer100g, this.fiberPer100g, this.sugarPer100g, this.sodiumMgPer100g, this.cholesterolMgPer100g, this.potassiumMgPer100g, this.calciumMgPer100g, this.ironMgPer100g, this.vitaminCMgPer100g, this.vitaminDMcgPer100g, this.pieceLabel, this.pieceWeightGrams, this.isFavorite = false, this.createdAt}): super._();
   factory _Food.fromJson(Map<String, dynamic> json) => _$FoodFromJson(json);
 
 @override final  int? id;
@@ -257,6 +259,8 @@ class _Food extends Food {
 @override final  double? ironMgPer100g;
 @override final  double? vitaminCMgPer100g;
 @override final  double? vitaminDMcgPer100g;
+@override final  String? pieceLabel;
+@override final  double? pieceWeightGrams;
 @override@JsonKey() final  bool isFavorite;
 @override final  DateTime? createdAt;
 
@@ -273,18 +277,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.store, store) || other.store == store)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath)&&(identical(other.caloriesPer100g, caloriesPer100g) || other.caloriesPer100g == caloriesPer100g)&&(identical(other.proteinPer100g, proteinPer100g) || other.proteinPer100g == proteinPer100g)&&(identical(other.fatPer100g, fatPer100g) || other.fatPer100g == fatPer100g)&&(identical(other.carbsPer100g, carbsPer100g) || other.carbsPer100g == carbsPer100g)&&(identical(other.fiberPer100g, fiberPer100g) || other.fiberPer100g == fiberPer100g)&&(identical(other.sugarPer100g, sugarPer100g) || other.sugarPer100g == sugarPer100g)&&(identical(other.sodiumMgPer100g, sodiumMgPer100g) || other.sodiumMgPer100g == sodiumMgPer100g)&&(identical(other.cholesterolMgPer100g, cholesterolMgPer100g) || other.cholesterolMgPer100g == cholesterolMgPer100g)&&(identical(other.potassiumMgPer100g, potassiumMgPer100g) || other.potassiumMgPer100g == potassiumMgPer100g)&&(identical(other.calciumMgPer100g, calciumMgPer100g) || other.calciumMgPer100g == calciumMgPer100g)&&(identical(other.ironMgPer100g, ironMgPer100g) || other.ironMgPer100g == ironMgPer100g)&&(identical(other.vitaminCMgPer100g, vitaminCMgPer100g) || other.vitaminCMgPer100g == vitaminCMgPer100g)&&(identical(other.vitaminDMcgPer100g, vitaminDMcgPer100g) || other.vitaminDMcgPer100g == vitaminDMcgPer100g)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Food&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.brand, brand) || other.brand == brand)&&(identical(other.store, store) || other.store == store)&&(identical(other.barcode, barcode) || other.barcode == barcode)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath)&&(identical(other.caloriesPer100g, caloriesPer100g) || other.caloriesPer100g == caloriesPer100g)&&(identical(other.proteinPer100g, proteinPer100g) || other.proteinPer100g == proteinPer100g)&&(identical(other.fatPer100g, fatPer100g) || other.fatPer100g == fatPer100g)&&(identical(other.carbsPer100g, carbsPer100g) || other.carbsPer100g == carbsPer100g)&&(identical(other.fiberPer100g, fiberPer100g) || other.fiberPer100g == fiberPer100g)&&(identical(other.sugarPer100g, sugarPer100g) || other.sugarPer100g == sugarPer100g)&&(identical(other.sodiumMgPer100g, sodiumMgPer100g) || other.sodiumMgPer100g == sodiumMgPer100g)&&(identical(other.cholesterolMgPer100g, cholesterolMgPer100g) || other.cholesterolMgPer100g == cholesterolMgPer100g)&&(identical(other.potassiumMgPer100g, potassiumMgPer100g) || other.potassiumMgPer100g == potassiumMgPer100g)&&(identical(other.calciumMgPer100g, calciumMgPer100g) || other.calciumMgPer100g == calciumMgPer100g)&&(identical(other.ironMgPer100g, ironMgPer100g) || other.ironMgPer100g == ironMgPer100g)&&(identical(other.vitaminCMgPer100g, vitaminCMgPer100g) || other.vitaminCMgPer100g == vitaminCMgPer100g)&&(identical(other.vitaminDMcgPer100g, vitaminDMcgPer100g) || other.vitaminDMcgPer100g == vitaminDMcgPer100g)&&(identical(other.pieceLabel, pieceLabel) || other.pieceLabel == pieceLabel)&&(identical(other.pieceWeightGrams, pieceWeightGrams) || other.pieceWeightGrams == pieceWeightGrams)&&(identical(other.isFavorite, isFavorite) || other.isFavorite == isFavorite)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,name,brand,store,barcode,photoPath,caloriesPer100g,proteinPer100g,fatPer100g,carbsPer100g,fiberPer100g,sugarPer100g,sodiumMgPer100g,cholesterolMgPer100g,potassiumMgPer100g,calciumMgPer100g,ironMgPer100g,vitaminCMgPer100g,vitaminDMcgPer100g,isFavorite,createdAt]);
+    return Object.hashAll([runtimeType,id,name,brand,store,barcode,photoPath,caloriesPer100g,proteinPer100g,fatPer100g,carbsPer100g,fiberPer100g,sugarPer100g,sodiumMgPer100g,cholesterolMgPer100g,potassiumMgPer100g,calciumMgPer100g,ironMgPer100g,vitaminCMgPer100g,vitaminDMcgPer100g,pieceLabel,pieceWeightGrams,isFavorite,createdAt]);
 }
 
 @override
 String toString() {
-    return 'Food(id: $id, name: $name, brand: $brand, store: $store, barcode: $barcode, photoPath: $photoPath, caloriesPer100g: $caloriesPer100g, proteinPer100g: $proteinPer100g, fatPer100g: $fatPer100g, carbsPer100g: $carbsPer100g, fiberPer100g: $fiberPer100g, sugarPer100g: $sugarPer100g, sodiumMgPer100g: $sodiumMgPer100g, cholesterolMgPer100g: $cholesterolMgPer100g, potassiumMgPer100g: $potassiumMgPer100g, calciumMgPer100g: $calciumMgPer100g, ironMgPer100g: $ironMgPer100g, vitaminCMgPer100g: $vitaminCMgPer100g, vitaminDMcgPer100g: $vitaminDMcgPer100g, isFavorite: $isFavorite, createdAt: $createdAt)';
+    return 'Food(id: $id, name: $name, brand: $brand, store: $store, barcode: $barcode, photoPath: $photoPath, caloriesPer100g: $caloriesPer100g, proteinPer100g: $proteinPer100g, fatPer100g: $fatPer100g, carbsPer100g: $carbsPer100g, fiberPer100g: $fiberPer100g, sugarPer100g: $sugarPer100g, sodiumMgPer100g: $sodiumMgPer100g, cholesterolMgPer100g: $cholesterolMgPer100g, potassiumMgPer100g: $potassiumMgPer100g, calciumMgPer100g: $calciumMgPer100g, ironMgPer100g: $ironMgPer100g, vitaminCMgPer100g: $vitaminCMgPer100g, vitaminDMcgPer100g: $vitaminDMcgPer100g, pieceLabel: $pieceLabel, pieceWeightGrams: $pieceWeightGrams, isFavorite: $isFavorite, createdAt: $createdAt)';
 }
 
 
@@ -295,7 +299,7 @@ abstract mixin class _$FoodCopyWith<$Res> implements $FoodCopyWith<$Res> {
   factory _$FoodCopyWith(_Food value, $Res Function(_Food) _then) = __$FoodCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String name, String? brand, String? store, String? barcode, String? photoPath, double? caloriesPer100g, double? proteinPer100g, double? fatPer100g, double? carbsPer100g, double? fiberPer100g, double? sugarPer100g, double? sodiumMgPer100g, double? cholesterolMgPer100g, double? potassiumMgPer100g, double? calciumMgPer100g, double? ironMgPer100g, double? vitaminCMgPer100g, double? vitaminDMcgPer100g, bool isFavorite, DateTime? createdAt
+ int? id, String name, String? brand, String? store, String? barcode, String? photoPath, double? caloriesPer100g, double? proteinPer100g, double? fatPer100g, double? carbsPer100g, double? fiberPer100g, double? sugarPer100g, double? sodiumMgPer100g, double? cholesterolMgPer100g, double? potassiumMgPer100g, double? calciumMgPer100g, double? ironMgPer100g, double? vitaminCMgPer100g, double? vitaminDMcgPer100g, String? pieceLabel, double? pieceWeightGrams, bool isFavorite, DateTime? createdAt
 });
 
 
@@ -312,7 +316,7 @@ class __$FoodCopyWithImpl<$Res>
 
 /// Create a copy of Food
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? brand = freezed,Object? store = freezed,Object? barcode = freezed,Object? photoPath = freezed,Object? caloriesPer100g = freezed,Object? proteinPer100g = freezed,Object? fatPer100g = freezed,Object? carbsPer100g = freezed,Object? fiberPer100g = freezed,Object? sugarPer100g = freezed,Object? sodiumMgPer100g = freezed,Object? cholesterolMgPer100g = freezed,Object? potassiumMgPer100g = freezed,Object? calciumMgPer100g = freezed,Object? ironMgPer100g = freezed,Object? vitaminCMgPer100g = freezed,Object? vitaminDMcgPer100g = freezed,Object? isFavorite = null,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = null,Object? brand = freezed,Object? store = freezed,Object? barcode = freezed,Object? photoPath = freezed,Object? caloriesPer100g = freezed,Object? proteinPer100g = freezed,Object? fatPer100g = freezed,Object? carbsPer100g = freezed,Object? fiberPer100g = freezed,Object? sugarPer100g = freezed,Object? sodiumMgPer100g = freezed,Object? cholesterolMgPer100g = freezed,Object? potassiumMgPer100g = freezed,Object? calciumMgPer100g = freezed,Object? ironMgPer100g = freezed,Object? vitaminCMgPer100g = freezed,Object? vitaminDMcgPer100g = freezed,Object? pieceLabel = freezed,Object? pieceWeightGrams = freezed,Object? isFavorite = null,Object? createdAt = freezed,}) {
   return _then(_Food(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -333,6 +337,8 @@ as double?,calciumMgPer100g: freezed == calciumMgPer100g ? _self.calciumMgPer100
 as double?,ironMgPer100g: freezed == ironMgPer100g ? _self.ironMgPer100g : ironMgPer100g // ignore: cast_nullable_to_non_nullable
 as double?,vitaminCMgPer100g: freezed == vitaminCMgPer100g ? _self.vitaminCMgPer100g : vitaminCMgPer100g // ignore: cast_nullable_to_non_nullable
 as double?,vitaminDMcgPer100g: freezed == vitaminDMcgPer100g ? _self.vitaminDMcgPer100g : vitaminDMcgPer100g // ignore: cast_nullable_to_non_nullable
+as double?,pieceLabel: freezed == pieceLabel ? _self.pieceLabel : pieceLabel // ignore: cast_nullable_to_non_nullable
+as String?,pieceWeightGrams: freezed == pieceWeightGrams ? _self.pieceWeightGrams : pieceWeightGrams // ignore: cast_nullable_to_non_nullable
 as double?,isFavorite: null == isFavorite ? _self.isFavorite : isFavorite // ignore: cast_nullable_to_non_nullable
 as bool,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

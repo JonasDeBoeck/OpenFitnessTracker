@@ -26,6 +26,8 @@ _Food _$FoodFromJson(Map<String, dynamic> json) => _Food(
   ironMgPer100g: (json['ironMgPer100g'] as num?)?.toDouble(),
   vitaminCMgPer100g: (json['vitaminCMgPer100g'] as num?)?.toDouble(),
   vitaminDMcgPer100g: (json['vitaminDMcgPer100g'] as num?)?.toDouble(),
+  pieceLabel: json['pieceLabel'] as String?,
+  pieceWeightGrams: (json['pieceWeightGrams'] as num?)?.toDouble(),
   isFavorite: json['isFavorite'] as bool? ?? false,
   createdAt: json['createdAt'] == null
       ? null
@@ -52,6 +54,8 @@ Map<String, dynamic> _$FoodToJson(_Food instance) => <String, dynamic>{
   'ironMgPer100g': instance.ironMgPer100g,
   'vitaminCMgPer100g': instance.vitaminCMgPer100g,
   'vitaminDMcgPer100g': instance.vitaminDMcgPer100g,
+  'pieceLabel': instance.pieceLabel,
+  'pieceWeightGrams': instance.pieceWeightGrams,
   'isFavorite': instance.isFavorite,
   'createdAt': instance.createdAt?.toIso8601String(),
 };

@@ -28,6 +28,8 @@ _DiaryEntry _$DiaryEntryFromJson(Map<String, dynamic> json) => _DiaryEntry(
   ironMg: (json['ironMg'] as num?)?.toDouble(),
   vitaminCMg: (json['vitaminCMg'] as num?)?.toDouble(),
   vitaminDMcg: (json['vitaminDMcg'] as num?)?.toDouble(),
+  loggedUnitLabel: json['loggedUnitLabel'] as String?,
+  loggedUnitCount: (json['loggedUnitCount'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$DiaryEntryToJson(_DiaryEntry instance) =>
@@ -53,6 +55,8 @@ Map<String, dynamic> _$DiaryEntryToJson(_DiaryEntry instance) =>
       'ironMg': instance.ironMg,
       'vitaminCMg': instance.vitaminCMg,
       'vitaminDMcg': instance.vitaminDMcg,
+      'loggedUnitLabel': instance.loggedUnitLabel,
+      'loggedUnitCount': instance.loggedUnitCount,
     };
 
 const _$MealTypeEnumMap = {
