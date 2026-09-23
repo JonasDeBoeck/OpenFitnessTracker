@@ -99,6 +99,21 @@ class RecipeRepository {
     });
   }
 
+  /// The distinct set of labels already used across all recipes, sorted
+  /// case-insensitively. Labels aren't stored anywhere but on the recipes
+  /// that use them, so this is always derived live — a label that no
+  /// recipe uses anymore simply stops appearing, with nothing to clean up.
+  Future<List<String>> getAllLabels() async {
+    final rows = await _db.select(_db.recipes).get();
+    final labels = <String>{};
+    for (final row in rows) {
+      labels.addAll((jsonDecode(row.labels) as List).cast<String>());
+    }
+    final sorted = labels.toList()
+      ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    return sorted;
+  }
+
   Future<void> toggleFavorite(int id) async {
     final recipe = await getById(id);
     if (recipe == null) return;

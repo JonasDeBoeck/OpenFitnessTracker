@@ -122,7 +122,7 @@ final class RecentRecipesProvider
   }
 }
 
-String _$recentRecipesHash() => r'b3fe5fe3ca85363f00357f542e868b47aaf7a88e';
+String _$recentRecipesHash() => r'e207841a36583c71b861a28293e7a1887ef2a00f';
 
 @ProviderFor(favoriteRecipes)
 final favoriteRecipesProvider = FavoriteRecipesProvider._();
@@ -162,3 +162,43 @@ final class FavoriteRecipesProvider
 }
 
 String _$favoriteRecipesHash() => r'3d938e5d0dd9c614fd18f19a1218f073e028b613';
+
+@ProviderFor(existingRecipeLabels)
+final existingRecipeLabelsProvider = ExistingRecipeLabelsProvider._();
+
+final class ExistingRecipeLabelsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<String>>,
+          List<String>,
+          FutureOr<List<String>>
+        >
+    with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
+  ExistingRecipeLabelsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'existingRecipeLabelsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$existingRecipeLabelsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<String>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<String>> create(Ref ref) {
+    return existingRecipeLabels(ref);
+  }
+}
+
+String _$existingRecipeLabelsHash() =>
+    r'd02d6f33ea8dddfdac3f6963edb29aa73bfc21b8';

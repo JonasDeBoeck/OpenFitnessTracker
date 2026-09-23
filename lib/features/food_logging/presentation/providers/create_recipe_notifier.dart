@@ -43,7 +43,8 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
 
   void addLabel(String label) {
     final trimmed = label.trim();
-    if (trimmed.isEmpty || state.labels.contains(trimmed)) return;
+    if (trimmed.isEmpty) return;
+    if (state.labels.any((l) => l.toLowerCase() == trimmed.toLowerCase())) return;
     state = state.copyWith(labels: [...state.labels, trimmed]);
   }
 
@@ -111,6 +112,7 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
 
       ref.invalidate(recentRecipesProvider);
       ref.invalidate(recipesGroupedAlphabeticallyProvider);
+      ref.invalidate(existingRecipeLabelsProvider);
       if (state.isFavorite) ref.invalidate(favoriteRecipesProvider);
 
       state = state.copyWith(isSaving: false, savedRecipe: saved);
