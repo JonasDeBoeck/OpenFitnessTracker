@@ -28,10 +28,13 @@ Future<TrendsView?> trends(Ref ref, TrendsRange range) async {
   if (profile == null) return null;
 
   final today = DateUtils.dateOnly(DateTime.now());
+  final createdAt = DateUtils.dateOnly(profile.createdAt ?? today);
   final lookback = range.lookback;
+  // Never chart further back than the profile has existed — there's no
+  // data to show before that, regardless of how wide the selected range is.
   final start = lookback == null
-      ? DateUtils.dateOnly(profile.createdAt ?? today)
-      : today.subtract(lookback);
+      ? createdAt
+      : _laterOf(today.subtract(lookback), createdAt);
 
   final entries = await ref
       .watch(diaryRepositoryProvider)
@@ -57,3 +60,5 @@ Future<TrendsView?> trends(Ref ref, TrendsRange range) async {
     dailyTotals: dailyTotals,
   );
 }
+
+DateTime _laterOf(DateTime a, DateTime b) => a.isAfter(b) ? a : b;
