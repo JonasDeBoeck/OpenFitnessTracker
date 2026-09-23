@@ -49,7 +49,8 @@ class _WaterLogCardState extends State<WaterLogCard> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => _CustomAmountSheet(onConfirm: (v) => Navigator.of(context).pop(v)),
+      builder: (context) =>
+          _CustomAmountSheet(onConfirm: (v) => Navigator.of(context).pop(v)),
     );
     if (value != null) widget.onCustomAdd(value);
   }
@@ -74,15 +75,24 @@ class _WaterLogCardState extends State<WaterLogCard> {
           Row(
             children: [
               Expanded(
-                child: _QuickAddChip(label: '+250 mL', onTap: () => widget.onQuickAdd(250)),
+                child: _QuickAddChip(
+                  label: '+250 mL',
+                  onTap: () => widget.onQuickAdd(250),
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _QuickAddChip(label: '+500 mL', onTap: () => widget.onQuickAdd(500)),
+                child: _QuickAddChip(
+                  label: '+500 mL',
+                  onTap: () => widget.onQuickAdd(500),
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: _QuickAddChip(label: '+1000 mL', onTap: () => widget.onQuickAdd(1000)),
+                child: _QuickAddChip(
+                  label: '+1000 mL',
+                  onTap: () => widget.onQuickAdd(1000),
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -153,39 +163,44 @@ class _WaterEntryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final time = TimeOfDay.fromDateTime(entry.loggedAt).format(context);
-    return Dismissible(
-      key: ValueKey(entry.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 14),
-        decoration: BoxDecoration(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Dismissible(
+        key: ValueKey(entry.id),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 14),
           color: DashboardColors.destructive,
-          borderRadius: BorderRadius.circular(14),
+          child: const Icon(
+            Icons.delete_outline,
+            color: Colors.white,
+            size: 18,
+          ),
         ),
-        child: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
-      ),
-      confirmDismiss: (_) => showConfirmDeleteDialog(
-        context,
-        title: 'Delete this item?',
-        message: '${entry.milliliters.toStringAsFixed(0)} mL will be removed from your log.',
-      ),
-      onDismissed: (_) => onDelete(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: DashboardColors.surface,
-          borderRadius: BorderRadius.circular(14),
+        confirmDismiss: (_) => showConfirmDeleteDialog(
+          context,
+          title: 'Delete this item?',
+          message:
+              '${entry.milliliters.toStringAsFixed(0)} mL will be removed from your log.',
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${entry.milliliters.toStringAsFixed(0)} mL',
-              style: DashboardTextStyles.waterEntryAmount,
-            ),
-            Text(time, style: DashboardTextStyles.waterEntryTime),
-          ],
+        onDismissed: (_) => onDelete(),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: DashboardColors.surface,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${entry.milliliters.toStringAsFixed(0)} mL',
+                style: DashboardTextStyles.waterEntryAmount,
+              ),
+              Text(time, style: DashboardTextStyles.waterEntryTime),
+            ],
+          ),
         ),
       ),
     );
@@ -232,7 +247,9 @@ class _CustomAmountSheetState extends State<_CustomAmountSheet> {
             child: FilledButton(
               style: FilledButton.styleFrom(
                 backgroundColor: DashboardColors.water,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
               onPressed: () => widget.onConfirm(_value),
               child: Text(

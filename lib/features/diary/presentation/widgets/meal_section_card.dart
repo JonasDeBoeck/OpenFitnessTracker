@@ -126,65 +126,69 @@ class _MealSectionCardState extends State<MealSectionCard> {
               spacing: 8,
               children: [
                 for (final item in visibleItems)
-                  Dismissible(
-                    key: ValueKey(item.id),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 14),
-                      decoration: BoxDecoration(
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(14),
+                    child: Dismissible(
+                      key: ValueKey(item.id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 14),
                         color: DashboardColors.destructive,
-                        borderRadius: BorderRadius.circular(14),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                          size: 18,
+                        ),
                       ),
-                      child: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.white,
-                        size: 18,
+                      confirmDismiss: (_) => showConfirmDeleteDialog(
+                        context,
+                        title: 'Delete this item?',
+                        message:
+                            '${item.displayName} will be removed from your log.',
                       ),
-                    ),
-                    confirmDismiss: (_) => showConfirmDeleteDialog(
-                      context,
-                      title: 'Delete this item?',
-                      message: '${item.displayName} will be removed from your log.',
-                    ),
-                    onDismissed: (_) {
-                      setState(() => _pendingDeleteIds.add(item.id!));
-                      widget.onDeleteItem(item.id!);
-                    },
-                    child: Material(
-                      color: DashboardColors.surface,
-                      borderRadius: BorderRadius.circular(14),
-                      child: InkWell(
+                      onDismissed: (_) {
+                        setState(() => _pendingDeleteIds.add(item.id!));
+                        widget.onDeleteItem(item.id!);
+                      },
+                      child: Material(
+                        color: DashboardColors.surface,
                         borderRadius: BorderRadius.circular(14),
-                        onTap: () => widget.onEditItem(item),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    item.displayName,
-                                    style: DashboardTextStyles.mealItemName,
-                                  ),
-                                  Text(
-                                    formatLoggedQuantity(
-                                      grams: item.quantityGrams,
-                                      unitLabel: item.loggedUnitLabel,
-                                      unitCount: item.loggedUnitCount,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(14),
+                          onTap: () => widget.onEditItem(item),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      item.displayName,
+                                      style: DashboardTextStyles.mealItemName,
                                     ),
-                                    style: DashboardTextStyles.mealItemGrams,
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                '${item.calories.toStringAsFixed(0)} kcal',
-                                style: DashboardTextStyles.mealItemKcal,
-                              ),
-                            ],
+                                    Text(
+                                      formatLoggedQuantity(
+                                        grams: item.quantityGrams,
+                                        unitLabel: item.loggedUnitLabel,
+                                        unitCount: item.loggedUnitCount,
+                                      ),
+                                      style: DashboardTextStyles.mealItemGrams,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '${item.calories.toStringAsFixed(0)} kcal',
+                                  style: DashboardTextStyles.mealItemKcal,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -219,7 +223,10 @@ class _MealMacroChip extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 4),
-        Text('${grams.toStringAsFixed(0)}g', style: DashboardTextStyles.mealMacroChip),
+        Text(
+          '${grams.toStringAsFixed(0)}g',
+          style: DashboardTextStyles.mealMacroChip,
+        ),
       ],
     );
   }
@@ -261,7 +268,10 @@ class _AddFoodButton extends StatelessWidget {
 }
 
 class _DashedRoundedBorderPainter extends CustomPainter {
-  const _DashedRoundedBorderPainter({required this.color, required this.radius});
+  const _DashedRoundedBorderPainter({
+    required this.color,
+    required this.radius,
+  });
 
   final Color color;
   final double radius;
