@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 /// [ThemeData] (which stays Material-3/seed-color for onboarding) and
 /// deliberately not dark-mode aware, matching the source design.
 abstract final class DashboardColors {
-  static const Color pageBackground = Color(0xFFEFEBDD);
   static const Color surface = Color(0xFFFBFAF2);
   static const Color card = Color(0xFFF0EDE0);
   static const Color border = Color(0xFFDAD6C6);

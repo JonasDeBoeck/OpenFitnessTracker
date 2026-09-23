@@ -87,7 +87,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
     );
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [

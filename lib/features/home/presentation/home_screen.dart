@@ -27,7 +27,7 @@ class HomeScreen extends ConsumerWidget {
 
     return ExitConfirmationScope(
       child: Scaffold(
-        backgroundColor: DashboardColors.pageBackground,
+        backgroundColor: DashboardColors.surface,
         body: SafeArea(
           child: dashboardAsync.when(
             loading: () => const Center(child: CircularProgressIndicator()),

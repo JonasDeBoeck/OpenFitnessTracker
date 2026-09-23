@@ -103,7 +103,7 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
     final isLogging = ref.watch(logRecipeProvider).isLoading;
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: recipeAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),

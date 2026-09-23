@@ -183,7 +183,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     final notifier = ref.read(_provider.notifier);
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [
