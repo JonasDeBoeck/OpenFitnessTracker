@@ -115,6 +115,8 @@ class DiaryRepository {
       ironMg: Value(entry.ironMg),
       vitaminCMg: Value(entry.vitaminCMg),
       vitaminDMcg: Value(entry.vitaminDMcg),
+      loggedUnitLabel: Value(entry.loggedUnitLabel),
+      loggedUnitCount: Value(entry.loggedUnitCount),
     );
   }
 
@@ -141,6 +143,8 @@ class DiaryRepository {
       ironMg: row.ironMg,
       vitaminCMg: row.vitaminCMg,
       vitaminDMcg: row.vitaminDMcg,
+      loggedUnitLabel: row.loggedUnitLabel,
+      loggedUnitCount: row.loggedUnitCount,
     );
   }
 }

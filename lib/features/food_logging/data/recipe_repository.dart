@@ -163,6 +163,8 @@ class RecipeRepository {
       proteinPer100g: Value(ingredient.proteinPer100g),
       fatPer100g: Value(ingredient.fatPer100g),
       carbsPer100g: Value(ingredient.carbsPer100g),
+      unitLabel: Value(ingredient.unitLabel),
+      unitCount: Value(ingredient.unitCount),
     );
   }
 
@@ -208,6 +210,8 @@ class RecipeRepository {
       proteinPer100g: row.proteinPer100g,
       fatPer100g: row.fatPer100g,
       carbsPer100g: row.carbsPer100g,
+      unitLabel: row.unitLabel,
+      unitCount: row.unitCount,
     );
   }
 }
