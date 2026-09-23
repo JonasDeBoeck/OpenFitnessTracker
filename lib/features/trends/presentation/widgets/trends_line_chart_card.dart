@@ -126,7 +126,12 @@ class TrendsLineChartCard extends StatelessWidget {
                           spots: spots,
                           color: color,
                           barWidth: 2.5,
-                          dotData: const FlDotData(),
+                          // Dots read fine at 7 days but overlap into a mess
+                          // once the chart has to fit weeks or months of
+                          // points into 306px — the line + area fill already
+                          // carry the trend, and the tap-anywhere tooltip
+                          // (touchSpotThreshold above) doesn't depend on them.
+                          dotData: const FlDotData(show: false),
                           belowBarData: BarAreaData(
                             show: true,
                             gradient: LinearGradient(
