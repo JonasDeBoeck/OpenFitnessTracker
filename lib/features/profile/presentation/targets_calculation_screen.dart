@@ -19,7 +19,7 @@ class TargetsCalculationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [

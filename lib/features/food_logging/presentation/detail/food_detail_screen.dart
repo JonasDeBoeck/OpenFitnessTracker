@@ -52,7 +52,7 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
     final isLogging = ref.watch(logFoodProvider).isLoading;
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: foodAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),

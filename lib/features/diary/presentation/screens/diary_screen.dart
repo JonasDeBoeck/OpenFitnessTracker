@@ -46,7 +46,7 @@ class DiaryScreen extends ConsumerWidget {
 
     return ExitConfirmationScope(
       child: Scaffold(
-        backgroundColor: DashboardColors.pageBackground,
+        backgroundColor: DashboardColors.surface,
         body: SafeArea(
           child: Column(
             children: [

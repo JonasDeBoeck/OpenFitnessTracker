@@ -100,7 +100,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          backgroundColor: DashboardColors.pageBackground,
+          backgroundColor: DashboardColors.surface,
           body: SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),

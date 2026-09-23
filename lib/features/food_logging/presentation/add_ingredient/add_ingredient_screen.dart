@@ -48,7 +48,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   Widget build(BuildContext context) {
     final selected = _selected;
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [

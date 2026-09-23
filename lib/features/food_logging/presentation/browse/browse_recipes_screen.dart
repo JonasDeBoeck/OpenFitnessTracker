@@ -26,7 +26,7 @@ class BrowseRecipesScreen extends ConsumerWidget {
     final groupedAsync = ref.watch(recipesGroupedAlphabeticallyProvider);
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [

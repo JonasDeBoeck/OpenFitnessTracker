@@ -134,7 +134,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     final isFoods = _mode == _Mode.foods;
 
     return Scaffold(
-      backgroundColor: DashboardColors.pageBackground,
+      backgroundColor: DashboardColors.surface,
       body: SafeArea(
         child: Column(
           children: [
