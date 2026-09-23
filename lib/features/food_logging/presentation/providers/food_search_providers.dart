@@ -17,6 +17,14 @@ Future<List<Food>> recentFoods(Ref ref) {
   return ref.watch(foodRepositoryProvider).getRecentLoggedFoods();
 }
 
+/// Every food in the catalog, sorted alphabetically — the unfiltered state
+/// of a search-filtered A–Z list (e.g. Add Ingredient), as opposed to
+/// [foodsGroupedAlphabeticallyProvider]'s letter-sectioned Browse Foods view.
+@riverpod
+Future<List<Food>> allFoodsSorted(Ref ref) {
+  return ref.watch(foodRepositoryProvider).getAllSortedByName();
+}
+
 @riverpod
 Future<List<Food>> favoriteFoods(Ref ref) {
   return ref.watch(foodRepositoryProvider).getFavorites();

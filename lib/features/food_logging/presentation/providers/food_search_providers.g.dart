@@ -121,6 +121,55 @@ final class RecentFoodsProvider
 
 String _$recentFoodsHash() => r'e7d4808f7692bd8a4e8465de1f90e8eb15e920fd';
 
+/// Every food in the catalog, sorted alphabetically — the unfiltered state
+/// of a search-filtered A–Z list (e.g. Add Ingredient), as opposed to
+/// [foodsGroupedAlphabeticallyProvider]'s letter-sectioned Browse Foods view.
+
+@ProviderFor(allFoodsSorted)
+final allFoodsSortedProvider = AllFoodsSortedProvider._();
+
+/// Every food in the catalog, sorted alphabetically — the unfiltered state
+/// of a search-filtered A–Z list (e.g. Add Ingredient), as opposed to
+/// [foodsGroupedAlphabeticallyProvider]'s letter-sectioned Browse Foods view.
+
+final class AllFoodsSortedProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Food>>,
+          List<Food>,
+          FutureOr<List<Food>>
+        >
+    with $FutureModifier<List<Food>>, $FutureProvider<List<Food>> {
+  /// Every food in the catalog, sorted alphabetically — the unfiltered state
+  /// of a search-filtered A–Z list (e.g. Add Ingredient), as opposed to
+  /// [foodsGroupedAlphabeticallyProvider]'s letter-sectioned Browse Foods view.
+  AllFoodsSortedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'allFoodsSortedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$allFoodsSortedHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Food>> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Food>> create(Ref ref) {
+    return allFoodsSorted(ref);
+  }
+}
+
+String _$allFoodsSortedHash() => r'8c07bcb6c13c5b429c161709c4c2bafe9a9d032f';
+
 @ProviderFor(favoriteFoods)
 final favoriteFoodsProvider = FavoriteFoodsProvider._();
 
