@@ -142,8 +142,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     if (source != null) await _scanNutritionLabel(source);
   }
 
-  Future<void> _save() async {
-    await ref.read(_provider.notifier).save();
+  Future<void> _save({bool ignoreMismatch = false}) async {
+    await ref.read(_provider.notifier).save(ignoreMismatch: ignoreMismatch);
     if (!mounted) return;
     final state = ref.read(_provider);
     if (state.saveError != null) {
@@ -151,9 +151,9 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       return;
     }
     if (state.macroMismatchWarning != null) {
-      // Saved, but left on-screen (see the warning banner below) so the
-      // user can actually fix the mistyped value instead of being sent
-      // away right after being told something's wrong.
+      // Not saved — left on-screen with the warning banner (and its "Save
+      // anyway" action) so the user can fix the mistyped value or
+      // explicitly override instead of it being saved silently.
       return;
     }
     if (state.savedFood == null) return;
@@ -338,7 +338,10 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                   if (state.macroMismatchWarning != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 12),
-                      child: _WarningBanner(text: state.macroMismatchWarning!),
+                      child: _WarningBanner(
+                        text: state.macroMismatchWarning!,
+                        onSaveAnyway: state.isSaving ? null : () => _save(ignoreMismatch: true),
+                      ),
                     ),
                   Text('Calories (kcal per 100 g)', style: DashboardTextStyles.mealKcal),
                   const SizedBox(height: 4),
@@ -557,9 +560,10 @@ class _Badge extends StatelessWidget {
 }
 
 class _WarningBanner extends StatelessWidget {
-  const _WarningBanner({required this.text});
+  const _WarningBanner({required this.text, this.onSaveAnyway});
 
   final String text;
+  final VoidCallback? onSaveAnyway;
 
   @override
   Widget build(BuildContext context) {
@@ -570,11 +574,31 @@ class _WarningBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFC98177), width: 1.2),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Icon(Icons.error_outline, color: Color(0xFFA34B3E), size: 18),
-          const SizedBox(width: 8),
-          Expanded(child: Text(text, style: DashboardTextStyles.mealKcal.copyWith(color: const Color(0xFFA34B3E)))),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.error_outline, color: Color(0xFFA34B3E), size: 18),
+              const SizedBox(width: 8),
+              Expanded(child: Text(text, style: DashboardTextStyles.mealKcal.copyWith(color: const Color(0xFFA34B3E)))),
+            ],
+          ),
+          if (onSaveAnyway != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: onSaveAnyway,
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFFA34B3E),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                ),
+                child: const Text('Save anyway'),
+              ),
+            ),
         ],
       ),
     );

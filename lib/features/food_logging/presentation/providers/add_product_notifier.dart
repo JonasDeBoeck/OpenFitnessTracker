@@ -117,9 +117,14 @@ class AddProductNotifier extends _$AddProductNotifier {
     }
   }
 
-  Future<void> save() async {
-    // A previous attempt already persisted this food (the user stayed on
-    // the screen to fix a macro-mismatch warning) — update that same row
+  /// Saves the current form as a food. When the entered macros don't
+  /// roughly account for the entered calories, nothing is persisted and
+  /// [AddProductFormState.macroMismatchWarning] is set instead — unless
+  /// [ignoreMismatch] is true, which saves anyway (the warning banner's
+  /// "Save anyway" action).
+  Future<void> save({bool ignoreMismatch = false}) async {
+    // A previous attempt already saved this food (the user chose "Save
+    // anyway" and came back to edit further) — update that same row
     // instead of creating a duplicate.
     final previouslySavedId = state.savedFood?.id;
 
@@ -131,19 +136,22 @@ class AddProductNotifier extends _$AddProductNotifier {
         fat: state.fatPer100g,
         carbs: state.carbsPer100g,
       );
-      // macrosRoughlyMatchCalories only returns false once all four values
-      // are known, so they're safe to read unconditionally below.
-      final mismatchWarning = macrosMatch
-          ? null
-          : '${_fmtGrams(state.proteinPer100g!)} g protein × 4 + '
-              '${_fmtGrams(state.carbsPer100g!)} g carbs × 4 + '
-              '${_fmtGrams(state.fatPer100g!)} g fat × 9 = '
-              '${expectedCaloriesFromMacros(
-                protein: state.proteinPer100g!,
-                fat: state.fatPer100g!,
-                carbs: state.carbsPer100g!,
-              ).round()} kcal, but you entered ${state.caloriesPer100g!.round()} kcal per '
-              '100 g. Please check and edit them before continuing.';
+      if (!macrosMatch && !ignoreMismatch) {
+        // macrosRoughlyMatchCalories only returns false once all four
+        // values are known, so they're safe to read unconditionally here.
+        final mismatchWarning =
+            '${_fmtGrams(state.proteinPer100g!)} g protein × 4 + '
+            '${_fmtGrams(state.carbsPer100g!)} g carbs × 4 + '
+            '${_fmtGrams(state.fatPer100g!)} g fat × 9 = '
+            '${expectedCaloriesFromMacros(
+              protein: state.proteinPer100g!,
+              fat: state.fatPer100g!,
+              carbs: state.carbsPer100g!,
+            ).round()} kcal, but you entered ${state.caloriesPer100g!.round()} kcal per '
+            '100 g. Please check and edit them, or save anyway.';
+        state = state.copyWith(isSaving: false, macroMismatchWarning: mismatchWarning);
+        return;
+      }
 
       final food = Food(
         id: previouslySavedId,
@@ -180,17 +188,7 @@ class AddProductNotifier extends _$AddProductNotifier {
       ref.invalidate(foodsGroupedAlphabeticallyProvider);
       if (saved.isFavorite) ref.invalidate(favoriteFoodsProvider);
 
-      // The record is persisted either way — the mismatch check never
-      // blocks saving the data itself. What it does block is leaving the
-      // screen (see AddProductScreen._save): while a warning is showing,
-      // the form stays open with the just-saved values still editable, so
-      // the user has somewhere to actually fix a mistyped macro instead of
-      // being sent away right after being told it's wrong.
-      state = state.copyWith(
-        isSaving: false,
-        savedFood: saved,
-        macroMismatchWarning: mismatchWarning,
-      );
+      state = state.copyWith(isSaving: false, savedFood: saved);
     } catch (e) {
       final message = e is DuplicateBarcodeException ? e.toString() : 'Could not save this food: $e';
       state = state.copyWith(isSaving: false, saveError: message);
