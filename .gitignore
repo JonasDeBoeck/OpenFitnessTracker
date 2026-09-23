@@ -51,3 +51,6 @@ app.*.map.json
 # Signing (android/.gitignore already covers key.properties and *.jks/*.keystore)
 android/keystore-base64-TO-DELETE.txt
 android/github-secrets-TO-DELETE.txt
+
+# Git worktrees used for isolated agent work
+.worktrees/
