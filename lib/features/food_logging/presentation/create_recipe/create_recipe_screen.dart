@@ -9,6 +9,7 @@ import '../../domain/models/recipe.dart';
 import '../add_ingredient/ingredient_pick_result.dart';
 import '../add_product/widgets/photo_picker_field.dart';
 import '../providers/create_recipe_notifier.dart';
+import '../providers/recipe_search_providers.dart';
 import '../widgets/label_chips_field.dart';
 
 /// Creates a new recipe: name, labels, ingredients (picked from the food
@@ -145,6 +146,11 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                   const SizedBox(height: 16),
                   LabelChipsField(
                     labels: state.labels,
+                    existingLabels: ref.watch(existingRecipeLabelsProvider).when(
+                          data: (labels) => labels,
+                          loading: () => const [],
+                          error: (_, _) => const [],
+                        ),
                     onAdd: notifier.addLabel,
                     onRemove: notifier.removeLabel,
                   ),

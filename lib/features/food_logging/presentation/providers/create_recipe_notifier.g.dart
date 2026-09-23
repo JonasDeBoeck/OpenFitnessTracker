@@ -59,7 +59,7 @@ final class CreateRecipeNotifierProvider
 }
 
 String _$createRecipeNotifierHash() =>
-    r'f103b987d33ae8a2f1db3981246fb5ca8ea9798a';
+    r'3d775380558c286a437425d7d08bd7c5fbf64dfd';
 
 final class CreateRecipeNotifierFamily extends $Family
     with

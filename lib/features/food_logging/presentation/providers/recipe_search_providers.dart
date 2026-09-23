@@ -21,3 +21,8 @@ Future<List<Recipe>> recentRecipes(Ref ref) {
 Future<List<Recipe>> favoriteRecipes(Ref ref) {
   return ref.watch(recipeRepositoryProvider).getFavorites();
 }
+
+@riverpod
+Future<List<String>> existingRecipeLabels(Ref ref) {
+  return ref.watch(recipeRepositoryProvider).getAllLabels();
+}
