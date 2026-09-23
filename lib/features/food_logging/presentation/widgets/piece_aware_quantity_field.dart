@@ -72,12 +72,17 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
     return text.endsWith('.0') ? text.substring(0, text.length - 2) : text;
   }
 
+  double _clamp(double value) => _unit == _QuantityUnit.grams
+      ? value.clamp(widget.minGrams, widget.maxGrams)
+      : value.clamp(1, double.infinity);
+
   void _setValue(double value) {
+    final clamped = _clamp(value);
     setState(() {
       _controller.text =
-          _unit == _QuantityUnit.grams ? value.toStringAsFixed(0) : _trimTrailingZero(value);
+          _unit == _QuantityUnit.grams ? clamped.toStringAsFixed(0) : _trimTrailingZero(clamped);
     });
-    _notify(value);
+    _notify(clamped);
   }
 
   void _notify(double value) {
@@ -105,11 +110,7 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
 
   void _increment() => _setValue(_unit == _QuantityUnit.grams ? _value + 25 : _value + 1);
 
-  void _decrement() => _setValue(
-        _unit == _QuantityUnit.grams
-            ? (_value - 25).clamp(widget.minGrams, widget.maxGrams)
-            : (_value - 1).clamp(1, double.infinity),
-      );
+  void _decrement() => _setValue(_unit == _QuantityUnit.grams ? _value - 25 : _value - 1);
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +170,7 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
                     controller: _controller,
                     textAlign: TextAlign.center,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (_) => _notify(_value),
+                    onChanged: (_) => _setValue(_value),
                     style: DashboardTextStyles.macroName,
                     decoration: const InputDecoration(
                       isDense: true,

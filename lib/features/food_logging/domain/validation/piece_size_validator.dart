@@ -5,6 +5,9 @@
 String? pieceSizeValidationError({required String? label, required double? weightGrams}) {
   final hasLabel = label != null && label.trim().isNotEmpty;
   final hasWeight = weightGrams != null;
+  if (hasWeight && weightGrams <= 0) {
+    return 'Enter a weight greater than zero, or clear it to skip this.';
+  }
   if (hasLabel == hasWeight) return null;
   return hasLabel
       ? 'Enter a weight per $label, or clear the label to skip this.'

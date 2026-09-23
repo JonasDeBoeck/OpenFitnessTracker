@@ -23,5 +23,13 @@ void main() {
     test('treats a blank label as unset', () {
       expect(pieceSizeValidationError(label: '   ', weightGrams: 60), isNotNull);
     });
+
+    test('errors when the weight is zero', () {
+      expect(pieceSizeValidationError(label: 'carrot', weightGrams: 0), isNotNull);
+    });
+
+    test('errors when the weight is negative', () {
+      expect(pieceSizeValidationError(label: 'carrot', weightGrams: -5), isNotNull);
+    });
   });
 }

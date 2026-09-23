@@ -367,7 +367,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                         child: _LabeledField(
                           label: 'Label',
                           controller: _pieceLabelController,
-                          onChanged: (v) => notifier.setPieceLabel(v.trim().isEmpty ? null : v),
+                          onChanged: (v) => notifier.setPieceLabel(v.trim().isEmpty ? null : v.trim()),
                           hint: 'e.g. carrot',
                         ),
                       ),
