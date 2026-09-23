@@ -25,5 +25,6 @@ Models: Freezed + JsonSerializable. Run build_runner after any model change.
 
 ## Design
 The app's design lives in a Claude "Design" canvas Artifact (https://claude.ai/artifact/GoiswZcxUzWMAKqGGEF214), with one mockup file per screen under `project/*.dc.html`.
-- After making a UI change, check the affected screen's implementation against its mockup in the Design artifact (colors, spacing, radii, font sizes/weights, copy, layout) before considering the change done.
+- Before implementing any UI change — new UI or altering an existing screen — first update the relevant mockup(s) in the Design artifact and get the user's explicit confirmation that the design is correct. Only start implementation after that confirmation. Never implement first and reconcile the mockup afterward.
+- The Design artifact and the implementation must always stay in sync. If a UI change ever gets implemented without the mockup being updated and verified first (e.g. as a one-off exception), update the mockup to match immediately after and call that out to the user — don't let the two drift.
 - If a feature or screen has no mockup in the Design artifact yet, stop and ask the user to plan and verify a design there first — don't invent new UI from scratch without one.
