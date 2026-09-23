@@ -10,6 +10,7 @@ import '../../data/services/nutrition_label_ocr_service.dart';
 import '../../domain/exceptions/duplicate_barcode_exception.dart';
 import '../../domain/models/food.dart';
 import '../../domain/validation/macro_calorie_validator.dart';
+import '../../domain/validation/piece_size_validator.dart';
 import 'add_product_form_state.dart';
 import 'browse_foods_providers.dart';
 import 'food_detail_providers.dart';
@@ -39,6 +40,8 @@ class AddProductNotifier extends _$AddProductNotifier {
         name: editingFood.name,
         brand: editingFood.brand,
         store: editingFood.store,
+        pieceLabel: editingFood.pieceLabel,
+        pieceWeightGrams: editingFood.pieceWeightGrams,
         isFavorite: editingFood.isFavorite,
         caloriesPer100g: editingFood.caloriesPer100g,
         proteinPer100g: editingFood.proteinPer100g,
@@ -66,6 +69,8 @@ class AddProductNotifier extends _$AddProductNotifier {
   void setName(String value) => state = state.copyWith(name: value);
   void setBrand(String? value) => state = state.copyWith(brand: value);
   void setStore(String? value) => state = state.copyWith(store: value);
+  void setPieceLabel(String? value) => state = state.copyWith(pieceLabel: value);
+  void setPieceWeightGrams(double? value) => state = state.copyWith(pieceWeightGrams: value);
   void setBarcode(String? value) => state = state.copyWith(barcode: value);
   void setMealType(MealType value) => state = state.copyWith(mealType: value);
   void setLogToMealEnabled(bool value) =>
@@ -161,6 +166,15 @@ class AddProductNotifier extends _$AddProductNotifier {
 
     state = state.copyWith(isSaving: true, saveError: null, macroMismatchWarning: null);
     try {
+      final pieceSizeError = pieceSizeValidationError(
+        label: state.pieceLabel,
+        weightGrams: state.pieceWeightGrams,
+      );
+      if (pieceSizeError != null) {
+        state = state.copyWith(isSaving: false, saveError: pieceSizeError);
+        return;
+      }
+
       final macrosMatch = macrosRoughlyMatchCalories(
         calories: state.caloriesPer100g,
         protein: state.proteinPer100g,
@@ -189,6 +203,8 @@ class AddProductNotifier extends _$AddProductNotifier {
         name: state.name,
         brand: state.brand,
         store: state.store,
+        pieceLabel: state.pieceLabel,
+        pieceWeightGrams: state.pieceWeightGrams,
         barcode: state.barcode,
         photoPath: state.photoPath,
         isFavorite: state.isFavorite,

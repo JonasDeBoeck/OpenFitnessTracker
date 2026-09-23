@@ -38,6 +38,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final _nameController = TextEditingController();
   final _brandController = TextEditingController();
   final _storeController = TextEditingController();
+  final _pieceLabelController = TextEditingController();
+  final _pieceWeightController = TextEditingController();
   final _barcodeController = TextEditingController();
   final _caloriesController = TextEditingController();
   final _proteinController = TextEditingController();
@@ -60,6 +62,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _nameController.text = initial.name;
     _brandController.text = initial.brand ?? '';
     _storeController.text = initial.store ?? '';
+    _pieceLabelController.text = initial.pieceLabel ?? '';
+    _pieceWeightController.text = initial.pieceWeightGrams?.toString() ?? '';
     _barcodeController.text = initial.barcode ?? '';
     _syncControllersFromState(initial);
   }
@@ -67,7 +71,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   @override
   void dispose() {
     for (final controller in [
-      _nameController, _brandController, _storeController, _barcodeController,
+      _nameController, _brandController, _storeController, _pieceLabelController,
+      _pieceWeightController, _barcodeController,
       _caloriesController, _proteinController, _fatController, _carbsController,
       _fiberController, _sugarController, _sodiumController,
       _cholesterolController, _potassiumController, _calciumController,
@@ -346,6 +351,35 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                           ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Piece size (optional)', style: DashboardTextStyles.mealKcal),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Let this food be logged by count (e.g. "1 carrot") instead of always by weight.',
+                    style: DashboardTextStyles.mealKcal.copyWith(fontSize: 12),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: _LabeledField(
+                          label: 'Label',
+                          controller: _pieceLabelController,
+                          onChanged: (v) => notifier.setPieceLabel(v.trim().isEmpty ? null : v),
+                          hint: 'e.g. carrot',
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _LabeledNumberField(
+                          label: 'Weight per piece (g)',
+                          controller: _pieceWeightController,
+                          onChanged: (v) => notifier.setPieceWeightGrams(_parse(v)),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   if (state.macroMismatchWarning != null)
