@@ -240,8 +240,8 @@ class _ResultRow extends StatelessWidget {
             ? const Border(bottom: BorderSide(color: DashboardColors.border))
             : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,11 +274,10 @@ class _ResultRow extends StatelessWidget {
               Text(value, style: DashboardTextStyles.resultValue),
             ],
           ),
-          if (infoOpen)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Align(alignment: Alignment.centerLeft, child: tooltip),
-            ),
+          // Overlays on top of whatever sits below in the list, rather than
+          // an inline widget that would push subsequent rows down — matches
+          // the `position: absolute` tooltip in the Results.dc.html mockup.
+          if (infoOpen) Positioned(top: 26, left: 0, child: tooltip),
         ],
       ),
     );
