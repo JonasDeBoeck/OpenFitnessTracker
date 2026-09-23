@@ -30,7 +30,10 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   late final _provider = addProductProvider(
     prefillBarcode: widget.args?.prefillBarcode,
     presetMealType: widget.args?.mealType,
+    editingFood: widget.args?.editingFood,
   );
+
+  bool get _isEditing => widget.args?.editingFood != null;
 
   final _nameController = TextEditingController();
   final _brandController = TextEditingController();
@@ -53,7 +56,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   @override
   void initState() {
     super.initState();
-    _barcodeController.text = widget.args?.prefillBarcode ?? '';
+    final initial = ref.read(_provider);
+    _nameController.text = initial.name;
+    _brandController.text = initial.brand ?? '';
+    _storeController.text = initial.store ?? '';
+    _barcodeController.text = initial.barcode ?? '';
+    _syncControllersFromState(initial);
   }
 
   @override
@@ -187,7 +195,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Expanded(child: Text('Add manually', style: DashboardTextStyles.topbarTitle)),
+                  Expanded(
+                    child: Text(
+                      _isEditing ? 'Edit food' : 'Add manually',
+                      style: DashboardTextStyles.topbarTitle,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -7,6 +7,7 @@ import '../../domain/models/food.dart';
 import '../../domain/models/recipe.dart';
 import 'browse_recipes_providers.dart';
 import 'create_recipe_form_state.dart';
+import 'recipe_detail_providers.dart';
 import 'recipe_search_providers.dart';
 
 part 'create_recipe_notifier.g.dart';
@@ -14,7 +15,22 @@ part 'create_recipe_notifier.g.dart';
 @riverpod
 class CreateRecipeNotifier extends _$CreateRecipeNotifier {
   @override
-  CreateRecipeFormState build() => const CreateRecipeFormState();
+  CreateRecipeFormState build({Recipe? editingRecipe}) {
+    if (editingRecipe == null) return const CreateRecipeFormState();
+    return CreateRecipeFormState(
+      photoPath: editingRecipe.photoPath,
+      name: editingRecipe.name,
+      labels: editingRecipe.labels,
+      ingredients: editingRecipe.ingredients,
+      servings: editingRecipe.servings,
+      prepTime: editingRecipe.prepTime,
+      cookTime: editingRecipe.cookTime,
+      instructionsText: editingRecipe.instructions.join('\n'),
+      showInstructions: editingRecipe.instructions.isNotEmpty,
+      isFavorite: editingRecipe.isFavorite,
+      savedRecipe: editingRecipe,
+    );
+  }
 
   void setName(String value) => state = state.copyWith(name: value, nameError: null);
   void setServings(int? value) => state = state.copyWith(servings: value);
@@ -62,6 +78,8 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
       state = state.copyWith(nameError: 'Enter a recipe name');
       return;
     }
+    final previouslySavedId = state.savedRecipe?.id;
+
     state = state.copyWith(isSaving: true, saveError: null);
     try {
       final instructions = state.instructionsText
@@ -71,6 +89,7 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
           .toList();
 
       final recipe = Recipe(
+        id: previouslySavedId,
         name: state.name.trim(),
         labels: state.labels,
         servings: state.servings,
@@ -82,7 +101,13 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
         ingredients: state.ingredients,
       );
 
-      final saved = await ref.read(recipeRepositoryProvider).create(recipe);
+      final Recipe saved;
+      if (previouslySavedId == null) {
+        saved = await ref.read(recipeRepositoryProvider).create(recipe);
+      } else {
+        saved = await ref.read(recipeRepositoryProvider).update(recipe);
+        ref.invalidate(recipeByIdProvider(previouslySavedId));
+      }
 
       ref.invalidate(recentRecipesProvider);
       ref.invalidate(recipesGroupedAlphabeticallyProvider);

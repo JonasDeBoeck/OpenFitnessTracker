@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/models/meal_type.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/recipe.dart';
@@ -127,6 +128,11 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                       ),
                       Expanded(
                         child: Text('Recipe details', style: DashboardTextStyles.topbarTitle),
+                      ),
+                      IconButton(
+                        onPressed: () => context.push(AppRoutes.createRecipePath, extra: recipe),
+                        icon: const Icon(Icons.edit_outlined, color: DashboardColors.textPrimary),
+                        tooltip: 'Edit recipe',
                       ),
                     ],
                   ),

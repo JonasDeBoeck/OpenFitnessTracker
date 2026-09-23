@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/diary/diary.dart';
+import '../../features/food_logging/domain/models/recipe.dart';
 import '../../features/food_logging/food_logging.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/providers/profile_providers.dart';
@@ -92,7 +93,7 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.createRecipePath,
         name: AppRoutes.createRecipeName,
-        builder: (context, state) => const CreateRecipeScreen(),
+        builder: (context, state) => CreateRecipeScreen(editingRecipe: state.extra as Recipe?),
       ),
       GoRoute(
         path: AppRoutes.addIngredientPath,

@@ -15,18 +15,33 @@ import '../widgets/label_chips_field.dart';
 /// catalog via [AddIngredientScreen]), optional servings/prep/cook time and
 /// instructions, plus a live-computed nutrition summary.
 class CreateRecipeScreen extends ConsumerStatefulWidget {
-  const CreateRecipeScreen({super.key});
+  const CreateRecipeScreen({super.key, this.editingRecipe});
+
+  final Recipe? editingRecipe;
 
   @override
   ConsumerState<CreateRecipeScreen> createState() => _CreateRecipeScreenState();
 }
 
 class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
+  late final _provider = createRecipeProvider(editingRecipe: widget.editingRecipe);
+
   final _nameController = TextEditingController();
   final _servingsController = TextEditingController();
   final _prepTimeController = TextEditingController();
   final _cookTimeController = TextEditingController();
   final _instructionsController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = ref.read(_provider);
+    _nameController.text = initial.name;
+    _servingsController.text = initial.servings?.toString() ?? '';
+    _prepTimeController.text = initial.prepTime ?? '';
+    _cookTimeController.text = initial.cookTime ?? '';
+    _instructionsController.text = initial.instructionsText;
+  }
 
   @override
   void dispose() {
@@ -47,7 +62,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
   Future<void> _save(CreateRecipeNotifier notifier) async {
     await notifier.save();
     if (!mounted) return;
-    final state = ref.read(createRecipeProvider);
+    final state = ref.read(_provider);
     if (state.saveError != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.saveError!)));
       return;
@@ -61,8 +76,9 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(createRecipeProvider);
-    final notifier = ref.read(createRecipeProvider.notifier);
+    final state = ref.watch(_provider);
+    final notifier = ref.read(_provider.notifier);
+    final isEditing = widget.editingRecipe != null;
 
     final preview = Recipe(
       name: state.name,
@@ -83,7 +99,12 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.arrow_back, color: DashboardColors.textPrimary),
                   ),
-                  Expanded(child: Text('Create recipe', style: DashboardTextStyles.topbarTitle)),
+                  Expanded(
+                    child: Text(
+                      isEditing ? 'Edit recipe' : 'Create recipe',
+                      style: DashboardTextStyles.topbarTitle,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -227,7 +248,9 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                     foregroundColor: DashboardColors.surface,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: Text(state.isSaving ? 'Saving…' : 'Save recipe'),
+                  child: Text(
+                    state.isSaving ? 'Saving…' : (isEditing ? 'Save changes' : 'Save recipe'),
+                  ),
                 ),
               ),
             ),
