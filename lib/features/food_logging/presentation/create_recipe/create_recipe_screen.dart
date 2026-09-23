@@ -6,6 +6,7 @@ import '../../../../core/router/app_routes.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/recipe.dart';
+import '../../domain/quantity/logged_quantity_display.dart';
 import '../add_ingredient/ingredient_pick_result.dart';
 import '../add_product/widgets/photo_picker_field.dart';
 import '../providers/create_recipe_notifier.dart';
@@ -57,7 +58,12 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
   Future<void> _addIngredient(CreateRecipeNotifier notifier) async {
     final result = await context.push<IngredientPickResult>(AppRoutes.addIngredientPath);
     if (result == null) return;
-    notifier.addIngredient(result.food, result.grams);
+    notifier.addIngredient(
+      result.food,
+      result.grams,
+      unitLabel: result.unitLabel,
+      unitCount: result.unitCount,
+    );
   }
 
   Future<void> _save(CreateRecipeNotifier notifier) async {
@@ -286,7 +292,8 @@ class _IngredientRow extends StatelessWidget {
               children: [
                 Text(ingredient.foodName, style: DashboardTextStyles.mealTitle),
                 Text(
-                  '${ingredient.grams.toStringAsFixed(0)} g · ${ingredient.calories.toStringAsFixed(0)} kcal',
+                  '${formatLoggedQuantity(grams: ingredient.grams, unitLabel: ingredient.unitLabel, unitCount: ingredient.unitCount)} · '
+                  '${ingredient.calories.toStringAsFixed(0)} kcal',
                   style: DashboardTextStyles.mealKcal,
                 ),
               ],

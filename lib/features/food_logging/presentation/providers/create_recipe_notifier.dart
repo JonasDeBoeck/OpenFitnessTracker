@@ -52,8 +52,13 @@ class CreateRecipeNotifier extends _$CreateRecipeNotifier {
     state = state.copyWith(labels: state.labels.where((l) => l != label).toList());
   }
 
-  void addIngredient(Food food, double grams) {
-    final ingredient = RecipeIngredient.fromFood(food: food, grams: grams);
+  void addIngredient(Food food, double grams, {String? unitLabel, double? unitCount}) {
+    final ingredient = RecipeIngredient.fromFood(
+      food: food,
+      grams: grams,
+      unitLabel: unitLabel,
+      unitCount: unitCount,
+    );
     state = state.copyWith(ingredients: [...state.ingredients, ingredient]);
   }
 

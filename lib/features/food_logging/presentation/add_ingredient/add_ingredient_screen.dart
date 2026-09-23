@@ -7,7 +7,7 @@ import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
 import '../providers/food_search_providers.dart';
 import '../widgets/food_thumbnail.dart';
-import '../widgets/quantity_stepper.dart';
+import '../widgets/piece_aware_quantity_field.dart';
 import 'ingredient_pick_result.dart';
 
 /// Two-step ingredient picker pushed from Create Recipe: search/pick a food,
@@ -24,6 +24,8 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   String _query = '';
   Food? _selected;
   double _grams = 100;
+  String? _unitLabel;
+  double? _unitCount;
 
   @override
   void dispose() {
@@ -35,13 +37,20 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     setState(() {
       _selected = food;
       _grams = 100;
+      _unitLabel = null;
+      _unitCount = null;
     });
   }
 
   void _backToList() => setState(() => _selected = null);
 
   void _confirm() {
-    context.pop(IngredientPickResult(food: _selected!, grams: _grams));
+    context.pop(IngredientPickResult(
+      food: _selected!,
+      grams: _grams,
+      unitLabel: _unitLabel,
+      unitCount: _unitCount,
+    ));
   }
 
   @override
@@ -199,7 +208,16 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             children: [
               Text(food.name, style: DashboardTextStyles.sectionTitle),
               const SizedBox(height: 16),
-              QuantityStepper(grams: _grams, onChanged: (v) => setState(() => _grams = v)),
+              PieceAwareQuantityField(
+                grams: _grams,
+                pieceLabel: food.pieceLabel,
+                pieceWeightGrams: food.pieceWeightGrams,
+                onChanged: (quantity) => setState(() {
+                  _grams = quantity.grams;
+                  _unitLabel = quantity.unitLabel;
+                  _unitCount = quantity.unitCount;
+                }),
+              ),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(22),
