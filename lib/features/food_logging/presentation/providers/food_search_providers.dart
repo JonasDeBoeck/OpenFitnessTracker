@@ -14,7 +14,7 @@ Future<List<Food>> foodSearchResults(Ref ref, String query) {
 
 @riverpod
 Future<List<Food>> recentFoods(Ref ref) {
-  return ref.watch(foodRepositoryProvider).getRecentLoggedFoods();
+  return ref.watch(foodRepositoryProvider).getRecentFoods();
 }
 
 /// Every food in the catalog, sorted alphabetically — the unfiltered state

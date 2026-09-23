@@ -49,28 +49,38 @@ class RecipeRepository {
     return _fromRows(rows);
   }
 
-  /// The distinct recipes behind the most recent diary log entries,
-  /// most-recently-logged first — the recipe counterpart of
-  /// [FoodRepository.getRecentLoggedFoods].
-  Future<List<Recipe>> getRecentLoggedRecipes({int limit = 10}) async {
-    final entryRows =
+  /// The recipes most recently logged or created, whichever is more recent
+  /// per recipe, most-recent first — the recipe counterpart of
+  /// [FoodRepository.getRecentFoods].
+  Future<List<Recipe>> getRecentRecipes({int limit = 10}) async {
+    final loggedRows =
         await (_db.select(_db.diaryEntries)
               ..where((t) => t.recipeId.isNotNull())
               ..orderBy([(t) => OrderingTerm.desc(t.loggedAt)])
               ..limit(limit * 5))
             .get();
-
-    final orderedUniqueRecipeIds = <int>[];
-    for (final entry in entryRows) {
-      final recipeId = entry.recipeId!;
-      if (!orderedUniqueRecipeIds.contains(recipeId)) {
-        orderedUniqueRecipeIds.add(recipeId);
-      }
-      if (orderedUniqueRecipeIds.length >= limit) break;
+    final mostRecentEventAt = <int, DateTime>{};
+    for (final entry in loggedRows) {
+      mostRecentEventAt.putIfAbsent(entry.recipeId!, () => entry.loggedAt);
     }
 
+    final createdRows =
+        await (_db.select(_db.recipes)
+              ..orderBy([(t) => OrderingTerm.desc(t.createdAt)])
+              ..limit(limit))
+            .get();
+    for (final recipe in createdRows) {
+      final loggedAt = mostRecentEventAt[recipe.id];
+      if (loggedAt == null || recipe.createdAt.isAfter(loggedAt)) {
+        mostRecentEventAt[recipe.id] = recipe.createdAt;
+      }
+    }
+
+    final orderedRecipeIds = mostRecentEventAt.keys.toList()
+      ..sort((a, b) => mostRecentEventAt[b]!.compareTo(mostRecentEventAt[a]!));
+
     final recipes = <Recipe>[];
-    for (final recipeId in orderedUniqueRecipeIds) {
+    for (final recipeId in orderedRecipeIds.take(limit)) {
       final recipe = await getById(recipeId);
       if (recipe != null) recipes.add(recipe);
     }

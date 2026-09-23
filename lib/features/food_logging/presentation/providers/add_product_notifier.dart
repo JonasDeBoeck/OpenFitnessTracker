@@ -11,6 +11,8 @@ import '../../domain/exceptions/duplicate_barcode_exception.dart';
 import '../../domain/models/food.dart';
 import '../../domain/validation/macro_calorie_validator.dart';
 import 'add_product_form_state.dart';
+import 'browse_foods_providers.dart';
+import 'food_search_providers.dart';
 
 part 'add_product_notifier.g.dart';
 
@@ -163,6 +165,10 @@ class AddProductNotifier extends _$AddProductNotifier {
         await ref.read(foodRepositoryProvider).update(food);
         saved = food;
       }
+
+      ref.invalidate(recentFoodsProvider);
+      ref.invalidate(foodsGroupedAlphabeticallyProvider);
+      if (saved.isFavorite) ref.invalidate(favoriteFoodsProvider);
 
       // The record is persisted either way — the mismatch check never
       // blocks saving the data itself. What it does block is leaving the
