@@ -25,4 +25,8 @@ class Foods extends Table {
   RealColumn get vitaminDMcgPer100g => real().nullable()();
   BoolColumn get isFavorite => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  // Optional "piece" unit — both null means this food is grams-only, same
+  // as every food before this feature existed.
+  TextColumn get pieceLabel => text().nullable()();
+  RealColumn get pieceWeightGrams => real().nullable()();
 }

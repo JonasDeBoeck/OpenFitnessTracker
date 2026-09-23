@@ -1369,6 +1369,28 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     requiredDuringInsert: false,
     defaultValue: currentDateAndTime,
   );
+  static const VerificationMeta _pieceLabelMeta = const VerificationMeta(
+    'pieceLabel',
+  );
+  @override
+  late final GeneratedColumn<String> pieceLabel = GeneratedColumn<String>(
+    'piece_label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pieceWeightGramsMeta = const VerificationMeta(
+    'pieceWeightGrams',
+  );
+  @override
+  late final GeneratedColumn<double> pieceWeightGrams = GeneratedColumn<double>(
+    'piece_weight_grams',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1392,6 +1414,8 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     vitaminDMcgPer100g,
     isFavorite,
     createdAt,
+    pieceLabel,
+    pieceWeightGrams,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1566,6 +1590,21 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
         createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
       );
     }
+    if (data.containsKey('piece_label')) {
+      context.handle(
+        _pieceLabelMeta,
+        pieceLabel.isAcceptableOrUnknown(data['piece_label']!, _pieceLabelMeta),
+      );
+    }
+    if (data.containsKey('piece_weight_grams')) {
+      context.handle(
+        _pieceWeightGramsMeta,
+        pieceWeightGrams.isAcceptableOrUnknown(
+          data['piece_weight_grams']!,
+          _pieceWeightGramsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1659,6 +1698,14 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      pieceLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}piece_label'],
+      ),
+      pieceWeightGrams: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}piece_weight_grams'],
+      ),
     );
   }
 
@@ -1690,6 +1737,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
   final double? vitaminDMcgPer100g;
   final bool isFavorite;
   final DateTime createdAt;
+  final String? pieceLabel;
+  final double? pieceWeightGrams;
   const FoodRow({
     required this.id,
     required this.name,
@@ -1712,6 +1761,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     this.vitaminDMcgPer100g,
     required this.isFavorite,
     required this.createdAt,
+    this.pieceLabel,
+    this.pieceWeightGrams,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1771,6 +1822,12 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     }
     map['is_favorite'] = Variable<bool>(isFavorite);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || pieceLabel != null) {
+      map['piece_label'] = Variable<String>(pieceLabel);
+    }
+    if (!nullToAbsent || pieceWeightGrams != null) {
+      map['piece_weight_grams'] = Variable<double>(pieceWeightGrams);
+    }
     return map;
   }
 
@@ -1831,6 +1888,12 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           : Value(vitaminDMcgPer100g),
       isFavorite: Value(isFavorite),
       createdAt: Value(createdAt),
+      pieceLabel: pieceLabel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pieceLabel),
+      pieceWeightGrams: pieceWeightGrams == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pieceWeightGrams),
     );
   }
 
@@ -1869,6 +1932,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       ),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      pieceLabel: serializer.fromJson<String?>(json['pieceLabel']),
+      pieceWeightGrams: serializer.fromJson<double?>(json['pieceWeightGrams']),
     );
   }
   @override
@@ -1896,6 +1961,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       'vitaminDMcgPer100g': serializer.toJson<double?>(vitaminDMcgPer100g),
       'isFavorite': serializer.toJson<bool>(isFavorite),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'pieceLabel': serializer.toJson<String?>(pieceLabel),
+      'pieceWeightGrams': serializer.toJson<double?>(pieceWeightGrams),
     };
   }
 
@@ -1921,6 +1988,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     Value<double?> vitaminDMcgPer100g = const Value.absent(),
     bool? isFavorite,
     DateTime? createdAt,
+    Value<String?> pieceLabel = const Value.absent(),
+    Value<double?> pieceWeightGrams = const Value.absent(),
   }) => FoodRow(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1961,6 +2030,10 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
         : this.vitaminDMcgPer100g,
     isFavorite: isFavorite ?? this.isFavorite,
     createdAt: createdAt ?? this.createdAt,
+    pieceLabel: pieceLabel.present ? pieceLabel.value : this.pieceLabel,
+    pieceWeightGrams: pieceWeightGrams.present
+        ? pieceWeightGrams.value
+        : this.pieceWeightGrams,
   );
   FoodRow copyWithCompanion(FoodsCompanion data) {
     return FoodRow(
@@ -2013,6 +2086,12 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           ? data.isFavorite.value
           : this.isFavorite,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pieceLabel: data.pieceLabel.present
+          ? data.pieceLabel.value
+          : this.pieceLabel,
+      pieceWeightGrams: data.pieceWeightGrams.present
+          ? data.pieceWeightGrams.value
+          : this.pieceWeightGrams,
     );
   }
 
@@ -2039,7 +2118,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           ..write('vitaminCMgPer100g: $vitaminCMgPer100g, ')
           ..write('vitaminDMcgPer100g: $vitaminDMcgPer100g, ')
           ..write('isFavorite: $isFavorite, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('pieceLabel: $pieceLabel, ')
+          ..write('pieceWeightGrams: $pieceWeightGrams')
           ..write(')'))
         .toString();
   }
@@ -2067,6 +2148,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     vitaminDMcgPer100g,
     isFavorite,
     createdAt,
+    pieceLabel,
+    pieceWeightGrams,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2092,7 +2175,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           other.vitaminCMgPer100g == this.vitaminCMgPer100g &&
           other.vitaminDMcgPer100g == this.vitaminDMcgPer100g &&
           other.isFavorite == this.isFavorite &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.pieceLabel == this.pieceLabel &&
+          other.pieceWeightGrams == this.pieceWeightGrams);
 }
 
 class FoodsCompanion extends UpdateCompanion<FoodRow> {
@@ -2117,6 +2202,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
   final Value<double?> vitaminDMcgPer100g;
   final Value<bool> isFavorite;
   final Value<DateTime> createdAt;
+  final Value<String?> pieceLabel;
+  final Value<double?> pieceWeightGrams;
   const FoodsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -2139,6 +2226,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.vitaminDMcgPer100g = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.pieceLabel = const Value.absent(),
+    this.pieceWeightGrams = const Value.absent(),
   });
   FoodsCompanion.insert({
     this.id = const Value.absent(),
@@ -2162,6 +2251,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.vitaminDMcgPer100g = const Value.absent(),
     this.isFavorite = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.pieceLabel = const Value.absent(),
+    this.pieceWeightGrams = const Value.absent(),
   }) : name = Value(name);
   static Insertable<FoodRow> custom({
     Expression<int>? id,
@@ -2185,6 +2276,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Expression<double>? vitaminDMcgPer100g,
     Expression<bool>? isFavorite,
     Expression<DateTime>? createdAt,
+    Expression<String>? pieceLabel,
+    Expression<double>? pieceWeightGrams,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2211,6 +2304,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
         'vitamin_d_mcg_per100g': vitaminDMcgPer100g,
       if (isFavorite != null) 'is_favorite': isFavorite,
       if (createdAt != null) 'created_at': createdAt,
+      if (pieceLabel != null) 'piece_label': pieceLabel,
+      if (pieceWeightGrams != null) 'piece_weight_grams': pieceWeightGrams,
     });
   }
 
@@ -2236,6 +2331,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Value<double?>? vitaminDMcgPer100g,
     Value<bool>? isFavorite,
     Value<DateTime>? createdAt,
+    Value<String?>? pieceLabel,
+    Value<double?>? pieceWeightGrams,
   }) {
     return FoodsCompanion(
       id: id ?? this.id,
@@ -2259,6 +2356,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
       vitaminDMcgPer100g: vitaminDMcgPer100g ?? this.vitaminDMcgPer100g,
       isFavorite: isFavorite ?? this.isFavorite,
       createdAt: createdAt ?? this.createdAt,
+      pieceLabel: pieceLabel ?? this.pieceLabel,
+      pieceWeightGrams: pieceWeightGrams ?? this.pieceWeightGrams,
     );
   }
 
@@ -2330,6 +2429,12 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (pieceLabel.present) {
+      map['piece_label'] = Variable<String>(pieceLabel.value);
+    }
+    if (pieceWeightGrams.present) {
+      map['piece_weight_grams'] = Variable<double>(pieceWeightGrams.value);
+    }
     return map;
   }
 
@@ -2356,7 +2461,9 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
           ..write('vitaminCMgPer100g: $vitaminCMgPer100g, ')
           ..write('vitaminDMcgPer100g: $vitaminDMcgPer100g, ')
           ..write('isFavorite: $isFavorite, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('pieceLabel: $pieceLabel, ')
+          ..write('pieceWeightGrams: $pieceWeightGrams')
           ..write(')'))
         .toString();
   }
@@ -3194,6 +3301,28 @@ class $DiaryEntriesTable extends DiaryEntries
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _loggedUnitLabelMeta = const VerificationMeta(
+    'loggedUnitLabel',
+  );
+  @override
+  late final GeneratedColumn<String> loggedUnitLabel = GeneratedColumn<String>(
+    'logged_unit_label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _loggedUnitCountMeta = const VerificationMeta(
+    'loggedUnitCount',
+  );
+  @override
+  late final GeneratedColumn<double> loggedUnitCount = GeneratedColumn<double>(
+    'logged_unit_count',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3217,6 +3346,8 @@ class $DiaryEntriesTable extends DiaryEntries
     ironMg,
     vitaminCMg,
     vitaminDMcg,
+    loggedUnitLabel,
+    loggedUnitCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3382,6 +3513,24 @@ class $DiaryEntriesTable extends DiaryEntries
         ),
       );
     }
+    if (data.containsKey('logged_unit_label')) {
+      context.handle(
+        _loggedUnitLabelMeta,
+        loggedUnitLabel.isAcceptableOrUnknown(
+          data['logged_unit_label']!,
+          _loggedUnitLabelMeta,
+        ),
+      );
+    }
+    if (data.containsKey('logged_unit_count')) {
+      context.handle(
+        _loggedUnitCountMeta,
+        loggedUnitCount.isAcceptableOrUnknown(
+          data['logged_unit_count']!,
+          _loggedUnitCountMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3475,6 +3624,14 @@ class $DiaryEntriesTable extends DiaryEntries
         DriftSqlType.double,
         data['${effectivePrefix}vitamin_d_mcg'],
       ),
+      loggedUnitLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}logged_unit_label'],
+      ),
+      loggedUnitCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}logged_unit_count'],
+      ),
     );
   }
 
@@ -3506,6 +3663,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
   final double? ironMg;
   final double? vitaminCMg;
   final double? vitaminDMcg;
+  final String? loggedUnitLabel;
+  final double? loggedUnitCount;
   const DiaryEntryRow({
     required this.id,
     this.foodId,
@@ -3528,6 +3687,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
     this.ironMg,
     this.vitaminCMg,
     this.vitaminDMcg,
+    this.loggedUnitLabel,
+    this.loggedUnitCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3578,6 +3739,12 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
     }
     if (!nullToAbsent || vitaminDMcg != null) {
       map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg);
+    }
+    if (!nullToAbsent || loggedUnitLabel != null) {
+      map['logged_unit_label'] = Variable<String>(loggedUnitLabel);
+    }
+    if (!nullToAbsent || loggedUnitCount != null) {
+      map['logged_unit_count'] = Variable<double>(loggedUnitCount);
     }
     return map;
   }
@@ -3631,6 +3798,12 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
       vitaminDMcg: vitaminDMcg == null && nullToAbsent
           ? const Value.absent()
           : Value(vitaminDMcg),
+      loggedUnitLabel: loggedUnitLabel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(loggedUnitLabel),
+      loggedUnitCount: loggedUnitCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(loggedUnitCount),
     );
   }
 
@@ -3661,6 +3834,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
       ironMg: serializer.fromJson<double?>(json['ironMg']),
       vitaminCMg: serializer.fromJson<double?>(json['vitaminCMg']),
       vitaminDMcg: serializer.fromJson<double?>(json['vitaminDMcg']),
+      loggedUnitLabel: serializer.fromJson<String?>(json['loggedUnitLabel']),
+      loggedUnitCount: serializer.fromJson<double?>(json['loggedUnitCount']),
     );
   }
   @override
@@ -3688,6 +3863,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
       'ironMg': serializer.toJson<double?>(ironMg),
       'vitaminCMg': serializer.toJson<double?>(vitaminCMg),
       'vitaminDMcg': serializer.toJson<double?>(vitaminDMcg),
+      'loggedUnitLabel': serializer.toJson<String?>(loggedUnitLabel),
+      'loggedUnitCount': serializer.toJson<double?>(loggedUnitCount),
     };
   }
 
@@ -3713,6 +3890,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
     Value<double?> ironMg = const Value.absent(),
     Value<double?> vitaminCMg = const Value.absent(),
     Value<double?> vitaminDMcg = const Value.absent(),
+    Value<String?> loggedUnitLabel = const Value.absent(),
+    Value<double?> loggedUnitCount = const Value.absent(),
   }) => DiaryEntryRow(
     id: id ?? this.id,
     foodId: foodId.present ? foodId.value : this.foodId,
@@ -3737,6 +3916,12 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
     ironMg: ironMg.present ? ironMg.value : this.ironMg,
     vitaminCMg: vitaminCMg.present ? vitaminCMg.value : this.vitaminCMg,
     vitaminDMcg: vitaminDMcg.present ? vitaminDMcg.value : this.vitaminDMcg,
+    loggedUnitLabel: loggedUnitLabel.present
+        ? loggedUnitLabel.value
+        : this.loggedUnitLabel,
+    loggedUnitCount: loggedUnitCount.present
+        ? loggedUnitCount.value
+        : this.loggedUnitCount,
   );
   DiaryEntryRow copyWithCompanion(DiaryEntriesCompanion data) {
     return DiaryEntryRow(
@@ -3773,6 +3958,12 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
       vitaminDMcg: data.vitaminDMcg.present
           ? data.vitaminDMcg.value
           : this.vitaminDMcg,
+      loggedUnitLabel: data.loggedUnitLabel.present
+          ? data.loggedUnitLabel.value
+          : this.loggedUnitLabel,
+      loggedUnitCount: data.loggedUnitCount.present
+          ? data.loggedUnitCount.value
+          : this.loggedUnitCount,
     );
   }
 
@@ -3799,7 +3990,9 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
           ..write('calciumMg: $calciumMg, ')
           ..write('ironMg: $ironMg, ')
           ..write('vitaminCMg: $vitaminCMg, ')
-          ..write('vitaminDMcg: $vitaminDMcg')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('loggedUnitLabel: $loggedUnitLabel, ')
+          ..write('loggedUnitCount: $loggedUnitCount')
           ..write(')'))
         .toString();
   }
@@ -3827,6 +4020,8 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
     ironMg,
     vitaminCMg,
     vitaminDMcg,
+    loggedUnitLabel,
+    loggedUnitCount,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -3852,7 +4047,9 @@ class DiaryEntryRow extends DataClass implements Insertable<DiaryEntryRow> {
           other.calciumMg == this.calciumMg &&
           other.ironMg == this.ironMg &&
           other.vitaminCMg == this.vitaminCMg &&
-          other.vitaminDMcg == this.vitaminDMcg);
+          other.vitaminDMcg == this.vitaminDMcg &&
+          other.loggedUnitLabel == this.loggedUnitLabel &&
+          other.loggedUnitCount == this.loggedUnitCount);
 }
 
 class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
@@ -3877,6 +4074,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
   final Value<double?> ironMg;
   final Value<double?> vitaminCMg;
   final Value<double?> vitaminDMcg;
+  final Value<String?> loggedUnitLabel;
+  final Value<double?> loggedUnitCount;
   const DiaryEntriesCompanion({
     this.id = const Value.absent(),
     this.foodId = const Value.absent(),
@@ -3899,6 +4098,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
     this.ironMg = const Value.absent(),
     this.vitaminCMg = const Value.absent(),
     this.vitaminDMcg = const Value.absent(),
+    this.loggedUnitLabel = const Value.absent(),
+    this.loggedUnitCount = const Value.absent(),
   });
   DiaryEntriesCompanion.insert({
     this.id = const Value.absent(),
@@ -3922,6 +4123,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
     this.ironMg = const Value.absent(),
     this.vitaminCMg = const Value.absent(),
     this.vitaminDMcg = const Value.absent(),
+    this.loggedUnitLabel = const Value.absent(),
+    this.loggedUnitCount = const Value.absent(),
   }) : mealType = Value(mealType),
        loggedAt = Value(loggedAt),
        quantityGrams = Value(quantityGrams),
@@ -3951,6 +4154,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
     Expression<double>? ironMg,
     Expression<double>? vitaminCMg,
     Expression<double>? vitaminDMcg,
+    Expression<String>? loggedUnitLabel,
+    Expression<double>? loggedUnitCount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3974,6 +4179,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
       if (ironMg != null) 'iron_mg': ironMg,
       if (vitaminCMg != null) 'vitamin_c_mg': vitaminCMg,
       if (vitaminDMcg != null) 'vitamin_d_mcg': vitaminDMcg,
+      if (loggedUnitLabel != null) 'logged_unit_label': loggedUnitLabel,
+      if (loggedUnitCount != null) 'logged_unit_count': loggedUnitCount,
     });
   }
 
@@ -3999,6 +4206,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
     Value<double?>? ironMg,
     Value<double?>? vitaminCMg,
     Value<double?>? vitaminDMcg,
+    Value<String?>? loggedUnitLabel,
+    Value<double?>? loggedUnitCount,
   }) {
     return DiaryEntriesCompanion(
       id: id ?? this.id,
@@ -4022,6 +4231,8 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
       ironMg: ironMg ?? this.ironMg,
       vitaminCMg: vitaminCMg ?? this.vitaminCMg,
       vitaminDMcg: vitaminDMcg ?? this.vitaminDMcg,
+      loggedUnitLabel: loggedUnitLabel ?? this.loggedUnitLabel,
+      loggedUnitCount: loggedUnitCount ?? this.loggedUnitCount,
     );
   }
 
@@ -4091,6 +4302,12 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
     if (vitaminDMcg.present) {
       map['vitamin_d_mcg'] = Variable<double>(vitaminDMcg.value);
     }
+    if (loggedUnitLabel.present) {
+      map['logged_unit_label'] = Variable<String>(loggedUnitLabel.value);
+    }
+    if (loggedUnitCount.present) {
+      map['logged_unit_count'] = Variable<double>(loggedUnitCount.value);
+    }
     return map;
   }
 
@@ -4117,7 +4334,9 @@ class DiaryEntriesCompanion extends UpdateCompanion<DiaryEntryRow> {
           ..write('calciumMg: $calciumMg, ')
           ..write('ironMg: $ironMg, ')
           ..write('vitaminCMg: $vitaminCMg, ')
-          ..write('vitaminDMcg: $vitaminDMcg')
+          ..write('vitaminDMcg: $vitaminDMcg, ')
+          ..write('loggedUnitLabel: $loggedUnitLabel, ')
+          ..write('loggedUnitCount: $loggedUnitCount')
           ..write(')'))
         .toString();
   }
@@ -4232,6 +4451,28 @@ class $RecipeIngredientsTable extends RecipeIngredients
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _unitLabelMeta = const VerificationMeta(
+    'unitLabel',
+  );
+  @override
+  late final GeneratedColumn<String> unitLabel = GeneratedColumn<String>(
+    'unit_label',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _unitCountMeta = const VerificationMeta(
+    'unitCount',
+  );
+  @override
+  late final GeneratedColumn<double> unitCount = GeneratedColumn<double>(
+    'unit_count',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -4243,6 +4484,8 @@ class $RecipeIngredientsTable extends RecipeIngredients
     proteinPer100g,
     fatPer100g,
     carbsPer100g,
+    unitLabel,
+    unitCount,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4332,6 +4575,18 @@ class $RecipeIngredientsTable extends RecipeIngredients
     } else if (isInserting) {
       context.missing(_carbsPer100gMeta);
     }
+    if (data.containsKey('unit_label')) {
+      context.handle(
+        _unitLabelMeta,
+        unitLabel.isAcceptableOrUnknown(data['unit_label']!, _unitLabelMeta),
+      );
+    }
+    if (data.containsKey('unit_count')) {
+      context.handle(
+        _unitCountMeta,
+        unitCount.isAcceptableOrUnknown(data['unit_count']!, _unitCountMeta),
+      );
+    }
     return context;
   }
 
@@ -4377,6 +4632,14 @@ class $RecipeIngredientsTable extends RecipeIngredients
         DriftSqlType.double,
         data['${effectivePrefix}carbs_per100g'],
       )!,
+      unitLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}unit_label'],
+      ),
+      unitCount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}unit_count'],
+      ),
     );
   }
 
@@ -4397,6 +4660,8 @@ class RecipeIngredientRow extends DataClass
   final double proteinPer100g;
   final double fatPer100g;
   final double carbsPer100g;
+  final String? unitLabel;
+  final double? unitCount;
   const RecipeIngredientRow({
     required this.id,
     required this.recipeId,
@@ -4407,6 +4672,8 @@ class RecipeIngredientRow extends DataClass
     required this.proteinPer100g,
     required this.fatPer100g,
     required this.carbsPer100g,
+    this.unitLabel,
+    this.unitCount,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -4420,6 +4687,12 @@ class RecipeIngredientRow extends DataClass
     map['protein_per100g'] = Variable<double>(proteinPer100g);
     map['fat_per100g'] = Variable<double>(fatPer100g);
     map['carbs_per100g'] = Variable<double>(carbsPer100g);
+    if (!nullToAbsent || unitLabel != null) {
+      map['unit_label'] = Variable<String>(unitLabel);
+    }
+    if (!nullToAbsent || unitCount != null) {
+      map['unit_count'] = Variable<double>(unitCount);
+    }
     return map;
   }
 
@@ -4434,6 +4707,12 @@ class RecipeIngredientRow extends DataClass
       proteinPer100g: Value(proteinPer100g),
       fatPer100g: Value(fatPer100g),
       carbsPer100g: Value(carbsPer100g),
+      unitLabel: unitLabel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(unitLabel),
+      unitCount: unitCount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(unitCount),
     );
   }
 
@@ -4452,6 +4731,8 @@ class RecipeIngredientRow extends DataClass
       proteinPer100g: serializer.fromJson<double>(json['proteinPer100g']),
       fatPer100g: serializer.fromJson<double>(json['fatPer100g']),
       carbsPer100g: serializer.fromJson<double>(json['carbsPer100g']),
+      unitLabel: serializer.fromJson<String?>(json['unitLabel']),
+      unitCount: serializer.fromJson<double?>(json['unitCount']),
     );
   }
   @override
@@ -4467,6 +4748,8 @@ class RecipeIngredientRow extends DataClass
       'proteinPer100g': serializer.toJson<double>(proteinPer100g),
       'fatPer100g': serializer.toJson<double>(fatPer100g),
       'carbsPer100g': serializer.toJson<double>(carbsPer100g),
+      'unitLabel': serializer.toJson<String?>(unitLabel),
+      'unitCount': serializer.toJson<double?>(unitCount),
     };
   }
 
@@ -4480,6 +4763,8 @@ class RecipeIngredientRow extends DataClass
     double? proteinPer100g,
     double? fatPer100g,
     double? carbsPer100g,
+    Value<String?> unitLabel = const Value.absent(),
+    Value<double?> unitCount = const Value.absent(),
   }) => RecipeIngredientRow(
     id: id ?? this.id,
     recipeId: recipeId ?? this.recipeId,
@@ -4490,6 +4775,8 @@ class RecipeIngredientRow extends DataClass
     proteinPer100g: proteinPer100g ?? this.proteinPer100g,
     fatPer100g: fatPer100g ?? this.fatPer100g,
     carbsPer100g: carbsPer100g ?? this.carbsPer100g,
+    unitLabel: unitLabel.present ? unitLabel.value : this.unitLabel,
+    unitCount: unitCount.present ? unitCount.value : this.unitCount,
   );
   RecipeIngredientRow copyWithCompanion(RecipeIngredientsCompanion data) {
     return RecipeIngredientRow(
@@ -4510,6 +4797,8 @@ class RecipeIngredientRow extends DataClass
       carbsPer100g: data.carbsPer100g.present
           ? data.carbsPer100g.value
           : this.carbsPer100g,
+      unitLabel: data.unitLabel.present ? data.unitLabel.value : this.unitLabel,
+      unitCount: data.unitCount.present ? data.unitCount.value : this.unitCount,
     );
   }
 
@@ -4524,7 +4813,9 @@ class RecipeIngredientRow extends DataClass
           ..write('caloriesPer100g: $caloriesPer100g, ')
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('fatPer100g: $fatPer100g, ')
-          ..write('carbsPer100g: $carbsPer100g')
+          ..write('carbsPer100g: $carbsPer100g, ')
+          ..write('unitLabel: $unitLabel, ')
+          ..write('unitCount: $unitCount')
           ..write(')'))
         .toString();
   }
@@ -4540,6 +4831,8 @@ class RecipeIngredientRow extends DataClass
     proteinPer100g,
     fatPer100g,
     carbsPer100g,
+    unitLabel,
+    unitCount,
   );
   @override
   bool operator ==(Object other) =>
@@ -4553,7 +4846,9 @@ class RecipeIngredientRow extends DataClass
           other.caloriesPer100g == this.caloriesPer100g &&
           other.proteinPer100g == this.proteinPer100g &&
           other.fatPer100g == this.fatPer100g &&
-          other.carbsPer100g == this.carbsPer100g);
+          other.carbsPer100g == this.carbsPer100g &&
+          other.unitLabel == this.unitLabel &&
+          other.unitCount == this.unitCount);
 }
 
 class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
@@ -4566,6 +4861,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
   final Value<double> proteinPer100g;
   final Value<double> fatPer100g;
   final Value<double> carbsPer100g;
+  final Value<String?> unitLabel;
+  final Value<double?> unitCount;
   const RecipeIngredientsCompanion({
     this.id = const Value.absent(),
     this.recipeId = const Value.absent(),
@@ -4576,6 +4873,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
     this.proteinPer100g = const Value.absent(),
     this.fatPer100g = const Value.absent(),
     this.carbsPer100g = const Value.absent(),
+    this.unitLabel = const Value.absent(),
+    this.unitCount = const Value.absent(),
   });
   RecipeIngredientsCompanion.insert({
     this.id = const Value.absent(),
@@ -4587,6 +4886,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
     required double proteinPer100g,
     required double fatPer100g,
     required double carbsPer100g,
+    this.unitLabel = const Value.absent(),
+    this.unitCount = const Value.absent(),
   }) : recipeId = Value(recipeId),
        foodId = Value(foodId),
        foodName = Value(foodName),
@@ -4605,6 +4906,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
     Expression<double>? proteinPer100g,
     Expression<double>? fatPer100g,
     Expression<double>? carbsPer100g,
+    Expression<String>? unitLabel,
+    Expression<double>? unitCount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -4616,6 +4919,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
       if (proteinPer100g != null) 'protein_per100g': proteinPer100g,
       if (fatPer100g != null) 'fat_per100g': fatPer100g,
       if (carbsPer100g != null) 'carbs_per100g': carbsPer100g,
+      if (unitLabel != null) 'unit_label': unitLabel,
+      if (unitCount != null) 'unit_count': unitCount,
     });
   }
 
@@ -4629,6 +4934,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
     Value<double>? proteinPer100g,
     Value<double>? fatPer100g,
     Value<double>? carbsPer100g,
+    Value<String?>? unitLabel,
+    Value<double?>? unitCount,
   }) {
     return RecipeIngredientsCompanion(
       id: id ?? this.id,
@@ -4640,6 +4947,8 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
       proteinPer100g: proteinPer100g ?? this.proteinPer100g,
       fatPer100g: fatPer100g ?? this.fatPer100g,
       carbsPer100g: carbsPer100g ?? this.carbsPer100g,
+      unitLabel: unitLabel ?? this.unitLabel,
+      unitCount: unitCount ?? this.unitCount,
     );
   }
 
@@ -4673,6 +4982,12 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
     if (carbsPer100g.present) {
       map['carbs_per100g'] = Variable<double>(carbsPer100g.value);
     }
+    if (unitLabel.present) {
+      map['unit_label'] = Variable<String>(unitLabel.value);
+    }
+    if (unitCount.present) {
+      map['unit_count'] = Variable<double>(unitCount.value);
+    }
     return map;
   }
 
@@ -4687,7 +5002,9 @@ class RecipeIngredientsCompanion extends UpdateCompanion<RecipeIngredientRow> {
           ..write('caloriesPer100g: $caloriesPer100g, ')
           ..write('proteinPer100g: $proteinPer100g, ')
           ..write('fatPer100g: $fatPer100g, ')
-          ..write('carbsPer100g: $carbsPer100g')
+          ..write('carbsPer100g: $carbsPer100g, ')
+          ..write('unitLabel: $unitLabel, ')
+          ..write('unitCount: $unitCount')
           ..write(')'))
         .toString();
   }
@@ -5524,6 +5841,8 @@ typedef $$FoodsTableCreateCompanionBuilder = FoodsCompanion Function({
   Value<double?> vitaminDMcgPer100g,
   Value<bool> isFavorite,
   Value<DateTime> createdAt,
+  Value<String?> pieceLabel,
+  Value<double?> pieceWeightGrams,
 });
 typedef $$FoodsTableUpdateCompanionBuilder = FoodsCompanion Function({
   Value<int> id,
@@ -5547,6 +5866,8 @@ typedef $$FoodsTableUpdateCompanionBuilder = FoodsCompanion Function({
   Value<double?> vitaminDMcgPer100g,
   Value<bool> isFavorite,
   Value<DateTime> createdAt,
+  Value<String?> pieceLabel,
+  Value<double?> pieceWeightGrams,
 });
 
 final class $$FoodsTableReferences
@@ -5703,6 +6024,16 @@ class $$FoodsTableFilterComposer extends Composer<_$AppDatabase, $FoodsTable> {
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get pieceLabel => $composableBuilder(
+    column: $table.pieceLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get pieceWeightGrams => $composableBuilder(
+    column: $table.pieceWeightGrams,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5870,6 +6201,16 @@ class $$FoodsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get pieceLabel => $composableBuilder(
+    column: $table.pieceLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get pieceWeightGrams => $composableBuilder(
+    column: $table.pieceWeightGrams,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FoodsTableAnnotationComposer
@@ -5971,6 +6312,16 @@ class $$FoodsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get pieceLabel => $composableBuilder(
+    column: $table.pieceLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get pieceWeightGrams => $composableBuilder(
+    column: $table.pieceWeightGrams,
+    builder: (column) => column,
+  );
 
   Expression<T> diaryEntriesRefs<T extends Object>(
     Expression<T> Function($$DiaryEntriesTableAnnotationComposer a) f,
@@ -6076,6 +6427,8 @@ class $$FoodsTableTableManager
                 Value<double?> vitaminDMcgPer100g = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> pieceLabel = const Value.absent(),
+                Value<double?> pieceWeightGrams = const Value.absent(),
               }) => FoodsCompanion(
                 id: id,
                 name: name,
@@ -6098,6 +6451,8 @@ class $$FoodsTableTableManager
                 vitaminDMcgPer100g: vitaminDMcgPer100g,
                 isFavorite: isFavorite,
                 createdAt: createdAt,
+                pieceLabel: pieceLabel,
+                pieceWeightGrams: pieceWeightGrams,
               ),
           createCompanionCallback:
               ({
@@ -6122,6 +6477,8 @@ class $$FoodsTableTableManager
                 Value<double?> vitaminDMcgPer100g = const Value.absent(),
                 Value<bool> isFavorite = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> pieceLabel = const Value.absent(),
+                Value<double?> pieceWeightGrams = const Value.absent(),
               }) => FoodsCompanion.insert(
                 id: id,
                 name: name,
@@ -6144,6 +6501,8 @@ class $$FoodsTableTableManager
                 vitaminDMcgPer100g: vitaminDMcgPer100g,
                 isFavorite: isFavorite,
                 createdAt: createdAt,
+                pieceLabel: pieceLabel,
+                pieceWeightGrams: pieceWeightGrams,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -6751,6 +7110,8 @@ typedef $$DiaryEntriesTableCreateCompanionBuilder =
       Value<double?> ironMg,
       Value<double?> vitaminCMg,
       Value<double?> vitaminDMcg,
+      Value<String?> loggedUnitLabel,
+      Value<double?> loggedUnitCount,
     });
 typedef $$DiaryEntriesTableUpdateCompanionBuilder =
     DiaryEntriesCompanion Function({
@@ -6775,6 +7136,8 @@ typedef $$DiaryEntriesTableUpdateCompanionBuilder =
       Value<double?> ironMg,
       Value<double?> vitaminCMg,
       Value<double?> vitaminDMcg,
+      Value<String?> loggedUnitLabel,
+      Value<double?> loggedUnitCount,
     });
 
 final class $$DiaryEntriesTableReferences
@@ -6917,6 +7280,16 @@ class $$DiaryEntriesTableFilterComposer
 
   ColumnFilters<double> get vitaminDMcg => $composableBuilder(
     column: $table.vitaminDMcg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get loggedUnitLabel => $composableBuilder(
+    column: $table.loggedUnitLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get loggedUnitCount => $composableBuilder(
+    column: $table.loggedUnitCount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7071,6 +7444,16 @@ class $$DiaryEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get loggedUnitLabel => $composableBuilder(
+    column: $table.loggedUnitLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get loggedUnitCount => $composableBuilder(
+    column: $table.loggedUnitCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$FoodsTableOrderingComposer get foodId {
     final $$FoodsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7196,6 +7579,16 @@ class $$DiaryEntriesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get loggedUnitLabel => $composableBuilder(
+    column: $table.loggedUnitLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get loggedUnitCount => $composableBuilder(
+    column: $table.loggedUnitCount,
+    builder: (column) => column,
+  );
+
   $$FoodsTableAnnotationComposer get foodId {
     final $$FoodsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -7292,6 +7685,8 @@ class $$DiaryEntriesTableTableManager
                 Value<double?> ironMg = const Value.absent(),
                 Value<double?> vitaminCMg = const Value.absent(),
                 Value<double?> vitaminDMcg = const Value.absent(),
+                Value<String?> loggedUnitLabel = const Value.absent(),
+                Value<double?> loggedUnitCount = const Value.absent(),
               }) => DiaryEntriesCompanion(
                 id: id,
                 foodId: foodId,
@@ -7314,6 +7709,8 @@ class $$DiaryEntriesTableTableManager
                 ironMg: ironMg,
                 vitaminCMg: vitaminCMg,
                 vitaminDMcg: vitaminDMcg,
+                loggedUnitLabel: loggedUnitLabel,
+                loggedUnitCount: loggedUnitCount,
               ),
           createCompanionCallback:
               ({
@@ -7338,6 +7735,8 @@ class $$DiaryEntriesTableTableManager
                 Value<double?> ironMg = const Value.absent(),
                 Value<double?> vitaminCMg = const Value.absent(),
                 Value<double?> vitaminDMcg = const Value.absent(),
+                Value<String?> loggedUnitLabel = const Value.absent(),
+                Value<double?> loggedUnitCount = const Value.absent(),
               }) => DiaryEntriesCompanion.insert(
                 id: id,
                 foodId: foodId,
@@ -7360,6 +7759,8 @@ class $$DiaryEntriesTableTableManager
                 ironMg: ironMg,
                 vitaminCMg: vitaminCMg,
                 vitaminDMcg: vitaminDMcg,
+                loggedUnitLabel: loggedUnitLabel,
+                loggedUnitCount: loggedUnitCount,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -7448,6 +7849,8 @@ typedef $$RecipeIngredientsTableCreateCompanionBuilder =
       required double proteinPer100g,
       required double fatPer100g,
       required double carbsPer100g,
+      Value<String?> unitLabel,
+      Value<double?> unitCount,
     });
 typedef $$RecipeIngredientsTableUpdateCompanionBuilder =
     RecipeIngredientsCompanion Function({
@@ -7460,6 +7863,8 @@ typedef $$RecipeIngredientsTableUpdateCompanionBuilder =
       Value<double> proteinPer100g,
       Value<double> fatPer100g,
       Value<double> carbsPer100g,
+      Value<String?> unitLabel,
+      Value<double?> unitCount,
     });
 
 final class $$RecipeIngredientsTableReferences
@@ -7554,6 +7959,16 @@ class $$RecipeIngredientsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get unitLabel => $composableBuilder(
+    column: $table.unitLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get unitCount => $composableBuilder(
+    column: $table.unitCount,
+    builder: (column) => ColumnFilters(column),
+  );
+
   $$RecipesTableFilterComposer get recipeId {
     final $$RecipesTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -7645,6 +8060,16 @@ class $$RecipeIngredientsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get unitLabel => $composableBuilder(
+    column: $table.unitLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get unitCount => $composableBuilder(
+    column: $table.unitCount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$RecipesTableOrderingComposer get recipeId {
     final $$RecipesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7729,6 +8154,12 @@ class $$RecipeIngredientsTableAnnotationComposer
     column: $table.carbsPer100g,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get unitLabel =>
+      $composableBuilder(column: $table.unitLabel, builder: (column) => column);
+
+  GeneratedColumn<double> get unitCount =>
+      $composableBuilder(column: $table.unitCount, builder: (column) => column);
 
   $$RecipesTableAnnotationComposer get recipeId {
     final $$RecipesTableAnnotationComposer composer = $composerBuilder(
@@ -7819,6 +8250,8 @@ class $$RecipeIngredientsTableTableManager
                 Value<double> proteinPer100g = const Value.absent(),
                 Value<double> fatPer100g = const Value.absent(),
                 Value<double> carbsPer100g = const Value.absent(),
+                Value<String?> unitLabel = const Value.absent(),
+                Value<double?> unitCount = const Value.absent(),
               }) => RecipeIngredientsCompanion(
                 id: id,
                 recipeId: recipeId,
@@ -7829,6 +8262,8 @@ class $$RecipeIngredientsTableTableManager
                 proteinPer100g: proteinPer100g,
                 fatPer100g: fatPer100g,
                 carbsPer100g: carbsPer100g,
+                unitLabel: unitLabel,
+                unitCount: unitCount,
               ),
           createCompanionCallback:
               ({
@@ -7841,6 +8276,8 @@ class $$RecipeIngredientsTableTableManager
                 required double proteinPer100g,
                 required double fatPer100g,
                 required double carbsPer100g,
+                Value<String?> unitLabel = const Value.absent(),
+                Value<double?> unitCount = const Value.absent(),
               }) => RecipeIngredientsCompanion.insert(
                 id: id,
                 recipeId: recipeId,
@@ -7851,6 +8288,8 @@ class $$RecipeIngredientsTableTableManager
                 proteinPer100g: proteinPer100g,
                 fatPer100g: fatPer100g,
                 carbsPer100g: carbsPer100g,
+                unitLabel: unitLabel,
+                unitCount: unitCount,
               ),
           withReferenceMapper: (p0) => p0
               .map(

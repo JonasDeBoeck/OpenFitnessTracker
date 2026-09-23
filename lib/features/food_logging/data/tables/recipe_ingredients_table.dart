@@ -17,4 +17,8 @@ class RecipeIngredients extends Table {
   RealColumn get proteinPer100g => real()();
   RealColumn get fatPer100g => real()();
   RealColumn get carbsPer100g => real()();
+  // Snapshotted alongside grams — the unit/count actually used when this
+  // ingredient was added, or both null if it was added in grams.
+  TextColumn get unitLabel => text().nullable()();
+  RealColumn get unitCount => real().nullable()();
 }
