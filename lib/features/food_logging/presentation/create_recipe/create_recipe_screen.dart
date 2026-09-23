@@ -106,6 +106,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                   TextField(
                     controller: _nameController,
                     onChanged: notifier.setName,
+                    textCapitalization: TextCapitalization.words,
                     style: DashboardTextStyles.mealItemName,
                     decoration: InputDecoration(
                       isDense: true,
@@ -183,6 +184,7 @@ class _CreateRecipeScreenState extends ConsumerState<CreateRecipeScreen> {
                       controller: _instructionsController,
                       onChanged: notifier.setInstructionsText,
                       maxLines: 5,
+                      textCapitalization: TextCapitalization.sentences,
                       style: DashboardTextStyles.mealItemName,
                       decoration: InputDecoration(
                         isDense: true,
