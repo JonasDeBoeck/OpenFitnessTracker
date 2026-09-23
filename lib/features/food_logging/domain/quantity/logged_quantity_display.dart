@@ -1,3 +1,5 @@
+import 'alternate_unit.dart';
+
 /// Formats an already-logged quantity for display: "2 carrots (120g)" when
 /// a piece unit was used to log it, or plain "120g" otherwise — shared by
 /// the diary meal list and the recipe ingredient list, the two places a
@@ -10,7 +12,7 @@ String formatLoggedQuantity({
   final gramsText = '${grams.toStringAsFixed(0)}g';
   if (unitLabel == null || unitCount == null) return gramsText;
   final countText = _trimTrailingZero(unitCount);
-  final label = unitCount == 1 ? unitLabel : '${unitLabel}s';
+  final label = (unitCount == 1 || unitLabel == mlUnitLabel) ? unitLabel : '${unitLabel}s';
   return '$countText $label ($gramsText)';
 }
 
