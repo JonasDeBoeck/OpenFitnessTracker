@@ -39,6 +39,7 @@ Future<bool> showConfirmDeleteDialog(
                         backgroundColor: DashboardColors.card,
                         foregroundColor: DashboardColors.textPrimary,
                         side: BorderSide.none,
+                        padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -55,6 +56,7 @@ Future<bool> showConfirmDeleteDialog(
                       onPressed: () => Navigator.of(context).pop(true),
                       style: FilledButton.styleFrom(
                         backgroundColor: DashboardColors.destructive,
+                        padding: EdgeInsets.zero,
                       ),
                       child: Text(
                         'Delete',

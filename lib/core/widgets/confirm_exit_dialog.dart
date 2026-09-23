@@ -36,6 +36,7 @@ Future<bool> showConfirmExitDialog(BuildContext context) async {
                         backgroundColor: DashboardColors.card,
                         foregroundColor: DashboardColors.textPrimary,
                         side: BorderSide.none,
+                        padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -55,6 +56,7 @@ Future<bool> showConfirmExitDialog(BuildContext context) async {
                       onPressed: () => Navigator.of(context).pop(true),
                       style: FilledButton.styleFrom(
                         backgroundColor: DashboardColors.primary,
+                        padding: EdgeInsets.zero,
                       ),
                       child: Text(
                         'Exit',
