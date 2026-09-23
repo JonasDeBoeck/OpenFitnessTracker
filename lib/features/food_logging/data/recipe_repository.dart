@@ -107,6 +107,20 @@ class RecipeRepository {
     );
   }
 
+  Future<Recipe> update(Recipe recipe) async {
+    final id = recipe.id!;
+    return _db.transaction(() async {
+      await (_db.update(_db.recipes)..where((t) => t.id.equals(id))).write(_toCompanion(recipe));
+      await (_db.delete(_db.recipeIngredients)..where((t) => t.recipeId.equals(id))).go();
+      for (final ingredient in recipe.ingredients) {
+        await _db.into(_db.recipeIngredients).insert(
+              _ingredientToCompanion(ingredient, recipeId: id),
+            );
+      }
+      return (await getById(id))!;
+    });
+  }
+
   RecipesCompanion _toCompanion(Recipe recipe) {
     return RecipesCompanion(
       id: recipe.id == null ? const Value.absent() : Value(recipe.id!),

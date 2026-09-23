@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/models/meal_type.dart';
+import '../../../../core/router/app_routes.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
+import '../add_product/add_product_launch_args.dart';
 import '../providers/diary_providers.dart';
 import '../providers/favorite_toggle_notifier.dart';
 import '../providers/food_detail_providers.dart';
@@ -73,6 +75,14 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                       ),
                       Expanded(
                         child: Text('Food details', style: DashboardTextStyles.topbarTitle),
+                      ),
+                      IconButton(
+                        onPressed: () => context.push(
+                          AppRoutes.addProductPath,
+                          extra: AddProductLaunchArgs(editingFood: food),
+                        ),
+                        icon: const Icon(Icons.edit_outlined, color: DashboardColors.textPrimary),
+                        tooltip: 'Edit food',
                       ),
                     ],
                   ),

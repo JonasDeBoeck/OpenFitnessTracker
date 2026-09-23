@@ -12,6 +12,7 @@ import '../../domain/models/food.dart';
 import '../../domain/validation/macro_calorie_validator.dart';
 import 'add_product_form_state.dart';
 import 'browse_foods_providers.dart';
+import 'food_detail_providers.dart';
 import 'food_search_providers.dart';
 
 part 'add_product_notifier.g.dart';
@@ -25,7 +26,37 @@ const double kDefaultLoggedQuantityGrams = 100.0;
 @riverpod
 class AddProductNotifier extends _$AddProductNotifier {
   @override
-  AddProductFormState build({String? prefillBarcode, MealType? presetMealType}) {
+  AddProductFormState build({
+    String? prefillBarcode,
+    MealType? presetMealType,
+    Food? editingFood,
+  }) {
+    if (editingFood != null) {
+      return AddProductFormState(
+        photoPath: editingFood.photoPath,
+        barcode: editingFood.barcode,
+        mealType: presetMealType ?? MealType.breakfast,
+        name: editingFood.name,
+        brand: editingFood.brand,
+        store: editingFood.store,
+        isFavorite: editingFood.isFavorite,
+        caloriesPer100g: editingFood.caloriesPer100g,
+        proteinPer100g: editingFood.proteinPer100g,
+        fatPer100g: editingFood.fatPer100g,
+        carbsPer100g: editingFood.carbsPer100g,
+        fiberPer100g: editingFood.fiberPer100g,
+        sugarPer100g: editingFood.sugarPer100g,
+        sodiumMgPer100g: editingFood.sodiumMgPer100g,
+        cholesterolMgPer100g: editingFood.cholesterolMgPer100g,
+        potassiumMgPer100g: editingFood.potassiumMgPer100g,
+        calciumMgPer100g: editingFood.calciumMgPer100g,
+        ironMgPer100g: editingFood.ironMgPer100g,
+        vitaminCMgPer100g: editingFood.vitaminCMgPer100g,
+        vitaminDMcgPer100g: editingFood.vitaminDMcgPer100g,
+        logToMealEnabled: false,
+        savedFood: editingFood,
+      );
+    }
     return AddProductFormState(
       barcode: prefillBarcode,
       mealType: presetMealType ?? MealType.breakfast,
@@ -182,6 +213,7 @@ class AddProductNotifier extends _$AddProductNotifier {
       } else {
         await ref.read(foodRepositoryProvider).update(food);
         saved = food;
+        ref.invalidate(foodByIdProvider(previouslySavedId));
       }
 
       ref.invalidate(recentFoodsProvider);

@@ -10,23 +10,30 @@ part of 'create_recipe_notifier.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(CreateRecipeNotifier)
-final createRecipeProvider = CreateRecipeNotifierProvider._();
+final createRecipeProvider = CreateRecipeNotifierFamily._();
 
 final class CreateRecipeNotifierProvider
     extends $NotifierProvider<CreateRecipeNotifier, CreateRecipeFormState> {
-  CreateRecipeNotifierProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'createRecipeProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  CreateRecipeNotifierProvider._({
+    required CreateRecipeNotifierFamily super.from,
+    required Recipe? super.argument,
+  }) : super(
+         retry: null,
+         name: r'createRecipeProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$createRecipeNotifierHash();
+
+  @override
+  String toString() {
+    return r'createRecipeProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
@@ -39,13 +46,51 @@ final class CreateRecipeNotifierProvider
       providerOverride: $SyncValueProvider<CreateRecipeFormState>(value),
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CreateRecipeNotifierProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$createRecipeNotifierHash() =>
-    r'80e3bad6ea292a501041cc68a1b17eb96e8b7b22';
+    r'f103b987d33ae8a2f1db3981246fb5ca8ea9798a';
+
+final class CreateRecipeNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CreateRecipeNotifier,
+          CreateRecipeFormState,
+          CreateRecipeFormState,
+          CreateRecipeFormState,
+          Recipe?
+        > {
+  CreateRecipeNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'createRecipeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  CreateRecipeNotifierProvider call({Recipe? editingRecipe}) =>
+      CreateRecipeNotifierProvider._(argument: editingRecipe, from: this);
+
+  @override
+  String toString() => r'createRecipeProvider';
+}
 
 abstract class _$CreateRecipeNotifier extends $Notifier<CreateRecipeFormState> {
-  CreateRecipeFormState build();
+  late final _$args = ref.$arg as Recipe?;
+  Recipe? get editingRecipe => _$args;
+
+  CreateRecipeFormState build({Recipe? editingRecipe});
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
@@ -58,6 +103,6 @@ abstract class _$CreateRecipeNotifier extends $Notifier<CreateRecipeFormState> {
               Object?,
               Object?
             >;
-    return element.handleCreate(ref, build);
+    return element.handleCreate(ref, () => build(editingRecipe: _$args));
   }
 }

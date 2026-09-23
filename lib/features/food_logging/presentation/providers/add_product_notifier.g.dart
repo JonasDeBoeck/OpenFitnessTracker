@@ -16,7 +16,11 @@ final class AddProductNotifierProvider
     extends $NotifierProvider<AddProductNotifier, AddProductFormState> {
   AddProductNotifierProvider._({
     required AddProductNotifierFamily super.from,
-    required ({String? prefillBarcode, MealType? presetMealType})
+    required ({
+      String? prefillBarcode,
+      MealType? presetMealType,
+      Food? editingFood,
+    })
     super.argument,
   }) : super(
          retry: null,
@@ -60,7 +64,7 @@ final class AddProductNotifierProvider
 }
 
 String _$addProductNotifierHash() =>
-    r'0195d89ec2526b3f27b179d3222c519a948f1305';
+    r'd511e46b4a9d6441d4fe916facd1749ac8b140a8';
 
 final class AddProductNotifierFamily extends $Family
     with
@@ -69,7 +73,11 @@ final class AddProductNotifierFamily extends $Family
           AddProductFormState,
           AddProductFormState,
           AddProductFormState,
-          ({String? prefillBarcode, MealType? presetMealType})
+          ({
+            String? prefillBarcode,
+            MealType? presetMealType,
+            Food? editingFood,
+          })
         > {
   AddProductNotifierFamily._()
     : super(
@@ -83,8 +91,13 @@ final class AddProductNotifierFamily extends $Family
   AddProductNotifierProvider call({
     String? prefillBarcode,
     MealType? presetMealType,
+    Food? editingFood,
   }) => AddProductNotifierProvider._(
-    argument: (prefillBarcode: prefillBarcode, presetMealType: presetMealType),
+    argument: (
+      prefillBarcode: prefillBarcode,
+      presetMealType: presetMealType,
+      editingFood: editingFood,
+    ),
     from: this,
   );
 
@@ -94,11 +107,21 @@ final class AddProductNotifierFamily extends $Family
 
 abstract class _$AddProductNotifier extends $Notifier<AddProductFormState> {
   late final _$args =
-      ref.$arg as ({String? prefillBarcode, MealType? presetMealType});
+      ref.$arg
+          as ({
+            String? prefillBarcode,
+            MealType? presetMealType,
+            Food? editingFood,
+          });
   String? get prefillBarcode => _$args.prefillBarcode;
   MealType? get presetMealType => _$args.presetMealType;
+  Food? get editingFood => _$args.editingFood;
 
-  AddProductFormState build({String? prefillBarcode, MealType? presetMealType});
+  AddProductFormState build({
+    String? prefillBarcode,
+    MealType? presetMealType,
+    Food? editingFood,
+  });
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
@@ -116,6 +139,7 @@ abstract class _$AddProductNotifier extends $Notifier<AddProductFormState> {
       () => build(
         prefillBarcode: _$args.prefillBarcode,
         presetMealType: _$args.presetMealType,
+        editingFood: _$args.editingFood,
       ),
     );
   }
