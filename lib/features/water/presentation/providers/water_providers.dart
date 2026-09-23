@@ -35,8 +35,11 @@ Future<WaterDayView?> waterDay(Ref ref, DateTime date) async {
 
 /// Logs and deletes water entries for a given date, invalidating
 /// [waterEntriesForDateProvider] (and therefore [waterDayProvider], which
-/// watches it) so the UI reflects the change.
-@riverpod
+/// watches it) so the UI reflects the change. `keepAlive` because nothing
+/// watches this provider's own state — an autoDispose notifier with no
+/// listener can be torn down mid-`await` here, silently dropping the
+/// invalidation that follows.
+@Riverpod(keepAlive: true)
 class WaterLogController extends _$WaterLogController {
   @override
   Future<void> build() async {}
