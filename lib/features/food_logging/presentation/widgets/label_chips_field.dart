@@ -79,6 +79,7 @@ class _LabelChipsFieldState extends State<LabelChipsField> {
               child: TextField(
                 controller: _controller,
                 onSubmitted: (_) => _submit(),
+                textCapitalization: TextCapitalization.words,
                 style: DashboardTextStyles.mealItemName,
                 decoration: InputDecoration(
                   isDense: true,

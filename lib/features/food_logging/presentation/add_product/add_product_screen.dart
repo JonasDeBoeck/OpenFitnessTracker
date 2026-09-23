@@ -220,6 +220,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                           controller: _barcodeController,
                           onChanged: notifier.setBarcode,
                           hint: 'Not scanned yet',
+                          textCapitalization: TextCapitalization.none,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -448,12 +449,19 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
 }
 
 class _LabeledField extends StatelessWidget {
-  const _LabeledField({required this.label, required this.controller, required this.onChanged, required this.hint});
+  const _LabeledField({
+    required this.label,
+    required this.controller,
+    required this.onChanged,
+    required this.hint,
+    this.textCapitalization = TextCapitalization.words,
+  });
 
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final String hint;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -465,6 +473,7 @@ class _LabeledField extends StatelessWidget {
         TextField(
           controller: controller,
           onChanged: onChanged,
+          textCapitalization: textCapitalization,
           style: DashboardTextStyles.mealItemName,
           decoration: InputDecoration(
             isDense: true,
