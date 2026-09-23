@@ -239,7 +239,7 @@ feature's final review), and the card/no-card layout are all unchanged —
 only the piece-specific naming and the fixed "+1, always pluralize"
 assumption generalize.
 
-### The four call sites
+### The three call sites
 
 `food_detail_screen.dart`, `add_ingredient_screen.dart`,
 `edit_diary_entry_sheet.dart` each currently pass
