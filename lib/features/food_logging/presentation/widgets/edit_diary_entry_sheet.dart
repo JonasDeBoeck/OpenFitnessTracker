@@ -8,7 +8,7 @@ import '../../domain/models/food.dart';
 import '../providers/diary_providers.dart';
 import '../providers/food_detail_providers.dart';
 import '../providers/recipe_detail_providers.dart';
-import 'piece_aware_quantity_field.dart';
+import 'alternate_unit_quantity_field.dart';
 
 /// Bottom sheet for editing an already-logged entry's quantity — opened by
 /// tapping a meal item row on the Goals/Diary screens. Re-fetches the
@@ -83,10 +83,9 @@ class _EditDiaryEntrySheetState extends ConsumerState<EditDiaryEntrySheet> {
         children: [
           Text('Edit ${entry.displayName}', style: DashboardTextStyles.dialogTitle),
           const SizedBox(height: 14),
-          PieceAwareQuantityField(
+          AlternateUnitQuantityField(
             grams: _grams,
-            pieceLabel: food?.pieceLabel,
-            pieceWeightGrams: food?.pieceWeightGrams,
+            altUnit: food?.alternateUnit,
             initialUnitCount: widget.entry.loggedUnitCount,
             showCard: false,
             minGrams: 5,

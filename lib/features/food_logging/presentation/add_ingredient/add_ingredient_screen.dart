@@ -7,7 +7,7 @@ import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
 import '../providers/food_search_providers.dart';
 import '../widgets/food_thumbnail.dart';
-import '../widgets/piece_aware_quantity_field.dart';
+import '../widgets/alternate_unit_quantity_field.dart';
 import 'ingredient_pick_result.dart';
 
 /// Two-step ingredient picker pushed from Create Recipe: search/pick a food,
@@ -208,10 +208,9 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             children: [
               Text(food.name, style: DashboardTextStyles.sectionTitle),
               const SizedBox(height: 16),
-              PieceAwareQuantityField(
+              AlternateUnitQuantityField(
                 grams: _grams,
-                pieceLabel: food.pieceLabel,
-                pieceWeightGrams: food.pieceWeightGrams,
+                altUnit: food.alternateUnit,
                 onChanged: (quantity) => setState(() {
                   _grams = quantity.grams;
                   _unitLabel = quantity.unitLabel;

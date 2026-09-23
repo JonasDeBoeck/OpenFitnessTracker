@@ -1,26 +1,27 @@
-// lib/features/food_logging/presentation/widgets/piece_aware_quantity_field.dart
+// lib/features/food_logging/presentation/widgets/alternate_unit_quantity_field.dart
 import 'package:flutter/material.dart';
 
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
+import '../../domain/quantity/alternate_unit.dart';
 import '../../domain/quantity/piece_conversion.dart';
 import 'quantity_stepper.dart';
 
-enum _QuantityUnit { grams, piece }
+enum _QuantityUnit { grams, alt }
 
-/// Grams/piece amount control, generalizing the grams/servings toggle that
-/// already exists privately in [RecipeDetailScreen]. Renders exactly like
-/// [QuantityStepper] (unchanged look, unchanged behavior) whenever
-/// [pieceLabel] or [pieceWeightGrams] is null; only when a food has both
-/// does it add the segmented grams/piece toggle. Always reports back
-/// grams — plus the unit actually used, when applicable — via [onChanged].
-class PieceAwareQuantityField extends StatefulWidget {
-  const PieceAwareQuantityField({
+/// Grams/alternate-unit control, generalizing the grams/servings toggle
+/// that already exists privately in [RecipeDetailScreen]. Renders exactly
+/// like [QuantityStepper] (unchanged look, unchanged behavior) whenever
+/// [altUnit] is null; only when a food has an alternate unit (piece or
+/// mL) does it add the segmented grams/alt-unit toggle. Always reports
+/// back grams — plus the unit actually used, when applicable — via
+/// [onChanged].
+class AlternateUnitQuantityField extends StatefulWidget {
+  const AlternateUnitQuantityField({
     super.key,
     required this.grams,
     required this.onChanged,
-    this.pieceLabel,
-    this.pieceWeightGrams,
+    this.altUnit,
     this.initialUnitCount,
     this.label = 'Quantity',
     this.showCard = true,
@@ -30,11 +31,10 @@ class PieceAwareQuantityField extends StatefulWidget {
 
   final double grams;
   final ValueChanged<LoggedQuantity> onChanged;
-  final String? pieceLabel;
-  final double? pieceWeightGrams;
-  /// When non-null (and a piece unit is available), the field starts in
-  /// piece mode showing this count instead of starting in grams mode —
-  /// used by the Edit Diary Entry sheet to reopen an entry the way it was
+  final AlternateUnit? altUnit;
+  /// When non-null (and [altUnit] is set), the field starts in alt-unit
+  /// mode showing this count instead of starting in grams mode — used by
+  /// the Edit Diary Entry sheet to reopen an entry the way it was
   /// originally logged.
   final double? initialUnitCount;
   final String label;
@@ -43,19 +43,19 @@ class PieceAwareQuantityField extends StatefulWidget {
   final double maxGrams;
 
   @override
-  State<PieceAwareQuantityField> createState() => _PieceAwareQuantityFieldState();
+  State<AlternateUnitQuantityField> createState() => _AlternateUnitQuantityFieldState();
 }
 
-class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
+class _AlternateUnitQuantityFieldState extends State<AlternateUnitQuantityField> {
   late _QuantityUnit _unit = _startingUnit();
   late final _controller = TextEditingController(text: _initialText());
 
-  bool get _hasPieceUnit => widget.pieceLabel != null && widget.pieceWeightGrams != null;
+  bool get _hasAltUnit => widget.altUnit != null;
 
   _QuantityUnit _startingUnit() =>
-      widget.initialUnitCount != null && _hasPieceUnit ? _QuantityUnit.piece : _QuantityUnit.grams;
+      widget.initialUnitCount != null && _hasAltUnit ? _QuantityUnit.alt : _QuantityUnit.grams;
 
-  String _initialText() => _unit == _QuantityUnit.piece
+  String _initialText() => _unit == _QuantityUnit.alt
       ? _trimTrailingZero(widget.initialUnitCount!)
       : widget.grams.toStringAsFixed(0);
 
@@ -92,10 +92,11 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
   /// the minimum still reports the floor, not a stray 0 or negative value.
   void _notify(double value) {
     final clamped = _clamp(value);
-    if (_unit == _QuantityUnit.piece && _hasPieceUnit) {
+    if (_unit == _QuantityUnit.alt && _hasAltUnit) {
+      final altUnit = widget.altUnit!;
       widget.onChanged(LoggedQuantity(
-        grams: gramsFromPieceCount(clamped, widget.pieceWeightGrams!),
-        unitLabel: widget.pieceLabel,
+        grams: gramsFromPieceCount(clamped, altUnit.weightPerUnitGrams),
+        unitLabel: altUnit.label,
         unitCount: clamped,
       ));
     } else {
@@ -104,23 +105,28 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
   }
 
   void _pickUnit(_QuantityUnit unit) {
-    if (unit == _unit || !_hasPieceUnit) return;
+    if (unit == _unit || !_hasAltUnit) return;
+    final altUnit = widget.altUnit!;
     setState(() {
       _unit = unit;
       _controller.text = unit == _QuantityUnit.grams
           ? widget.grams.toStringAsFixed(0)
-          : _trimTrailingZero(pieceCountFromGrams(widget.grams, widget.pieceWeightGrams!));
+          : _trimTrailingZero(pieceCountFromGrams(widget.grams, altUnit.weightPerUnitGrams));
     });
     _notify(_value);
   }
 
-  void _increment() => _setValue(_unit == _QuantityUnit.grams ? _value + 25 : _value + 1);
+  void _increment() => _setValue(
+        _unit == _QuantityUnit.grams ? _value + 25 : _value + widget.altUnit!.step,
+      );
 
-  void _decrement() => _setValue(_unit == _QuantityUnit.grams ? _value - 25 : _value - 1);
+  void _decrement() => _setValue(
+        _unit == _QuantityUnit.grams ? _value - 25 : _value - widget.altUnit!.step,
+      );
 
   @override
   Widget build(BuildContext context) {
-    if (!_hasPieceUnit) {
+    if (!_hasAltUnit) {
       return QuantityStepper(
         grams: widget.grams,
         onChanged: (value) => widget.onChanged(LoggedQuantity(grams: value)),
@@ -131,11 +137,13 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
       );
     }
 
-    final pieceLabel = widget.pieceLabel!;
+    final altUnit = widget.altUnit!;
     final unitSuffix = _unit == _QuantityUnit.grams
         ? 'g'
-        : (_value == 1 ? pieceLabel : '${pieceLabel}s');
-    final pieceButtonLabel = '${pieceLabel[0].toUpperCase()}${pieceLabel.substring(1)}s';
+        : (!altUnit.pluralize || _value == 1 ? altUnit.label : '${altUnit.label}s');
+    final altButtonLabel = altUnit.pluralize
+        ? '${altUnit.label[0].toUpperCase()}${altUnit.label.substring(1)}s'
+        : altUnit.label;
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -154,9 +162,9 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
               const SizedBox(width: 6),
               Expanded(
                 child: _UnitButton(
-                  label: pieceButtonLabel,
-                  active: _unit == _QuantityUnit.piece,
-                  onTap: () => _pickUnit(_QuantityUnit.piece),
+                  label: altButtonLabel,
+                  active: _unit == _QuantityUnit.alt,
+                  onTap: () => _pickUnit(_QuantityUnit.alt),
                 ),
               ),
             ],
