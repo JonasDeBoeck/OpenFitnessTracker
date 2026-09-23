@@ -297,8 +297,9 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                                 Row(
                                   children: [
                                     _StepButton(icon: Icons.remove, onTap: _decAmount),
+                                    const SizedBox(width: 10),
                                     SizedBox(
-                                      width: 60,
+                                      width: 52,
                                       child: TextField(
                                         controller: _amountController,
                                         textAlign: TextAlign.center,
@@ -308,15 +309,18 @@ class _RecipeDetailScreenState extends ConsumerState<RecipeDetailScreen> {
                                         decoration: const InputDecoration(
                                           isDense: true,
                                           border: InputBorder.none,
+                                          contentPadding: EdgeInsets.zero,
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(width: 6),
                                     Text(
                                       _unit == _AmountUnit.grams
                                           ? 'g'
                                           : (_amountValue == 1 ? 'serving' : 'servings'),
                                       style: DashboardTextStyles.mealKcal,
                                     ),
+                                    const SizedBox(width: 10),
                                     _StepButton(icon: Icons.add, onTap: _incAmount),
                                   ],
                                 ),
