@@ -9,6 +9,7 @@ import '../../domain/models/food.dart';
 import '../providers/diary_providers.dart';
 import '../providers/favorite_toggle_notifier.dart';
 import '../providers/food_detail_providers.dart';
+import '../widgets/food_thumbnail.dart';
 import '../widgets/meal_type_picker.dart';
 import '../widgets/quantity_stepper.dart';
 
@@ -81,30 +82,44 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                     padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
                     children: [
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          FoodThumbnail(photoPath: food.photoPath, size: 84),
+                          const SizedBox(width: 14),
                           Expanded(
-                            child: Text(
-                              food.name,
-                              style: DashboardTextStyles.sectionTitle.copyWith(fontSize: 21),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        food.name,
+                                        style: DashboardTextStyles.sectionTitle.copyWith(fontSize: 21),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    _FavoriteToggleButton(
+                                      isFavorite: food.isFavorite,
+                                      onPressed: () =>
+                                          ref.read(favoriteToggleProvider.notifier).toggle(food.id!),
+                                    ),
+                                  ],
+                                ),
+                                if (food.brand != null || food.store != null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2),
+                                    child: Text(
+                                      [food.brand, food.store].where((v) => v != null).join(' · '),
+                                      style: DashboardTextStyles.mealKcal,
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          _FavoriteToggleButton(
-                            isFavorite: food.isFavorite,
-                            onPressed: () =>
-                                ref.read(favoriteToggleProvider.notifier).toggle(food.id!),
                           ),
                         ],
                       ),
-                      if (food.brand != null || food.store != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            [food.brand, food.store].where((v) => v != null).join(' · '),
-                            style: DashboardTextStyles.mealKcal,
-                          ),
-                        ),
                       const SizedBox(height: 16),
                       QuantityStepper(
                         grams: grams,
