@@ -45,4 +45,13 @@ void main() {
       );
     });
   });
+
+  group('expectedCaloriesFromMacros', () {
+    test('applies the 4/4/9 Atwater factors', () {
+      expect(
+        expectedCaloriesFromMacros(protein: 20, fat: 5, carbs: 20),
+        205,
+      );
+    });
+  });
 }

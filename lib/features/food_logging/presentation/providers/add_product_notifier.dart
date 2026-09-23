@@ -125,15 +125,25 @@ class AddProductNotifier extends _$AddProductNotifier {
 
     state = state.copyWith(isSaving: true, saveError: null, macroMismatchWarning: null);
     try {
-      final mismatchWarning = macrosRoughlyMatchCalories(
+      final macrosMatch = macrosRoughlyMatchCalories(
         calories: state.caloriesPer100g,
         protein: state.proteinPer100g,
         fat: state.fatPer100g,
         carbs: state.carbsPer100g,
-      )
+      );
+      // macrosRoughlyMatchCalories only returns false once all four values
+      // are known, so they're safe to read unconditionally below.
+      final mismatchWarning = macrosMatch
           ? null
-          : "The calories don't match the macros. Please check and edit them "
-              'before continuing.';
+          : '${_fmtGrams(state.proteinPer100g!)} g protein × 4 + '
+              '${_fmtGrams(state.carbsPer100g!)} g carbs × 4 + '
+              '${_fmtGrams(state.fatPer100g!)} g fat × 9 = '
+              '${expectedCaloriesFromMacros(
+                protein: state.proteinPer100g!,
+                fat: state.fatPer100g!,
+                carbs: state.carbsPer100g!,
+              ).round()} kcal, but you entered ${state.caloriesPer100g!.round()} kcal per '
+              '100 g. Please check and edit them before continuing.';
 
       final food = Food(
         id: previouslySavedId,
@@ -186,4 +196,9 @@ class AddProductNotifier extends _$AddProductNotifier {
       state = state.copyWith(isSaving: false, saveError: message);
     }
   }
+}
+
+String _fmtGrams(double value) {
+  final text = value.toStringAsFixed(1);
+  return text.endsWith('.0') ? text.substring(0, text.length - 2) : text;
 }
