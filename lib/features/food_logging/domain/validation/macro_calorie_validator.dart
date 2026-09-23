@@ -2,6 +2,16 @@
 /// before it's flagged as a likely data-entry/OCR mistake.
 const double _maxCalorieMacroVariance = 0.20;
 
+/// The Atwater-factor calorie total implied by these macros, so a mismatch
+/// warning can show the reader the same arithmetic this validates against.
+double expectedCaloriesFromMacros({
+  required double protein,
+  required double fat,
+  required double carbs,
+}) {
+  return protein * 4 + carbs * 4 + fat * 9;
+}
+
 /// Returns true when protein/fat/carbs roughly account for the stated
 /// calories (within [_maxCalorieMacroVariance]). Also returns true (i.e. no
 /// warning) when any of the four values is missing or calories is zero,
@@ -17,7 +27,7 @@ bool macrosRoughlyMatchCalories({
   }
   if (calories <= 0) return true;
 
-  final expectedCalories = protein * 4 + carbs * 4 + fat * 9;
+  final expectedCalories = expectedCaloriesFromMacros(protein: protein, fat: fat, carbs: carbs);
   final variance = (expectedCalories - calories).abs() / calories;
   return variance <= _maxCalorieMacroVariance;
 }
