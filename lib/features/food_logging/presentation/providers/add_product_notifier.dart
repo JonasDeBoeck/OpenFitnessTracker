@@ -10,6 +10,7 @@ import '../../data/services/nutrition_label_ocr_service.dart';
 import '../../domain/exceptions/duplicate_barcode_exception.dart';
 import '../../domain/models/food.dart';
 import '../../domain/validation/macro_calorie_validator.dart';
+import '../../domain/validation/ml_density_validator.dart';
 import '../../domain/validation/piece_size_validator.dart';
 import 'add_product_form_state.dart';
 import 'browse_foods_providers.dart';
@@ -42,6 +43,7 @@ class AddProductNotifier extends _$AddProductNotifier {
         store: editingFood.store,
         pieceLabel: editingFood.pieceLabel,
         pieceWeightGrams: editingFood.pieceWeightGrams,
+        mlDensityGramsPerMl: editingFood.mlDensityGramsPerMl,
         isFavorite: editingFood.isFavorite,
         caloriesPer100g: editingFood.caloriesPer100g,
         proteinPer100g: editingFood.proteinPer100g,
@@ -71,6 +73,8 @@ class AddProductNotifier extends _$AddProductNotifier {
   void setStore(String? value) => state = state.copyWith(store: value);
   void setPieceLabel(String? value) => state = state.copyWith(pieceLabel: value);
   void setPieceWeightGrams(double? value) => state = state.copyWith(pieceWeightGrams: value);
+  void setMlDensityGramsPerMl(double? value) =>
+      state = state.copyWith(mlDensityGramsPerMl: value);
   void setBarcode(String? value) => state = state.copyWith(barcode: value);
   void setMealType(MealType value) => state = state.copyWith(mealType: value);
   void setLogToMealEnabled(bool value) =>
@@ -175,6 +179,14 @@ class AddProductNotifier extends _$AddProductNotifier {
         return;
       }
 
+      final mlDensityError = mlDensityValidationError(
+        densityGramsPerMl: state.mlDensityGramsPerMl,
+      );
+      if (mlDensityError != null) {
+        state = state.copyWith(isSaving: false, saveError: mlDensityError);
+        return;
+      }
+
       final macrosMatch = macrosRoughlyMatchCalories(
         calories: state.caloriesPer100g,
         protein: state.proteinPer100g,
@@ -205,6 +217,7 @@ class AddProductNotifier extends _$AddProductNotifier {
         store: state.store,
         pieceLabel: state.pieceLabel,
         pieceWeightGrams: state.pieceWeightGrams,
+        mlDensityGramsPerMl: state.mlDensityGramsPerMl,
         barcode: state.barcode,
         photoPath: state.photoPath,
         isFavorite: state.isFavorite,

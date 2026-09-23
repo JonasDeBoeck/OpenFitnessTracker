@@ -15,6 +15,7 @@ abstract class AddProductFormState with _$AddProductFormState {
     String? store,
     String? pieceLabel,
     double? pieceWeightGrams,
+    double? mlDensityGramsPerMl,
     @Default(false) bool isFavorite,
     double? caloriesPer100g,
     double? proteinPer100g,
