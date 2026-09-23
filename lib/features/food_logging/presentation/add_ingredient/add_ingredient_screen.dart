@@ -6,6 +6,7 @@ import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
 import '../providers/food_search_providers.dart';
+import '../widgets/food_thumbnail.dart';
 import '../widgets/quantity_stepper.dart';
 import 'ingredient_pick_result.dart';
 
@@ -141,6 +142,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                     final kcalLabel = food.caloriesPer100g == null
                         ? '— kcal/100g'
                         : '${food.caloriesPer100g!.toStringAsFixed(0)} kcal/100g';
+                    final subtitle = [food.brand, food.store].whereType<String>().join(' · ');
                     return Material(
                       color: DashboardColors.card,
                       borderRadius: BorderRadius.circular(16),
@@ -151,11 +153,24 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                           padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                           child: Row(
                             children: [
+                              FoodThumbnail(photoPath: food.photoPath),
+                              const SizedBox(width: 12),
                               Expanded(
-                                child: Text(
-                                  food.name,
-                                  style: DashboardTextStyles.mealTitle,
-                                  overflow: TextOverflow.ellipsis,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      food.name,
+                                      style: DashboardTextStyles.mealTitle,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    if (subtitle.isNotEmpty)
+                                      Text(
+                                        subtitle,
+                                        style: DashboardTextStyles.mealKcal,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                  ],
                                 ),
                               ),
                               Text(kcalLabel, style: DashboardTextStyles.mealItemKcal),

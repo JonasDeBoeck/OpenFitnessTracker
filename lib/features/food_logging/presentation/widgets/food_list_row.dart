@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../home/presentation/theme/dashboard_colors.dart';
 import '../../../home/presentation/theme/dashboard_text_styles.dart';
 import '../../domain/models/food.dart';
+import 'food_thumbnail.dart';
 
 /// One food in a list — used by search results, Recent, Favorites, and
 /// Browse all foods. Shows the name, per-100g calories, a toggleable
@@ -29,6 +30,7 @@ class FoodListRow extends StatelessWidget {
     final kcalLabel = food.caloriesPer100g == null
         ? '— kcal/100g'
         : '${food.caloriesPer100g!.toStringAsFixed(0)} kcal/100g';
+    final subtitle = [food.brand, food.store].whereType<String>().join(' · ');
 
     return Material(
       color: DashboardColors.card,
@@ -40,6 +42,8 @@ class FoodListRow extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 10, 8, 10),
           child: Row(
             children: [
+              FoodThumbnail(photoPath: food.photoPath),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,8 +53,8 @@ class FoodListRow extends StatelessWidget {
                       style: DashboardTextStyles.mealTitle,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (food.brand != null)
-                      Text(food.brand!, style: DashboardTextStyles.mealKcal),
+                    if (subtitle.isNotEmpty)
+                      Text(subtitle, style: DashboardTextStyles.mealKcal, overflow: TextOverflow.ellipsis),
                   ],
                 ),
               ),
