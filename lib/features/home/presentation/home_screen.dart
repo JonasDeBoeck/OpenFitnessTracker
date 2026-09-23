@@ -38,6 +38,7 @@ class HomeScreen extends ConsumerWidget {
                 return const Center(child: Text('No profile yet.'));
               }
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   DashboardHeader(
                     greeting: dashboard.greeting,
