@@ -85,15 +85,21 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
     _notify(clamped);
   }
 
+  /// Clamps before reporting so a typed value (which the field displays
+  /// as-is, unclamped, so a keystroke is never fought or rewritten mid-type
+  /// — see [_clamp]'s caller here vs. [_setValue]'s) never reaches the
+  /// caller out of range: clearing the field or typing something below
+  /// the minimum still reports the floor, not a stray 0 or negative value.
   void _notify(double value) {
+    final clamped = _clamp(value);
     if (_unit == _QuantityUnit.piece && _hasPieceUnit) {
       widget.onChanged(LoggedQuantity(
-        grams: gramsFromPieceCount(value, widget.pieceWeightGrams!),
+        grams: gramsFromPieceCount(clamped, widget.pieceWeightGrams!),
         unitLabel: widget.pieceLabel,
-        unitCount: value,
+        unitCount: clamped,
       ));
     } else {
-      widget.onChanged(LoggedQuantity(grams: value));
+      widget.onChanged(LoggedQuantity(grams: clamped));
     }
   }
 
@@ -170,7 +176,7 @@ class _PieceAwareQuantityFieldState extends State<PieceAwareQuantityField> {
                     controller: _controller,
                     textAlign: TextAlign.center,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    onChanged: (_) => _setValue(_value),
+                    onChanged: (_) => _notify(_value),
                     style: DashboardTextStyles.macroName,
                     decoration: const InputDecoration(
                       isDense: true,
