@@ -24,7 +24,10 @@ class AlternateUnit {
 
   /// Whether [label] pluralizes for a count other than 1 ("carrot" →
   /// "carrots"). Always false for mL, the one fixed, non-freeform label in
-  /// the system.
+  /// the system. Mirrored independently by `formatLoggedQuantity`'s
+  /// `unitLabel == mlUnitLabel` check, since that function only ever sees
+  /// the frozen label string, not this flag — keep both in sync if a
+  /// second non-pluralizing unit is ever added.
   final bool pluralize;
 }
 

@@ -107,13 +107,11 @@ class _AlternateUnitQuantityFieldState extends State<AlternateUnitQuantityField>
   void _pickUnit(_QuantityUnit unit) {
     if (unit == _unit || !_hasAltUnit) return;
     final altUnit = widget.altUnit!;
-    setState(() {
-      _unit = unit;
-      _controller.text = unit == _QuantityUnit.grams
-          ? widget.grams.toStringAsFixed(0)
-          : _trimTrailingZero(pieceCountFromGrams(widget.grams, altUnit.weightPerUnitGrams));
-    });
-    _notify(_value);
+    final rawValue = unit == _QuantityUnit.grams
+        ? widget.grams
+        : pieceCountFromGrams(widget.grams, altUnit.weightPerUnitGrams);
+    _unit = unit;
+    _setValue(rawValue);
   }
 
   void _increment() => _setValue(

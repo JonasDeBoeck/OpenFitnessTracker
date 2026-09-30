@@ -12,6 +12,8 @@ String formatLoggedQuantity({
   final gramsText = '${grams.toStringAsFixed(0)}g';
   if (unitLabel == null || unitCount == null) return gramsText;
   final countText = _trimTrailingZero(unitCount);
+  // Mirrors AlternateUnit.pluralize, which this function can't read
+  // directly — only the frozen label string survives into a snapshot.
   final label = (unitCount == 1 || unitLabel == mlUnitLabel) ? unitLabel : '${unitLabel}s';
   return '$countText $label ($gramsText)';
 }
