@@ -1391,6 +1391,17 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _mlDensityGramsPerMlMeta =
+      const VerificationMeta('mlDensityGramsPerMl');
+  @override
+  late final GeneratedColumn<double> mlDensityGramsPerMl =
+      GeneratedColumn<double>(
+        'ml_density_grams_per_ml',
+        aliasedName,
+        true,
+        type: DriftSqlType.double,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1416,6 +1427,7 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
     createdAt,
     pieceLabel,
     pieceWeightGrams,
+    mlDensityGramsPerMl,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1605,6 +1617,15 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
         ),
       );
     }
+    if (data.containsKey('ml_density_grams_per_ml')) {
+      context.handle(
+        _mlDensityGramsPerMlMeta,
+        mlDensityGramsPerMl.isAcceptableOrUnknown(
+          data['ml_density_grams_per_ml']!,
+          _mlDensityGramsPerMlMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1706,6 +1727,10 @@ class $FoodsTable extends Foods with TableInfo<$FoodsTable, FoodRow> {
         DriftSqlType.double,
         data['${effectivePrefix}piece_weight_grams'],
       ),
+      mlDensityGramsPerMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}ml_density_grams_per_ml'],
+      ),
     );
   }
 
@@ -1739,6 +1764,7 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
   final DateTime createdAt;
   final String? pieceLabel;
   final double? pieceWeightGrams;
+  final double? mlDensityGramsPerMl;
   const FoodRow({
     required this.id,
     required this.name,
@@ -1763,6 +1789,7 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     required this.createdAt,
     this.pieceLabel,
     this.pieceWeightGrams,
+    this.mlDensityGramsPerMl,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1827,6 +1854,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     }
     if (!nullToAbsent || pieceWeightGrams != null) {
       map['piece_weight_grams'] = Variable<double>(pieceWeightGrams);
+    }
+    if (!nullToAbsent || mlDensityGramsPerMl != null) {
+      map['ml_density_grams_per_ml'] = Variable<double>(mlDensityGramsPerMl);
     }
     return map;
   }
@@ -1894,6 +1924,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       pieceWeightGrams: pieceWeightGrams == null && nullToAbsent
           ? const Value.absent()
           : Value(pieceWeightGrams),
+      mlDensityGramsPerMl: mlDensityGramsPerMl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mlDensityGramsPerMl),
     );
   }
 
@@ -1934,6 +1967,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       pieceLabel: serializer.fromJson<String?>(json['pieceLabel']),
       pieceWeightGrams: serializer.fromJson<double?>(json['pieceWeightGrams']),
+      mlDensityGramsPerMl: serializer.fromJson<double?>(
+        json['mlDensityGramsPerMl'],
+      ),
     );
   }
   @override
@@ -1963,6 +1999,7 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'pieceLabel': serializer.toJson<String?>(pieceLabel),
       'pieceWeightGrams': serializer.toJson<double?>(pieceWeightGrams),
+      'mlDensityGramsPerMl': serializer.toJson<double?>(mlDensityGramsPerMl),
     };
   }
 
@@ -1990,6 +2027,7 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     DateTime? createdAt,
     Value<String?> pieceLabel = const Value.absent(),
     Value<double?> pieceWeightGrams = const Value.absent(),
+    Value<double?> mlDensityGramsPerMl = const Value.absent(),
   }) => FoodRow(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -2034,6 +2072,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     pieceWeightGrams: pieceWeightGrams.present
         ? pieceWeightGrams.value
         : this.pieceWeightGrams,
+    mlDensityGramsPerMl: mlDensityGramsPerMl.present
+        ? mlDensityGramsPerMl.value
+        : this.mlDensityGramsPerMl,
   );
   FoodRow copyWithCompanion(FoodsCompanion data) {
     return FoodRow(
@@ -2092,6 +2133,9 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
       pieceWeightGrams: data.pieceWeightGrams.present
           ? data.pieceWeightGrams.value
           : this.pieceWeightGrams,
+      mlDensityGramsPerMl: data.mlDensityGramsPerMl.present
+          ? data.mlDensityGramsPerMl.value
+          : this.mlDensityGramsPerMl,
     );
   }
 
@@ -2120,7 +2164,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           ..write('isFavorite: $isFavorite, ')
           ..write('createdAt: $createdAt, ')
           ..write('pieceLabel: $pieceLabel, ')
-          ..write('pieceWeightGrams: $pieceWeightGrams')
+          ..write('pieceWeightGrams: $pieceWeightGrams, ')
+          ..write('mlDensityGramsPerMl: $mlDensityGramsPerMl')
           ..write(')'))
         .toString();
   }
@@ -2150,6 +2195,7 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
     createdAt,
     pieceLabel,
     pieceWeightGrams,
+    mlDensityGramsPerMl,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -2177,7 +2223,8 @@ class FoodRow extends DataClass implements Insertable<FoodRow> {
           other.isFavorite == this.isFavorite &&
           other.createdAt == this.createdAt &&
           other.pieceLabel == this.pieceLabel &&
-          other.pieceWeightGrams == this.pieceWeightGrams);
+          other.pieceWeightGrams == this.pieceWeightGrams &&
+          other.mlDensityGramsPerMl == this.mlDensityGramsPerMl);
 }
 
 class FoodsCompanion extends UpdateCompanion<FoodRow> {
@@ -2204,6 +2251,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
   final Value<DateTime> createdAt;
   final Value<String?> pieceLabel;
   final Value<double?> pieceWeightGrams;
+  final Value<double?> mlDensityGramsPerMl;
   const FoodsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -2228,6 +2276,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.createdAt = const Value.absent(),
     this.pieceLabel = const Value.absent(),
     this.pieceWeightGrams = const Value.absent(),
+    this.mlDensityGramsPerMl = const Value.absent(),
   });
   FoodsCompanion.insert({
     this.id = const Value.absent(),
@@ -2253,6 +2302,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     this.createdAt = const Value.absent(),
     this.pieceLabel = const Value.absent(),
     this.pieceWeightGrams = const Value.absent(),
+    this.mlDensityGramsPerMl = const Value.absent(),
   }) : name = Value(name);
   static Insertable<FoodRow> custom({
     Expression<int>? id,
@@ -2278,6 +2328,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Expression<DateTime>? createdAt,
     Expression<String>? pieceLabel,
     Expression<double>? pieceWeightGrams,
+    Expression<double>? mlDensityGramsPerMl,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2306,6 +2357,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
       if (createdAt != null) 'created_at': createdAt,
       if (pieceLabel != null) 'piece_label': pieceLabel,
       if (pieceWeightGrams != null) 'piece_weight_grams': pieceWeightGrams,
+      if (mlDensityGramsPerMl != null)
+        'ml_density_grams_per_ml': mlDensityGramsPerMl,
     });
   }
 
@@ -2333,6 +2386,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     Value<DateTime>? createdAt,
     Value<String?>? pieceLabel,
     Value<double?>? pieceWeightGrams,
+    Value<double?>? mlDensityGramsPerMl,
   }) {
     return FoodsCompanion(
       id: id ?? this.id,
@@ -2358,6 +2412,7 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
       createdAt: createdAt ?? this.createdAt,
       pieceLabel: pieceLabel ?? this.pieceLabel,
       pieceWeightGrams: pieceWeightGrams ?? this.pieceWeightGrams,
+      mlDensityGramsPerMl: mlDensityGramsPerMl ?? this.mlDensityGramsPerMl,
     );
   }
 
@@ -2435,6 +2490,11 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
     if (pieceWeightGrams.present) {
       map['piece_weight_grams'] = Variable<double>(pieceWeightGrams.value);
     }
+    if (mlDensityGramsPerMl.present) {
+      map['ml_density_grams_per_ml'] = Variable<double>(
+        mlDensityGramsPerMl.value,
+      );
+    }
     return map;
   }
 
@@ -2463,7 +2523,8 @@ class FoodsCompanion extends UpdateCompanion<FoodRow> {
           ..write('isFavorite: $isFavorite, ')
           ..write('createdAt: $createdAt, ')
           ..write('pieceLabel: $pieceLabel, ')
-          ..write('pieceWeightGrams: $pieceWeightGrams')
+          ..write('pieceWeightGrams: $pieceWeightGrams, ')
+          ..write('mlDensityGramsPerMl: $mlDensityGramsPerMl')
           ..write(')'))
         .toString();
   }
@@ -5843,6 +5904,7 @@ typedef $$FoodsTableCreateCompanionBuilder = FoodsCompanion Function({
   Value<DateTime> createdAt,
   Value<String?> pieceLabel,
   Value<double?> pieceWeightGrams,
+  Value<double?> mlDensityGramsPerMl,
 });
 typedef $$FoodsTableUpdateCompanionBuilder = FoodsCompanion Function({
   Value<int> id,
@@ -5868,6 +5930,7 @@ typedef $$FoodsTableUpdateCompanionBuilder = FoodsCompanion Function({
   Value<DateTime> createdAt,
   Value<String?> pieceLabel,
   Value<double?> pieceWeightGrams,
+  Value<double?> mlDensityGramsPerMl,
 });
 
 final class $$FoodsTableReferences
@@ -6034,6 +6097,11 @@ class $$FoodsTableFilterComposer extends Composer<_$AppDatabase, $FoodsTable> {
 
   ColumnFilters<double> get pieceWeightGrams => $composableBuilder(
     column: $table.pieceWeightGrams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get mlDensityGramsPerMl => $composableBuilder(
+    column: $table.mlDensityGramsPerMl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6211,6 +6279,11 @@ class $$FoodsTableOrderingComposer
     column: $table.pieceWeightGrams,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get mlDensityGramsPerMl => $composableBuilder(
+    column: $table.mlDensityGramsPerMl,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$FoodsTableAnnotationComposer
@@ -6323,6 +6396,11 @@ class $$FoodsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<double> get mlDensityGramsPerMl => $composableBuilder(
+    column: $table.mlDensityGramsPerMl,
+    builder: (column) => column,
+  );
+
   Expression<T> diaryEntriesRefs<T extends Object>(
     Expression<T> Function($$DiaryEntriesTableAnnotationComposer a) f,
   ) {
@@ -6429,6 +6507,7 @@ class $$FoodsTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String?> pieceLabel = const Value.absent(),
                 Value<double?> pieceWeightGrams = const Value.absent(),
+                Value<double?> mlDensityGramsPerMl = const Value.absent(),
               }) => FoodsCompanion(
                 id: id,
                 name: name,
@@ -6453,6 +6532,7 @@ class $$FoodsTableTableManager
                 createdAt: createdAt,
                 pieceLabel: pieceLabel,
                 pieceWeightGrams: pieceWeightGrams,
+                mlDensityGramsPerMl: mlDensityGramsPerMl,
               ),
           createCompanionCallback:
               ({
@@ -6479,6 +6559,7 @@ class $$FoodsTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String?> pieceLabel = const Value.absent(),
                 Value<double?> pieceWeightGrams = const Value.absent(),
+                Value<double?> mlDensityGramsPerMl = const Value.absent(),
               }) => FoodsCompanion.insert(
                 id: id,
                 name: name,
@@ -6503,6 +6584,7 @@ class $$FoodsTableTableManager
                 createdAt: createdAt,
                 pieceLabel: pieceLabel,
                 pieceWeightGrams: pieceWeightGrams,
+                mlDensityGramsPerMl: mlDensityGramsPerMl,
               ),
           withReferenceMapper: (p0) => p0
               .map(

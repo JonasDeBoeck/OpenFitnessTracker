@@ -13,7 +13,7 @@ import '../providers/favorite_toggle_notifier.dart';
 import '../providers/food_detail_providers.dart';
 import '../widgets/food_thumbnail.dart';
 import '../widgets/meal_type_picker.dart';
-import '../widgets/piece_aware_quantity_field.dart';
+import '../widgets/alternate_unit_quantity_field.dart';
 
 class FoodDetailScreen extends ConsumerStatefulWidget {
   const FoodDetailScreen({super.key, required this.foodId, this.mealType});
@@ -135,10 +135,9 @@ class _FoodDetailScreenState extends ConsumerState<FoodDetailScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      PieceAwareQuantityField(
+                      AlternateUnitQuantityField(
                         grams: grams,
-                        pieceLabel: food.pieceLabel,
-                        pieceWeightGrams: food.pieceWeightGrams,
+                        altUnit: food.alternateUnit,
                         onChanged: (quantity) {
                           ref.read(foodQuantityProvider.notifier).setGrams(quantity.grams);
                           setState(() {

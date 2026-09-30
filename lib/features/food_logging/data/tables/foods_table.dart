@@ -29,4 +29,9 @@ class Foods extends Table {
   // as every food before this feature existed.
   TextColumn get pieceLabel => text().nullable()();
   RealColumn get pieceWeightGrams => real().nullable()();
+  // Optional liquid density (grams per mL) — like pieceLabel/
+  // pieceWeightGrams, null means this food has no volume unit. A food
+  // never has both a piece unit and this set at once (enforced on the
+  // Add/Edit Product screen).
+  RealColumn get mlDensityGramsPerMl => real().nullable()();
 }

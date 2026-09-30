@@ -1,7 +1,8 @@
-/// The grams+unit pair a [PieceAwareQuantityField] reports back on every
-/// change — [grams] is always populated (the value everything downstream
-/// keys nutrition off of); [unitLabel]/[unitCount] are set only when the
-/// field was in piece mode, both null when it was in grams mode.
+/// The grams+unit pair an [AlternateUnitQuantityField] reports back on
+/// every change — [grams] is always populated (the value everything
+/// downstream keys nutrition off of); [unitLabel]/[unitCount] are set only
+/// when the field was in alternate-unit mode, both null when it was in
+/// grams mode.
 class LoggedQuantity {
   const LoggedQuantity({required this.grams, this.unitLabel, this.unitCount});
 

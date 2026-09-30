@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../quantity/alternate_unit.dart';
+
 part 'food.freezed.dart';
 part 'food.g.dart';
 
@@ -29,6 +31,7 @@ abstract class Food with _$Food {
     double? vitaminDMcgPer100g,
     String? pieceLabel,
     double? pieceWeightGrams,
+    double? mlDensityGramsPerMl,
     @Default(false) bool isFavorite,
     DateTime? createdAt,
   }) = _Food;
@@ -64,6 +67,36 @@ abstract class Food with _$Food {
   /// together (enforced by `pieceSizeValidationError` on the Add/Edit
   /// Product screen).
   bool get hasPieceUnit => pieceLabel != null && pieceWeightGrams != null;
+
+  /// Whether this food has a density (grams per mL) defined, letting it be
+  /// logged by volume instead of only by grams.
+  bool get hasVolumeUnit => mlDensityGramsPerMl != null;
+
+  /// The single alternate unit this food can be logged in, or null for a
+  /// grams-only food. A food has a piece unit, an mL unit, or neither —
+  /// never both (enforced on the Add/Edit Product screen, where switching
+  /// which kind is selected clears the other kind's fields). If both are
+  /// somehow set, piece takes priority — an arbitrary but defined and
+  /// tested choice for a state the UI never actually produces.
+  AlternateUnit? get alternateUnit {
+    if (hasPieceUnit) {
+      return AlternateUnit(
+        label: pieceLabel!,
+        weightPerUnitGrams: pieceWeightGrams!,
+        step: 1,
+        pluralize: true,
+      );
+    }
+    if (hasVolumeUnit) {
+      return AlternateUnit(
+        label: mlUnitLabel,
+        weightPerUnitGrams: mlDensityGramsPerMl!,
+        step: 50,
+        pluralize: false,
+      );
+    }
+    return null;
+  }
 }
 
 /// A food's nutrition values scaled to a specific quantity in grams.

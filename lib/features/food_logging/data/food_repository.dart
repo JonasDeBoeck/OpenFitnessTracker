@@ -146,6 +146,7 @@ class FoodRepository {
       isFavorite: Value(food.isFavorite),
       pieceLabel: Value(food.pieceLabel),
       pieceWeightGrams: Value(food.pieceWeightGrams),
+      mlDensityGramsPerMl: Value(food.mlDensityGramsPerMl),
     );
   }
 
@@ -173,6 +174,7 @@ class FoodRepository {
       isFavorite: row.isFavorite,
       pieceLabel: row.pieceLabel,
       pieceWeightGrams: row.pieceWeightGrams,
+      mlDensityGramsPerMl: row.mlDensityGramsPerMl,
       createdAt: row.createdAt,
     );
   }

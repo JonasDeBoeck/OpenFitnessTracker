@@ -14,6 +14,8 @@ import 'add_product_launch_args.dart';
 import 'widgets/micronutrients_section.dart';
 import 'widgets/photo_picker_field.dart';
 
+enum _AlternateUnitKind { none, piece, liquid }
+
 /// Creates a new food in the local catalog. Optionally pre-filled with a
 /// barcode (when reached from a scan that found no existing match) and/or
 /// a preset meal type (when reached from a specific meal's "Add food").
@@ -40,6 +42,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final _storeController = TextEditingController();
   final _pieceLabelController = TextEditingController();
   final _pieceWeightController = TextEditingController();
+  final _mlDensityController = TextEditingController();
   final _barcodeController = TextEditingController();
   final _caloriesController = TextEditingController();
   final _proteinController = TextEditingController();
@@ -55,6 +58,8 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final _vitaminCController = TextEditingController();
   final _vitaminDController = TextEditingController();
 
+  _AlternateUnitKind _altUnitKind = _AlternateUnitKind.none;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +69,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
     _storeController.text = initial.store ?? '';
     _pieceLabelController.text = initial.pieceLabel ?? '';
     _pieceWeightController.text = initial.pieceWeightGrams?.toString() ?? '';
+    _mlDensityController.text = initial.mlDensityGramsPerMl?.toString() ?? '';
+    if (initial.pieceLabel != null || initial.pieceWeightGrams != null) {
+      _altUnitKind = _AlternateUnitKind.piece;
+    } else if (initial.mlDensityGramsPerMl != null) {
+      _altUnitKind = _AlternateUnitKind.liquid;
+    }
     _barcodeController.text = initial.barcode ?? '';
     _syncControllersFromState(initial);
   }
@@ -72,7 +83,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   void dispose() {
     for (final controller in [
       _nameController, _brandController, _storeController, _pieceLabelController,
-      _pieceWeightController, _barcodeController,
+      _pieceWeightController, _mlDensityController, _barcodeController,
       _caloriesController, _proteinController, _fatController, _carbsController,
       _fiberController, _sugarController, _sodiumController,
       _cholesterolController, _potassiumController, _calciumController,
@@ -153,6 +164,23 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       ),
     );
     if (source != null) await _scanNutritionLabel(source);
+  }
+
+  void _pickAltUnitKind(_AlternateUnitKind kind, AddProductNotifier notifier) {
+    if (kind == _altUnitKind) return;
+    setState(() {
+      _altUnitKind = kind;
+      if (kind != _AlternateUnitKind.piece) {
+        _pieceLabelController.clear();
+        _pieceWeightController.clear();
+        notifier.setPieceLabel(null);
+        notifier.setPieceWeightGrams(null);
+      }
+      if (kind != _AlternateUnitKind.liquid) {
+        _mlDensityController.clear();
+        notifier.setMlDensityGramsPerMl(null);
+      }
+    });
   }
 
   Future<void> _save({bool ignoreMismatch = false}) async {
@@ -353,34 +381,79 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Text('Piece size (optional)', style: DashboardTextStyles.mealKcal),
+                  Text('Alternate unit (optional)', style: DashboardTextStyles.mealKcal),
                   const SizedBox(height: 4),
                   Text(
-                    'Let this food be logged by count (e.g. "1 carrot") instead of always by weight.',
+                    'Let this food be logged by count (e.g. "1 carrot") or by volume '
+                    '(e.g. "250 mL") instead of always by weight.',
                     style: DashboardTextStyles.mealKcal.copyWith(fontSize: 12),
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: _LabeledField(
-                          label: 'Label',
-                          controller: _pieceLabelController,
-                          onChanged: (v) => notifier.setPieceLabel(v.trim().isEmpty ? null : v.trim()),
-                          hint: 'e.g. carrot',
+                        child: _AltUnitKindButton(
+                          label: 'None',
+                          active: _altUnitKind == _AlternateUnitKind.none,
+                          onTap: () => _pickAltUnitKind(_AlternateUnitKind.none, notifier),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 6),
                       Expanded(
-                        child: _LabeledNumberField(
-                          label: 'Weight per piece (g)',
-                          controller: _pieceWeightController,
-                          onChanged: (v) => notifier.setPieceWeightGrams(_parse(v)),
+                        child: _AltUnitKindButton(
+                          label: 'Piece',
+                          active: _altUnitKind == _AlternateUnitKind.piece,
+                          onTap: () => _pickAltUnitKind(_AlternateUnitKind.piece, notifier),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: _AltUnitKindButton(
+                          label: 'Liquid',
+                          active: _altUnitKind == _AlternateUnitKind.liquid,
+                          onTap: () => _pickAltUnitKind(_AlternateUnitKind.liquid, notifier),
                         ),
                       ),
                     ],
                   ),
+                  if (_altUnitKind == _AlternateUnitKind.piece) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _LabeledField(
+                            label: 'Label',
+                            controller: _pieceLabelController,
+                            onChanged: (v) =>
+                                notifier.setPieceLabel(v.trim().isEmpty ? null : v.trim()),
+                            hint: 'e.g. carrot',
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _LabeledNumberField(
+                            label: 'Weight per piece (g)',
+                            controller: _pieceWeightController,
+                            onChanged: (v) => notifier.setPieceWeightGrams(_parse(v)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_altUnitKind == _AlternateUnitKind.liquid) ...[
+                    const SizedBox(height: 8),
+                    _LabeledNumberField(
+                      label: 'Density (g per mL)',
+                      controller: _mlDensityController,
+                      onChanged: (v) => notifier.setMlDensityGramsPerMl(_parse(v)),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Water ≈ 1.0, milk ≈ 1.03, oil ≈ 0.92',
+                      style: DashboardTextStyles.mealKcal.copyWith(fontSize: 12),
+                    ),
+                  ],
                   const SizedBox(height: 16),
                   if (state.macroMismatchWarning != null)
                     Padding(
@@ -579,6 +652,37 @@ class _NumberField extends StatelessWidget {
         fillColor: DashboardColors.card,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      ),
+    );
+  }
+}
+
+class _AltUnitKindButton extends StatelessWidget {
+  const _AltUnitKindButton({required this.label, required this.active, required this.onTap});
+
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: active ? DashboardColors.primary : DashboardColors.card,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          height: 40,
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: DashboardTextStyles.mealKcal.copyWith(
+              fontWeight: FontWeight.w600,
+              color: active ? DashboardColors.surface : DashboardColors.textSecondary,
+            ),
+          ),
+        ),
       ),
     );
   }
